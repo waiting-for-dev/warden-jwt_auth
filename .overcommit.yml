@@ -9,6 +9,9 @@ gemfile: .overcommit_gems.rb
 CommitMsg:
   ALL:
     required: true
+    exclude: &default_excludes
+      - Gemfile
+      - devise-jwt.gemspec
 
   HardTabs:
     enabled: true
@@ -23,6 +26,7 @@ CommitMsg:
 PreCommit:
   ALL:
     required: true
+    exclude: *default_excludes
 
   BundleAudit:
     enabled: true
@@ -53,6 +57,7 @@ PreCommit:
 PrePush:
   ALL:
     required: true
+    exclude: *default_excludes
 
   RSpec:
     enabled: true
