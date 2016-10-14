@@ -1,3 +1,5 @@
 require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 2.3
+RSpec/NestedGroups:
+  MaxNesting: 3
