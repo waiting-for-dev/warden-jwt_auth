@@ -13,6 +13,3 @@ gem 'reek', '~> 4.5'
 # Ruby code style checking
 gem 'rubocop', '~> 0.43'
 gem 'rubocop-rspec', '~> 1.7'
-
-# Run test suite
-gem 'rspec', '~> 3.5'

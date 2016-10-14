@@ -50,14 +50,3 @@ PreCommit:
 
   TrailingWhitespace:
     enabled: true
-
-#
-# Hooks that are run before pushing changes
-#
-PrePush:
-  ALL:
-    required: true
-    exclude: *default_excludes
-
-  RSpec:
-    enabled: true
