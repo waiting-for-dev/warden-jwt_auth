@@ -36,7 +36,7 @@ module Devise
       end
 
       def check_in_blacklist(payload, blacklist)
-        raise JWT::DecodeError if blacklist.include?(payload['jti'])
+        raise JWT::DecodeError if blacklist.member?(payload['jti'])
       end
 
       # :reek:UtilityFunction
