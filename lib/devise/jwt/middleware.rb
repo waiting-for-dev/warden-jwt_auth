@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 require 'devise/jwt/middleware/token_dispatcher'
+require 'devise/jwt/middleware/blacklist_manager'
 
 module Devise
   module Jwt
-    # Calls actual middlewares
+    # Calls two actual middlewares
     class Middleware
       attr_reader :config
 
@@ -15,6 +16,7 @@ module Devise
 
       def call(env)
         builder = Rack::Builder.new(@app)
+        builder.use(BlacklistManager, config)
         builder.use(TokenDispatcher, config)
         builder.run(@app)
         builder.call(env)

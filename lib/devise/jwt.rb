@@ -16,5 +16,6 @@ module Devise
     setting :blacklist
     setting :mappings
     setting :response_token_paths, /\b\B/
+    setting :blacklist_token_paths, /\b\B/
   end
 end
