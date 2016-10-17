@@ -17,12 +17,12 @@ module Warden
 
       def authenticate!
         token = env['HTTP_AUTHORIZATION'].split.last
-        config = Warden::JWTAuth.config
-        payload = Warden::JWTAuth::TokenCoder.decode(token, config)
+        config = JWTAuth.config
+        payload = TokenCoder.decode(token, config)
         mapping = config.mappings[scope]
         user = mapping.find_for_jwt_authentication(payload['sub'])
         success!(user)
-      rescue ::JWT::DecodeError
+      rescue JWT::DecodeError
         fail!
       end
     end

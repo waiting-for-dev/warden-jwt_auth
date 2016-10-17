@@ -24,13 +24,13 @@ module Warden
 
       def encode(payload, secret, expiration_time)
         payload_to_encode = base_payload(expiration_time).merge(payload)
-        ::JWT.encode(payload_to_encode, secret, ALG)
+        JWT.encode(payload_to_encode, secret, ALG)
       end
 
       def decode(token, secret, blacklist)
-        payload = ::JWT.decode(token, secret, true,
-                               algorithm: ALG,
-                               verify_jti: true)[0]
+        payload = JWT.decode(token, secret, true,
+                             algorithm: ALG,
+                             verify_jti: true)[0]
         check_in_blacklist(payload, blacklist) if blacklist
         payload
       end

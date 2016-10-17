@@ -22,7 +22,7 @@ module Warden
         def add_token_to_blacklist(env)
           return unless env['PATH_INFO'].match(config.blacklist_token_paths)
           token = env['HTTP_AUTHORIZATION'].split.last
-          jti = Warden::JWTAuth::TokenCoder.decode(token, config)['jti']
+          jti = TokenCoder.decode(token, config)['jti']
           config.blacklist.push(jti)
         end
       end

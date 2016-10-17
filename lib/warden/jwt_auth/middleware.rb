@@ -11,7 +11,7 @@ module Warden
 
       def initialize(app)
         @app = app
-        @config = Warden::JWTAuth.config
+        @config = JWTAuth.config
       end
 
       def call(env)

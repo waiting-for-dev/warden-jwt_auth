@@ -24,9 +24,7 @@ module Warden
           user = env['warden'].user
           return unless user &&
                         env['PATH_INFO'].match(config.response_token_paths)
-          token = Warden::JWTAuth::TokenCoder.encode(
-            { sub: user.jwt_subject }, config
-          )
+          token = TokenCoder.encode({ sub: user.jwt_subject }, config)
           headers['Authorization'] = "Bearer #{token}"
         end
       end
