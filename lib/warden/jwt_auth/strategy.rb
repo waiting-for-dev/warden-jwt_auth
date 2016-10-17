@@ -24,3 +24,5 @@ module Warden
     end
   end
 end
+
+Warden::Strategies.add(:jwt, Warden::JWTAuth::Strategy)
