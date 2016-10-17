@@ -11,6 +11,10 @@ module Warden
         env['HTTP_AUTHORIZATION']
       end
 
+      def store?
+        false
+      end
+
       def authenticate!
         token = env['HTTP_AUTHORIZATION'].split.last
         config = Warden::JWTAuth.config

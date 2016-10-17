@@ -31,6 +31,12 @@ describe Warden::JWTAuth::Strategy do
     end
   end
 
+  describe '#persist?' do
+    it 'returns false' do
+      expect(described_class.new({}).store?).to eq(false)
+    end
+  end
+
   describe '#authenticate!' do
     context 'when token is invalid' do
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer 123' } }
