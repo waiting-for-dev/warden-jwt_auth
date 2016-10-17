@@ -12,7 +12,7 @@ describe Warden::JWTAuth::Strategy do
   let(:config) { Warden::JWTAuth.config }
 
   describe '#valid?' do
-    context 'when Authorization header is set' do
+    context 'when Authorization header is valid' do
       it 'returns true' do
         env = { 'HTTP_AUTHORIZATION' => 'Bearer 123' }
         strategy = described_class.new(env, :user)
@@ -21,7 +21,7 @@ describe Warden::JWTAuth::Strategy do
       end
     end
 
-    context 'when Authorization header is not set' do
+    context 'when Authorization header is not valid' do
       it 'returns false' do
         env = {}
         strategy = described_class.new(env, :user)

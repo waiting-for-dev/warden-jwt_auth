@@ -2,6 +2,7 @@
 
 require 'dry/configurable'
 require 'warden/jwt_auth/version'
+require 'warden/jwt_auth/header_parser'
 require 'warden/jwt_auth/token_coder'
 require 'warden/jwt_auth/strategy'
 require 'warden/jwt_auth/middleware'

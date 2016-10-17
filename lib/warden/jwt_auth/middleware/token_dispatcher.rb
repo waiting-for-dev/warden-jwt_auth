@@ -25,7 +25,7 @@ module Warden
           return unless user &&
                         env['PATH_INFO'].match(config.response_token_paths)
           token = TokenCoder.encode({ sub: user.jwt_subject }, config)
-          headers['Authorization'] = "Bearer #{token}"
+          HeaderParser.parse_to_headers(headers, token)
         end
       end
     end

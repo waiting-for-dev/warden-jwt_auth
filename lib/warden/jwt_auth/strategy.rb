@@ -7,8 +7,10 @@ module Warden
     # JWT strategy
     # :reek:PrimmaDonnaMethod
     class Strategy < Warden::Strategies::Base
+      attr_reader :token
+
       def valid?
-        env['HTTP_AUTHORIZATION']
+        !token.nil?
       end
 
       def store?
@@ -16,7 +18,6 @@ module Warden
       end
 
       def authenticate!
-        token = env['HTTP_AUTHORIZATION'].split.last
         config = JWTAuth.config
         payload = TokenCoder.decode(token, config)
         mapping = config.mappings[scope]
@@ -24,6 +25,12 @@ module Warden
         success!(user)
       rescue JWT::DecodeError
         fail!
+      end
+
+      private
+
+      def token
+        @token ||= HeaderParser.parse_from_env(env)
       end
     end
   end

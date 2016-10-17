@@ -21,7 +21,7 @@ module Warden
 
         def add_token_to_blacklist(env)
           return unless env['PATH_INFO'].match(config.blacklist_token_paths)
-          token = env['HTTP_AUTHORIZATION'].split.last
+          token = HeaderParser.parse_from_env(env)
           jti = TokenCoder.decode(token, config)['jti']
           config.blacklist.push(jti)
         end
