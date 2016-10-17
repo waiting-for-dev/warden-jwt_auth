@@ -20,7 +20,7 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   let(:app) { described_class.new(warden_app, config) }
   let(:user) do
     Class.new do
-      def id
+      def jwt_subject
         1
       end
     end

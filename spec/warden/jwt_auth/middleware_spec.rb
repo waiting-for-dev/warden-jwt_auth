@@ -22,10 +22,15 @@ describe Warden::JWTAuth::Middleware do
   let(:app) { described_class.new(warden_app) }
   let(:user) do
     Class.new do
-      def id
+      def jwt_subject
         1
       end
     end
+  end
+  let(:token) do
+    Warden::JWTAuth::TokenCoder.encode(
+      { sub: user.new.jwt_subject }, config
+    )
   end
 
   describe '#call(env)' do
@@ -37,7 +42,6 @@ describe Warden::JWTAuth::Middleware do
     end
 
     it 'calls BlacklistManager middleware' do
-      token = Warden::JWTAuth::TokenCoder.encode({ sub: user.new.id }, config)
       jti = Warden::JWTAuth::TokenCoder.decode(token, config)['jti']
       header('Authorization', "Bearer #{token}")
 
