@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-describe Devise::Jwt::TokenCoder do
+describe Warden::JWTAuth::TokenCoder do
   before do
-    Devise::Jwt.configure { |config| config.secret = '123' }
+    Warden::JWTAuth.configure { |config| config.secret = '123' }
   end
 
-  let(:config) { Devise::Jwt.config }
+  let(:config) { Warden::JWTAuth.config }
   let(:secret) { config.secret }
 
   describe '::encode(payload)' do
@@ -46,7 +46,7 @@ describe Devise::Jwt::TokenCoder do
   describe '::decode(token)' do
     # :reek:UtilityFunction
     def use_blacklist(items = [])
-      Devise::Jwt.configure { |config| config.blacklist = items }
+      Warden::JWTAuth.configure { |config| config.blacklist = items }
     end
 
     let(:payload) { { 'foo' => 'bar', 'jti' => '123' } }

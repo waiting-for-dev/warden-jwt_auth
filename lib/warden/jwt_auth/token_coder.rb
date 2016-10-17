@@ -2,8 +2,8 @@
 
 require 'jwt'
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     # Encode/decode a token, adding some configurable claims to the payload
     class TokenCoder
       ALG = 'HS256'

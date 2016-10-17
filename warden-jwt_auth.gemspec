@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'devise/jwt/version'
+require 'warden/jwt_auth/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "devise-jwt"
-  spec.version       = Devise::Jwt::VERSION
+  spec.name          = "warden-jwt_auth"
+  spec.version       = Warden::JWTAuth::VERSION
   spec.authors       = ["Marc Busqué"]
   spec.email         = ["marc@lamarciana.com"]
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     class Middleware
       # Adds JWT token to the response
       class TokenDispatcher < Middleware
@@ -24,7 +24,7 @@ module Devise
           user = env['warden'].user
           return unless user &&
                         env['PATH_INFO'].match(config.response_token_paths)
-          token = Devise::Jwt::TokenCoder.encode({ sub: user.id }, config)
+          token = Warden::JWTAuth::TokenCoder.encode({ sub: user.id }, config)
           headers['Authorization'] = "Bearer #{token}"
         end
       end

@@ -3,12 +3,12 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe Devise::Jwt::Middleware do
+describe Warden::JWTAuth::Middleware do
   include Rack::Test::Methods
   include Warden::Test::Helpers
 
   before do
-    Devise::Jwt.configure do |config|
+    Warden::JWTAuth.configure do |config|
       config.secret = '123'
       config.blacklist = []
       config.response_token_paths = '/sign_in'
@@ -16,7 +16,7 @@ describe Devise::Jwt::Middleware do
     end
   end
 
-  let(:config) { Devise::Jwt.config }
+  let(:config) { Warden::JWTAuth.config }
   let(:pristine_app) { ->(_env) { [200, {}, []] } }
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app) }
@@ -37,8 +37,8 @@ describe Devise::Jwt::Middleware do
     end
 
     it 'calls BlacklistManager middleware' do
-      token = Devise::Jwt::TokenCoder.encode({ sub: user.new.id }, config)
-      jti = Devise::Jwt::TokenCoder.decode(token, config)['jti']
+      token = Warden::JWTAuth::TokenCoder.encode({ sub: user.new.id }, config)
+      jti = Warden::JWTAuth::TokenCoder.decode(token, config)['jti']
       header('Authorization', "Bearer #{token}")
 
       get '/sign_out'

@@ -11,7 +11,7 @@ CommitMsg:
     required: true
     exclude: &default_excludes
       - Gemfile
-      - devise-jwt.gemspec
+      - warden-jwt_auth.gemspec
 
   HardTabs:
     enabled: true

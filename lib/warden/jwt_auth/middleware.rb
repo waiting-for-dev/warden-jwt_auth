@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'devise/jwt/middleware/token_dispatcher'
-require 'devise/jwt/middleware/blacklist_manager'
+require 'warden/jwt_auth/middleware/token_dispatcher'
+require 'warden/jwt_auth/middleware/blacklist_manager'
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     # Calls two actual middlewares
     class Middleware
       attr_reader :config
 
       def initialize(app)
         @app = app
-        @config = Devise::Jwt.config
+        @config = Warden::JWTAuth.config
       end
 
       def call(env)

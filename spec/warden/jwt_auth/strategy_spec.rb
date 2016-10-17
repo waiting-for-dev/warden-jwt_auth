@@ -2,14 +2,14 @@
 
 require 'spec_helper'
 
-describe Devise::Jwt::Strategy do
+describe Warden::JWTAuth::Strategy do
   before do
-    Devise::Jwt.configure do |config|
+    Warden::JWTAuth.configure do |config|
       config.secret = '123'
     end
   end
 
-  let(:config) { Devise::Jwt.config }
+  let(:config) { Warden::JWTAuth.config }
 
   describe '#valid?' do
     context 'when Authorization header is set' do
@@ -60,13 +60,15 @@ describe Devise::Jwt::Strategy do
         end
       end
       let(:token) do
-        Devise::Jwt::TokenCoder.encode({ 'sub' => user_class.new.id }, config)
+        Warden::JWTAuth::TokenCoder.encode(
+          { 'sub' => user_class.new.id }, config
+        )
       end
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 
       before do
-        Devise::Jwt.configure do |config|
+        Warden::JWTAuth.configure do |config|
           config.mappings = { user: user_class }
         end
         strategy.authenticate!

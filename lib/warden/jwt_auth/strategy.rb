@@ -2,8 +2,8 @@
 
 require 'warden'
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     # JWT strategy
     # :reek:PrimmaDonnaMethod
     class Strategy < Warden::Strategies::Base
@@ -13,8 +13,8 @@ module Devise
 
       def authenticate!
         token = env['HTTP_AUTHORIZATION'].split.last
-        config = Devise::Jwt.config
-        payload = Devise::Jwt::TokenCoder.decode(token, config)
+        config = Warden::JWTAuth.config
+        payload = Warden::JWTAuth::TokenCoder.decode(token, config)
         mapping = config.mappings[scope]
         user = mapping.find_for_jwt_authentication(payload['sub'])
         success!(user)

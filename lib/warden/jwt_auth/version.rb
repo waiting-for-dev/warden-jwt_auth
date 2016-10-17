@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     VERSION = '0.1.0'
   end
 end

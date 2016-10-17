@@ -3,18 +3,18 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe Devise::Jwt::Middleware::TokenDispatcher do
+describe Warden::JWTAuth::Middleware::TokenDispatcher do
   include Rack::Test::Methods
   include Warden::Test::Helpers
 
   before do
-    Devise::Jwt.configure do |config|
+    Warden::JWTAuth.configure do |config|
       config.secret = '123'
       config.response_token_paths = '/sign_in'
     end
   end
 
-  let(:config) { Devise::Jwt.config }
+  let(:config) { Warden::JWTAuth.config }
   let(:pristine_app) { ->(_env) { [200, {}, []] } }
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app, config) }

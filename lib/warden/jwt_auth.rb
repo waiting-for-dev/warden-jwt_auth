@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require 'dry/configurable'
-require 'devise/jwt/version'
-require 'devise/jwt/token_coder'
-require 'devise/jwt/strategy'
-require 'devise/jwt/middleware'
+require 'warden/jwt_auth/version'
+require 'warden/jwt_auth/token_coder'
+require 'warden/jwt_auth/strategy'
+require 'warden/jwt_auth/middleware'
 
-module Devise
-  # JWT authentication plugin for devise
-  module Jwt
+module Warden
+  # JWT authentication plugin for warden
+  module JWTAuth
     extend Dry::Configurable
 
     setting :secret

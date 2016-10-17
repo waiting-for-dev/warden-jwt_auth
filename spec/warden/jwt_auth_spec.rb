@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe Devise::Jwt do
+describe Warden::JWTAuth do
   it 'has a version number' do
-    expect(Devise::Jwt::VERSION).not_to be nil
+    expect(Warden::JWTAuth::VERSION).not_to be nil
   end
 end

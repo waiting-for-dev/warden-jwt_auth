@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Devise
-  module Jwt
+module Warden
+  module JWTAuth
     class Middleware
       # Adds JWT to the blacklist
       class BlacklistManager < Middleware
@@ -22,7 +22,7 @@ module Devise
         def add_token_to_blacklist(env)
           return unless env['PATH_INFO'].match(config.blacklist_token_paths)
           token = env['HTTP_AUTHORIZATION'].split.last
-          jti = Devise::Jwt::TokenCoder.decode(token, config)['jti']
+          jti = Warden::JWTAuth::TokenCoder.decode(token, config)['jti']
           config.blacklist.push(jti)
         end
       end
