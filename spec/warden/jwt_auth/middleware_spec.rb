@@ -18,9 +18,7 @@ describe Warden::JWTAuth::Middleware do
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app) }
   let(:token) do
-    Warden::JWTAuth::TokenCoder.encode(
-      { sub: Fixtures.user.jwt_subject }, config
-    )
+    Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
   end
 
   describe '#call(env)' do

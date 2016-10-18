@@ -49,9 +49,7 @@ describe Warden::JWTAuth::Strategy do
 
     context 'when token is valid' do
       let(:token) do
-        Warden::JWTAuth::TokenCoder.encode(
-          { 'sub' => Fixtures.user.jwt_subject }, config
-        )
+        Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
       end
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }

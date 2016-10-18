@@ -5,10 +5,10 @@ require 'spec_helper'
 describe Warden::JWTAuth::TokenCoder do
   include_context 'configuration'
 
-  describe '::encode(payload)' do
+  describe '::encode(sub, config)' do
     let(:expiration_time) { config.expiration_time }
-    let(:payload) { { 'foo' => 'bar' } }
-    let(:token) { described_class.encode(payload, config) }
+    let(:sub) { '1' }
+    let(:token) { described_class.encode(sub, config) }
     let(:decoded_payload) do
       ::JWT.decode(token, secret, true, algorithn: 'HS256')[0]
     end
@@ -17,8 +17,8 @@ describe Warden::JWTAuth::TokenCoder do
       expect { decoded_payload }.not_to raise_error
     end
 
-    it 'merges given payload in the automatic claims' do
-      expect(decoded_payload['foo']).to eq('bar')
+    it 'adds a sub claim with provided sub argument' do
+      expect(decoded_payload['sub']).to eq('1')
     end
 
     it 'adds an `iat` claim with the issue time' do
@@ -41,7 +41,7 @@ describe Warden::JWTAuth::TokenCoder do
   describe '::decode(token)' do
     include_context 'blacklist'
 
-    let(:payload) { { 'foo' => 'bar', 'jti' => '123' } }
+    let(:payload) { { 'sub' => '1', 'jti' => '123' } }
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
 
     it 'decodes using HS256 algorithm and secret as key' do

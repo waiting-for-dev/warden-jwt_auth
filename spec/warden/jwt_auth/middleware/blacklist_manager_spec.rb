@@ -14,9 +14,7 @@ describe Warden::JWTAuth::Middleware::BlacklistManager do
 
   describe '#call(env)' do
     let(:token) do
-      Warden::JWTAuth::TokenCoder.encode(
-        { sub: Fixtures.user.jwt_subject }, config
-      )
+      Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
     end
 
     context 'when PATH_INFO matches configured blacklist_token_paths' do

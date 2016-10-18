@@ -8,10 +8,10 @@ module Warden
     class TokenCoder
       ALG = 'HS256'
 
-      def self.encode(payload, config)
+      def self.encode(sub, config)
         secret = config.secret
         expiration_time = config.expiration_time
-        new.send(:encode, payload, secret, expiration_time)
+        new.send(:encode, sub, expiration_time, secret)
       end
 
       def self.decode(token, config)
@@ -22,8 +22,8 @@ module Warden
 
       private
 
-      def encode(payload, secret, expiration_time)
-        payload_to_encode = base_payload(expiration_time).merge(payload)
+      def encode(sub, expiration_time, secret)
+        payload_to_encode = payload(sub, expiration_time)
         JWT.encode(payload_to_encode, secret, ALG)
       end
 
@@ -40,9 +40,10 @@ module Warden
       end
 
       # :reek:UtilityFunction
-      def base_payload(expiration_time)
+      def payload(sub, expiration_time)
         now = Time.now.to_i
         {
+          sub: sub,
           iat: now,
           exp: now + expiration_time,
           jti: SecureRandom.uuid
