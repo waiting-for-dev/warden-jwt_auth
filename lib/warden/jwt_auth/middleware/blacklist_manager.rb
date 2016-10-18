@@ -5,6 +5,8 @@ module Warden
     class Middleware
       # Adds JWT to the blacklist
       class BlacklistManager < Middleware
+        ENV_KEY = 'warden-jwt_auth.blacklist_manager'
+
         attr_reader :config
 
         def initialize(app, config)
@@ -13,6 +15,7 @@ module Warden
         end
 
         def call(env)
+          env[ENV_KEY] = true
           add_token_to_blacklist(env)
           @app.call(env)
         end

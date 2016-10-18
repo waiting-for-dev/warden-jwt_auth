@@ -12,9 +12,23 @@ describe Warden::JWTAuth::Middleware::BlacklistManager do
   let(:pristine_app) { ->(_env) { [200, {}, []] } }
   let(:app) { described_class.new(pristine_app, config) }
 
+  describe '::ENV_KEY' do
+    it 'is warden-jwt_auth.blacklist_manager' do
+      expect(
+        described_class::ENV_KEY
+      ).to eq('warden-jwt_auth.blacklist_manager')
+    end
+  end
+
   describe '#call(env)' do
     let(:token) do
       Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
+    end
+
+    it 'adds ENV_KEY key to env' do
+      get '/'
+
+      expect(last_request.env[described_class::ENV_KEY]).to eq(true)
     end
 
     context 'when PATH_INFO matches configured blacklist_token_paths' do

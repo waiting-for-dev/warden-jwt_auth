@@ -15,7 +15,21 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app, config) }
 
+  describe '::ENV_KEY' do
+    it 'is warden-jwt_auth.token_dispatcher' do
+      expect(
+        described_class::ENV_KEY
+      ).to eq('warden-jwt_auth.token_dispatcher')
+    end
+  end
+
   describe '#call(env)' do
+    it 'adds ENV_KEY key to env' do
+      get '/'
+
+      expect(last_request.env[described_class::ENV_KEY]).to eq(true)
+    end
+
     context 'when PATH_INFO matches configured response_token_paths' do
       it 'adds token to the response if user is signed in' do
         login_as Fixtures.user

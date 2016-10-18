@@ -5,6 +5,8 @@ module Warden
     class Middleware
       # Adds JWT token to the response
       class TokenDispatcher < Middleware
+        ENV_KEY = 'warden-jwt_auth.token_dispatcher'
+
         attr_reader :config
 
         def initialize(app, config)
@@ -13,6 +15,7 @@ module Warden
         end
 
         def call(env)
+          env[ENV_KEY] = true
           status, headers, response = @app.call(env)
           add_token_to_response(env, headers)
           [status, headers, response]

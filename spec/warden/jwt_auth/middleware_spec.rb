@@ -8,34 +8,26 @@ describe Warden::JWTAuth::Middleware do
   include Warden::Test::Helpers
 
   include_context 'configuration'
-  include_context 'blacklist'
-
-  before do
-    config.response_token_paths = '/sign_in'
-  end
 
   let(:pristine_app) { ->(_env) { [200, {}, []] } }
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app) }
-  let(:token) do
-    Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
-  end
 
   describe '#call(env)' do
     it 'calls TokenDispatcher middleware' do
-      login_as Fixtures.user
-      get '/sign_in'
+      env_key = Warden::JWTAuth::Middleware::TokenDispatcher::ENV_KEY
 
-      expect(last_response.headers['Authorization']).not_to be_nil
+      get '/'
+
+      expect(last_request.env[env_key]).to eq(true)
     end
 
     it 'calls BlacklistManager middleware' do
-      jti = Warden::JWTAuth::TokenCoder.decode(token, config)['jti']
-      header('Authorization', "Bearer #{token}")
+      env_key = Warden::JWTAuth::Middleware::BlacklistManager::ENV_KEY
 
-      get '/sign_out'
+      get '/'
 
-      expect(blacklist.member?(jti)).to eq(true)
+      expect(last_request.env[env_key]).to eq(true)
     end
   end
 
