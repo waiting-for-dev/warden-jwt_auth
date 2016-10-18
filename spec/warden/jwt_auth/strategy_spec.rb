@@ -3,13 +3,7 @@
 require 'spec_helper'
 
 describe Warden::JWTAuth::Strategy do
-  before do
-    Warden::JWTAuth.configure do |config|
-      config.secret = '123'
-    end
-  end
-
-  let(:config) { Warden::JWTAuth.config }
+  include_context 'configuration'
 
   describe '#valid?' do
     context 'when Authorization header is valid' do
@@ -54,31 +48,17 @@ describe Warden::JWTAuth::Strategy do
     end
 
     context 'when token is valid' do
-      let(:user_class) do
-        Class.new do
-          def id
-            1
-          end
-
-          def self.find_for_jwt_authentication(_)
-            :an_user
-          end
-        end
-      end
       let(:token) do
         Warden::JWTAuth::TokenCoder.encode(
-          { 'sub' => user_class.new.id }, config
+          { 'sub' => Fixtures.user.jwt_subject }, config
         )
       end
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 
-      before do
-        Warden::JWTAuth.configure do |config|
-          config.mappings = { user: user_class }
-        end
-        strategy.authenticate!
-      end
+      before { config.mappings = { user: Fixtures.user_repo } }
+
+      before { strategy.authenticate! }
 
       it 'successes authentication' do
         expect(strategy).to be_successful

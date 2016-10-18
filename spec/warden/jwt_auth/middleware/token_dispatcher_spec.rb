@@ -7,29 +7,18 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   include Rack::Test::Methods
   include Warden::Test::Helpers
 
-  before do
-    Warden::JWTAuth.configure do |config|
-      config.secret = '123'
-      config.response_token_paths = '/sign_in'
-    end
-  end
+  include_context 'configuration'
 
-  let(:config) { Warden::JWTAuth.config }
+  before { config.response_token_paths = '/sign_in' }
+
   let(:pristine_app) { ->(_env) { [200, {}, []] } }
   let(:warden_app) { Warden::Manager.new(pristine_app) }
   let(:app) { described_class.new(warden_app, config) }
-  let(:user) do
-    Class.new do
-      def jwt_subject
-        1
-      end
-    end
-  end
 
   describe '#call(env)' do
     context 'when PATH_INFO matches configured response_token_paths' do
       it 'adds token to the response if user is signed in' do
-        login_as user.new
+        login_as Fixtures.user
         get '/sign_in'
 
         expect(last_response.headers['Authorization']).not_to be_nil
@@ -44,7 +33,7 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
     context 'when PATH_INFO does not match configured response_token_paths' do
       it 'adds nothing to the response' do
-        login_as user.new
+        login_as Fixtures.user
         get '/another_path'
 
         expect(last_response.headers['Authorization']).to be_nil

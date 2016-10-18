@@ -3,12 +3,7 @@
 require 'spec_helper'
 
 describe Warden::JWTAuth::TokenCoder do
-  before do
-    Warden::JWTAuth.configure { |config| config.secret = '123' }
-  end
-
-  let(:config) { Warden::JWTAuth.config }
-  let(:secret) { config.secret }
+  include_context 'configuration'
 
   describe '::encode(payload)' do
     let(:expiration_time) { config.expiration_time }
@@ -44,10 +39,7 @@ describe Warden::JWTAuth::TokenCoder do
   end
 
   describe '::decode(token)' do
-    # :reek:UtilityFunction
-    def use_blacklist(items = [])
-      Warden::JWTAuth.configure { |config| config.blacklist = items }
-    end
+    include_context 'blacklist'
 
     let(:payload) { { 'foo' => 'bar', 'jti' => '123' } }
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
@@ -57,7 +49,7 @@ describe Warden::JWTAuth::TokenCoder do
     end
 
     it 'raises a JWT::DecodeError if `jwt` is in the blacklist' do
-      use_blacklist(['123'])
+      blacklist.push('123')
 
       expect do
         described_class.decode(token, config)
@@ -65,8 +57,6 @@ describe Warden::JWTAuth::TokenCoder do
     end
 
     it 'does not raise a JWT::DecodeError if `jwt` is not the blacklist' do
-      use_blacklist(['345'])
-
       expect(described_class.decode(token, config)).to eq(payload)
     end
   end
