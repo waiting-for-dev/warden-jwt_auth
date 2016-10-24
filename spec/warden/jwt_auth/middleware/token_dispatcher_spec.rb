@@ -11,9 +11,9 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
   before { config.response_token_paths = '/sign_in' }
 
-  let(:pristine_app) { ->(_env) { [200, {}, []] } }
-  let(:warden_app) { Warden::Manager.new(pristine_app) }
-  let(:app) { described_class.new(warden_app, config) }
+  let(:dummy_app) { ->(_env) { [200, {}, []] } }
+  let(:this_app) { described_class.new(dummy_app, config) }
+  let(:app) { Warden::Manager.new(this_app) }
 
   describe '::ENV_KEY' do
     it 'is warden-jwt_auth.token_dispatcher' do
@@ -31,23 +31,19 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
     end
 
     context 'when PATH_INFO matches configured response_token_paths' do
-      it 'adds token to the response if user is signed in' do
+      it 'adds token to the response' do
         login_as Fixtures.user
+
         get '/sign_in'
 
         expect(last_response.headers['Authorization']).not_to be_nil
-      end
-
-      it 'adds nothing to the response if user is not signed in' do
-        get '/sign_in'
-
-        expect(last_response.headers['Authorization']).to be_nil
       end
     end
 
     context 'when PATH_INFO does not match configured response_token_paths' do
       it 'adds nothing to the response' do
         login_as Fixtures.user
+
         get '/another_path'
 
         expect(last_response.headers['Authorization']).to be_nil

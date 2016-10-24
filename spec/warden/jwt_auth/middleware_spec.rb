@@ -9,25 +9,51 @@ describe Warden::JWTAuth::Middleware do
 
   include_context 'configuration'
 
-  let(:pristine_app) { ->(_env) { [200, {}, []] } }
-  let(:warden_app) { Warden::Manager.new(pristine_app) }
-  let(:app) { described_class.new(warden_app) }
+  let(:dummy_app) { ->(_env) { [200, {}, []] } }
+  let(:this_app) { described_class.new(dummy_app) }
+
+  let(:token_env_key) { Warden::JWTAuth::Middleware::TokenDispatcher::ENV_KEY }
+  let(:black_env_key) { Warden::JWTAuth::Middleware::BlacklistManager::ENV_KEY }
 
   describe '#call(env)' do
-    it 'calls TokenDispatcher middleware' do
-      env_key = Warden::JWTAuth::Middleware::TokenDispatcher::ENV_KEY
+    context 'when warden middleware has not been called' do
+      let(:app) { this_app }
 
-      get '/'
-
-      expect(last_request.env[env_key]).to eq(true)
+      it 'raises a RuntimeError' do
+        expect { get '/' }.to raise_error(RuntimeError)
+      end
     end
 
-    it 'calls BlacklistManager middleware' do
-      env_key = Warden::JWTAuth::Middleware::BlacklistManager::ENV_KEY
+    context 'when an user has been logged in' do
+      let(:app) { Warden::Manager.new(this_app) }
 
-      get '/'
+      before do
+        login_as Fixtures.user
 
-      expect(last_request.env[env_key]).to eq(true)
+        get '/'
+      end
+
+      it 'calls TokenDispatcher middleware' do
+        expect(last_request.env[token_env_key]).to eq(true)
+      end
+
+      it 'calls BlacklistManager middleware' do
+        expect(last_request.env[black_env_key]).to eq(true)
+      end
+    end
+
+    context 'when an user has not been logged in' do
+      let(:app) { Warden::Manager.new(this_app) }
+
+      before { get '/' }
+
+      it 'does not call TokenDispatcher midleware' do
+        expect(last_request.env[token_env_key]).to be_nil
+      end
+
+      it 'does not call BlacklistManager midleware' do
+        expect(last_request.env[black_env_key]).to be_nil
+      end
     end
   end
 

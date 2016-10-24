@@ -24,9 +24,8 @@ module Warden
         private
 
         def add_token_to_response(env, headers)
+          return unless env['PATH_INFO'].match(config.response_token_paths)
           user = env['warden'].user
-          return unless user &&
-                        env['PATH_INFO'].match(config.response_token_paths)
           token = TokenCoder.encode(user.jwt_subject, config)
           HeaderParser.parse_to_headers(headers, token)
         end

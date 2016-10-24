@@ -7,7 +7,7 @@ module Warden
   module JWTAuth
     # Calls two actual middlewares
     class Middleware
-      attr_reader :config
+      attr_reader :app, :config
 
       def initialize(app)
         @app = app
@@ -15,11 +15,26 @@ module Warden
       end
 
       def call(env)
-        builder = Rack::Builder.new(@app)
+        warden_proxy = env['warden']
+        unless warden_proxy
+          raise "#{self.class.name} must be called after Warden"
+        end
+        warden_proxy.user ? call_with_middlewares(app, env) : app.call(env)
+      end
+
+      private
+
+      # :reek:FeatureEnvy
+      def call_with_middlewares(app, env)
+        builder = Rack::Builder.new(app)
         builder.use(BlacklistManager, config)
         builder.use(TokenDispatcher, config)
-        builder.run(@app)
+        builder.run(app)
         builder.call(env)
+      end
+
+      def warden_proxy
+        env['warden']
       end
     end
   end
