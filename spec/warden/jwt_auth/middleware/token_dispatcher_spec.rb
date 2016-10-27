@@ -31,12 +31,18 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
     end
 
     context 'when PATH_INFO matches configured response_token_paths' do
-      it 'adds token to the response' do
+      it 'adds token to the response when user is logged in' do
         login_as Fixtures.user
 
         get '/sign_in'
 
         expect(last_response.headers['Authorization']).not_to be_nil
+      end
+
+      it 'adds nothing to the response when user is not logged in' do
+        get '/sign_in'
+
+        expect(last_response.headers['Authorization']).to be_nil
       end
     end
 

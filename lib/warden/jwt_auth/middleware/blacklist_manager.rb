@@ -16,14 +16,17 @@ module Warden
 
         def call(env)
           env[ENV_KEY] = true
+          response = @app.call(env)
           add_token_to_blacklist(env)
-          @app.call(env)
+          response
         end
 
         private
 
         def add_token_to_blacklist(env)
-          return unless env['PATH_INFO'].match(config.blacklist_token_paths)
+          user = env['warden'].user
+          return unless user &&
+                        env['PATH_INFO'].match(config.blacklist_token_paths)
           token = HeaderParser.parse_from_env(env)
           jti = TokenCoder.decode(token, config)['jti']
           config.blacklist.push(jti)
