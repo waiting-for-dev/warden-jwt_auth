@@ -16,14 +16,6 @@ describe Warden::JWTAuth::Middleware do
   let(:black_env_key) { Warden::JWTAuth::Middleware::BlacklistManager::ENV_KEY }
 
   describe '#call(env)' do
-    context 'when warden middleware has not been called' do
-      let(:app) { this_app }
-
-      it 'raises a RuntimeError' do
-        expect { get '/' }.to raise_error(RuntimeError)
-      end
-    end
-
     context 'when an user has been logged in' do
       let(:app) { Warden::Manager.new(this_app) }
 
