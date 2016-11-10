@@ -24,8 +24,8 @@ describe Warden::JWTAuth::Middleware do
       expect(last_request.env[env_key]).to eq(true)
     end
 
-    it 'calls BlacklistManager middleware' do
-      env_key = Warden::JWTAuth::Middleware::BlacklistManager::ENV_KEY
+    it 'calls RevocationManager middleware' do
+      env_key = Warden::JWTAuth::Middleware::RevocationManager::ENV_KEY
 
       expect(last_request.env[env_key]).to eq(true)
     end

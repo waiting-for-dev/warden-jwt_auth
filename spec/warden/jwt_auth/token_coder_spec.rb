@@ -39,7 +39,7 @@ describe Warden::JWTAuth::TokenCoder do
   end
 
   describe '::decode(token)' do
-    include_context 'blacklist'
+    include_context 'revocation'
 
     let(:payload) { { 'sub' => '1', 'jti' => '123' } }
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
@@ -48,15 +48,15 @@ describe Warden::JWTAuth::TokenCoder do
       expect(described_class.decode(token, config)).to eq(payload)
     end
 
-    it 'raises a JWT::DecodeError if `jwt` is in the blacklist' do
-      blacklist.push('123')
+    it 'raises a JWT::DecodeError if the token has been revoked' do
+      revocation_strategy.revoke(payload)
 
       expect do
         described_class.decode(token, config)
       end.to raise_error(JWT::DecodeError)
     end
 
-    it 'does not raise a JWT::DecodeError if `jwt` is not the blacklist' do
+    it 'does not raise a JWT::DecodeError if the token has not been revoked' do
       expect(described_class.decode(token, config)).to eq(payload)
     end
   end

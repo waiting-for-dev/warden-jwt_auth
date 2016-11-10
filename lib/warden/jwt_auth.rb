@@ -17,6 +17,7 @@ module Warden
     setting :blacklist
     setting :mappings, {}
     setting :response_token_paths, /\b\B/
-    setting :blacklist_token_paths, /\b\B/
+    setting :token_revocation_paths, /\b\B/
+    setting :revocation_strategy
   end
 end

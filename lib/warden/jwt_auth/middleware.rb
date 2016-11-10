@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'warden/jwt_auth/middleware/token_dispatcher'
-require 'warden/jwt_auth/middleware/blacklist_manager'
+require 'warden/jwt_auth/middleware/revocation_manager'
 
 module Warden
   module JWTAuth
@@ -16,7 +16,7 @@ module Warden
 
       def call(env)
         builder = Rack::Builder.new(app)
-        builder.use(BlacklistManager, config)
+        builder.use(RevocationManager, config)
         builder.use(TokenDispatcher, config)
         builder.run(app)
         builder.call(env)

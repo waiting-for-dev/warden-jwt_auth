@@ -3,9 +3,9 @@
 module Warden
   module JWTAuth
     class Middleware
-      # Adds JWT to the blacklist
-      class BlacklistManager < Middleware
-        ENV_KEY = 'warden-jwt_auth.blacklist_manager'
+      # Revokes a token
+      class RevocationManager < Middleware
+        ENV_KEY = 'warden-jwt_auth.revocation_manager'
 
         attr_reader :config
 
@@ -17,19 +17,19 @@ module Warden
         def call(env)
           env[ENV_KEY] = true
           response = @app.call(env)
-          add_token_to_blacklist(env)
+          revoke_token(env)
           response
         end
 
         private
 
-        def add_token_to_blacklist(env)
+        def revoke_token(env)
           user = env['warden'].user
           return unless user &&
-                        env['PATH_INFO'].match(config.blacklist_token_paths)
+                        env['PATH_INFO'].match(config.token_revocation_paths)
           token = HeaderParser.parse_from_env(env)
-          jti = TokenCoder.decode(token, config)['jti']
-          config.blacklist.push(jti)
+          payload = TokenCoder.decode(token, config)
+          config.revocation_strategy.revoke(payload)
         end
       end
     end

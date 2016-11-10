@@ -16,8 +16,8 @@ module Warden
 
       def self.decode(token, config)
         secret = config.secret
-        blacklist = config.blacklist
-        new.send(:decode, token, secret, blacklist)
+        revocation_strategy = config.revocation_strategy
+        new.send(:decode, token, secret, revocation_strategy)
       end
 
       private
@@ -27,16 +27,16 @@ module Warden
         JWT.encode(payload_to_encode, secret, ALG)
       end
 
-      def decode(token, secret, blacklist)
+      def decode(token, secret, revocation_strategy)
         payload = JWT.decode(token, secret, true,
                              algorithm: ALG,
                              verify_jti: true)[0]
-        check_in_blacklist(payload, blacklist) if blacklist
+        check_if_revoked(payload, revocation_strategy) if revocation_strategy
         payload
       end
 
-      def check_in_blacklist(payload, blacklist)
-        raise JWT::DecodeError if blacklist.member?(payload['jti'])
+      def check_if_revoked(payload, revocation_strategy)
+        raise JWT::DecodeError if revocation_strategy.revoked?(payload)
       end
 
       # :reek:UtilityFunction
