@@ -32,7 +32,7 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
     context 'when PATH_INFO matches configured response_token_paths' do
       it 'adds token to the response when user is logged in' do
-        login_as Fixtures.user
+        login_as Fixtures::User.new
 
         get '/sign_in'
 
@@ -48,7 +48,7 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
     context 'when PATH_INFO does not match configured response_token_paths' do
       it 'adds nothing to the response' do
-        login_as Fixtures.user
+        login_as Fixtures::User.new
 
         get '/another_path'
 

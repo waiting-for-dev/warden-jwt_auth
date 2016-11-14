@@ -49,12 +49,14 @@ describe Warden::JWTAuth::Strategy do
 
     context 'when token is valid' do
       let(:token) do
-        Warden::JWTAuth::TokenCoder.encode(Fixtures.user.jwt_subject, config)
+        Warden::JWTAuth::TokenCoder.encode(
+          Fixtures::User.new.jwt_subject, config
+        )
       end
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 
-      before { config.mappings = { user: Fixtures.user_repo } }
+      before { config.mappings = { user: Fixtures::UserRepo } }
 
       before { strategy.authenticate! }
 
@@ -63,7 +65,7 @@ describe Warden::JWTAuth::Strategy do
       end
 
       it 'logs in user returned by current mapping' do
-        expect(strategy.user).to eq(:an_user)
+        expect(strategy.user).to be_an_instance_of(Fixtures::User)
       end
     end
   end

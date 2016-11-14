@@ -10,7 +10,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   include_context 'configuration'
   include_context 'revocation'
 
-  let(:user) { Fixtures.user }
+  let(:user) { Fixtures::User.new }
   let(:token) { Warden::JWTAuth::TokenCoder.encode(user.jwt_subject, config) }
   let(:payload) { Warden::JWTAuth::TokenCoder.decode(token, config) }
 
