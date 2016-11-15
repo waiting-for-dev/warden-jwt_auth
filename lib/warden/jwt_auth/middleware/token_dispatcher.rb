@@ -35,7 +35,9 @@ module Warden
         def call_revocation_hook(token)
           revocation_strategy = config.revocation_strategy
           return unless revocation_strategy
-          payload = TokenCoder.decode(token, config)
+          payload = JWT.decode(token, config.secret, true,
+                               algorithm: TokenCoder::ALG,
+                               verify_jti: true)[0]
           revocation_strategy.after_jwt_dispatch(payload)
         end
       end
