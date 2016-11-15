@@ -54,14 +54,6 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
           config.revocation_strategy
         ).to have_received(:revoke).with(payload)
       end
-
-      it 'does not call the revocation strategy when user is not logged in' do
-        get '/sign_out'
-
-        expect(
-          config.revocation_strategy
-        ).not_to have_received(:revoke)
-      end
     end
 
     context 'when PATH_INFO does not match configured token_revocation_paths' do

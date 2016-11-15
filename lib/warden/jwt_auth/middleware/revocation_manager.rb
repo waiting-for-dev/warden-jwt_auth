@@ -24,9 +24,7 @@ module Warden
         private
 
         def revoke_token(env)
-          user = env['warden'].user
-          return unless user &&
-                        env['PATH_INFO'].match(config.token_revocation_paths)
+          return unless env['PATH_INFO'].match(config.token_revocation_paths)
           token = HeaderParser.parse_from_env(env)
           payload = TokenCoder.decode(token, config)
           config.revocation_strategy.revoke(payload)
