@@ -30,5 +30,8 @@ module Fixtures
     def revoked?(payload)
       revoked.member?(payload['jti'])
     end
+
+    def after_jwt_dispatch(_payload)
+    end
   end
 end

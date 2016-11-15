@@ -24,6 +24,12 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   end
 
   describe '#call(env)' do
+    include_context 'revocation'
+
+    before do
+      allow(revocation_strategy).to receive(:after_jwt_dispatch)
+    end
+
     it 'adds ENV_KEY key to env' do
       get '/'
 
@@ -39,20 +45,44 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
         expect(last_response.headers['Authorization']).not_to be_nil
       end
 
+      it 'calls revokation strategy hook when user is logged in' do
+        login_as Fixtures::User.new
+
+        get '/sign_in'
+
+        expect(config.revocation_strategy).to have_received(
+          :after_jwt_dispatch
+        )
+      end
+
       it 'adds nothing to the response when user is not logged in' do
         get '/sign_in'
 
         expect(last_response.headers['Authorization']).to be_nil
       end
+
+      it 'does not call revokation strategy hook when user is not logged in' do
+        expect(config.revocation_strategy).not_to have_received(
+          :after_jwt_dispatch
+        )
+      end
     end
 
     context 'when PATH_INFO does not match configured response_token_paths' do
-      it 'adds nothing to the response' do
+      before do
         login_as Fixtures::User.new
 
         get '/another_path'
+      end
 
+      it 'adds nothing to the response' do
         expect(last_response.headers['Authorization']).to be_nil
+      end
+
+      it 'does not call revokation strategy hook' do
+        expect(config.revocation_strategy).not_to have_received(
+          :after_jwt_dispatch
+        )
       end
     end
   end

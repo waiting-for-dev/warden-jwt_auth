@@ -17,18 +17,26 @@ module Warden
         def call(env)
           env[ENV_KEY] = true
           status, headers, response = @app.call(env)
-          add_token_to_response(env, headers)
+          manage_token_response(env, headers)
           [status, headers, response]
         end
 
         private
 
-        def add_token_to_response(env, headers)
+        def manage_token_response(env, headers)
           user = env['warden'].user
           return unless user &&
                         env['PATH_INFO'].match(config.response_token_paths)
           token = TokenCoder.encode(user.jwt_subject, config)
           HeaderParser.parse_to_headers(headers, token)
+          call_revocation_hook(token)
+        end
+
+        def call_revocation_hook(token)
+          revocation_strategy = config.revocation_strategy
+          return unless revocation_strategy
+          payload = TokenCoder.decode(token, config)
+          revocation_strategy.after_jwt_dispatch(payload)
         end
       end
     end
