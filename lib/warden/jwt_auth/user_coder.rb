@@ -6,11 +6,11 @@ module Warden
   module JWTAuth
     # Encode/decode a user
     class UserCoder
-      def self.encode(user, config)
+      def self.encode(user, config = JWTAuth.config)
         new.send(:encode, user, config)
       end
 
-      def self.decode(user, scope, config)
+      def self.decode(user, scope, config = JWTAuth.config)
         new.send(:decode, user, scope, config)
       end
 
