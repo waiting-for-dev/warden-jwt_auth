@@ -18,10 +18,7 @@ module Warden
       end
 
       def authenticate!
-        config = JWTAuth.config
-        payload = TokenCoder.decode(token, config)
-        mapping = config.mappings[scope]
-        user = mapping.find_for_jwt_authentication(payload['sub'])
+        user = UserCoder.decode(token, scope)
         success!(user)
       rescue JWT::DecodeError
         fail!
