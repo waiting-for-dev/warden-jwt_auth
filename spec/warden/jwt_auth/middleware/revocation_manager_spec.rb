@@ -12,7 +12,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
 
   let(:user) { Fixtures::User.new }
   let(:token) do
-    Warden::JWTAuth::TokenCoder.encode({ sub: user.jwt_subject }, config)
+    Warden::JWTAuth::UserCoder.encode(user, config)
   end
   let(:payload) { Warden::JWTAuth::TokenCoder.decode(token, config) }
 

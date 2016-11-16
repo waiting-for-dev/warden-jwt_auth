@@ -27,7 +27,7 @@ module Warden
           user = env['warden'].user
           return unless user &&
                         env['PATH_INFO'].match(config.response_token_paths)
-          token = TokenCoder.encode({ sub: user.jwt_subject }, config)
+          token = UserCoder.encode(user, config)
           HeaderParser.parse_to_headers(headers, token)
           call_revocation_hook(token)
         end
