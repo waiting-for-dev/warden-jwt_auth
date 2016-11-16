@@ -45,26 +45,10 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
         expect(last_response.headers['Authorization']).not_to be_nil
       end
 
-      it 'calls revokation strategy hook when user is logged in' do
-        login_as Fixtures::User.new
-
-        get '/sign_in'
-
-        expect(config.revocation_strategy).to have_received(
-          :after_jwt_dispatch
-        )
-      end
-
       it 'adds nothing to the response when user is not logged in' do
         get '/sign_in'
 
         expect(last_response.headers['Authorization']).to be_nil
-      end
-
-      it 'does not call revokation strategy hook when user is not logged in' do
-        expect(config.revocation_strategy).not_to have_received(
-          :after_jwt_dispatch
-        )
       end
     end
 
@@ -77,12 +61,6 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
       it 'adds nothing to the response' do
         expect(last_response.headers['Authorization']).to be_nil
-      end
-
-      it 'does not call revokation strategy hook' do
-        expect(config.revocation_strategy).not_to have_received(
-          :after_jwt_dispatch
-        )
       end
     end
   end

@@ -15,6 +15,10 @@ describe Warden::JWTAuth::UserCoder do
     it 'merges in user `jwt_subject` result as sub claim' do
       expect(decoded_payload['sub']).to eq(user.jwt_subject)
     end
+
+    it 'merges in user `jwt_payload` result' do
+      expect(decoded_payload['foo']).to eq(user.jwt_payload['foo'])
+    end
   end
 
   describe '::decode(token, scope, config)' do

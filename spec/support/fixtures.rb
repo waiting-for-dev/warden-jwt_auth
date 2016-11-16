@@ -6,6 +6,10 @@ module Fixtures
     def jwt_subject
       1
     end
+
+    def jwt_payload
+      { 'foo' => 'bar' }
+    end
   end
 
   # User repository

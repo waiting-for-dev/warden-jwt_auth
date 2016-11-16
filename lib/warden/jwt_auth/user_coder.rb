@@ -19,7 +19,7 @@ module Warden
       # :reek:UtilityFunction
       def encode(user, config)
         sub = user.jwt_subject
-        payload = { sub: sub }
+        payload = merge_user_payload(user, sub: sub)
         TokenCoder.encode(payload, config)
       end
 
@@ -28,6 +28,13 @@ module Warden
         payload = TokenCoder.decode(token, config)
         user_repo = config.mappings[scope]
         user_repo.find_for_jwt_authentication(payload['sub'])
+      end
+
+      # :reek:ManualDispatch
+      # :reek:UtilityFunction
+      def merge_user_payload(user, payload)
+        return payload unless user.respond_to?(:jwt_payload)
+        user.jwt_payload.merge(payload)
       end
     end
   end

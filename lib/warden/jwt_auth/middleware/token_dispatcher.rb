@@ -29,16 +29,6 @@ module Warden
                         env['PATH_INFO'].match(config.response_token_paths)
           token = UserCoder.encode(user, config)
           HeaderParser.parse_to_headers(headers, token)
-          call_revocation_hook(token)
-        end
-
-        def call_revocation_hook(token)
-          revocation_strategy = config.revocation_strategy
-          return unless revocation_strategy
-          payload = JWT.decode(token, config.secret, true,
-                               algorithm: TokenCoder::ALG,
-                               verify_jti: true)[0]
-          revocation_strategy.after_jwt_dispatch(payload)
         end
       end
     end
