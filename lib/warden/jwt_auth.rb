@@ -15,7 +15,6 @@ module Warden
 
     setting :secret
     setting :expiration_time, 3600 * 24 * 365
-    setting :blacklist
     setting :mappings, {}
     setting :response_token_paths, /\b\B/
     setting :token_revocation_paths, /\b\B/
