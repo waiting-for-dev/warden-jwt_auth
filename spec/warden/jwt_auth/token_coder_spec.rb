@@ -5,10 +5,10 @@ require 'spec_helper'
 describe Warden::JWTAuth::TokenCoder do
   include_context 'configuration'
 
-  describe '::encode(sub, config)' do
+  describe '::encode(payload, config)' do
     let(:expiration_time) { config.expiration_time }
-    let(:sub) { '1' }
-    let(:token) { described_class.encode(sub, config) }
+    let(:payload) { { 'foo' => 'bar' } }
+    let(:token) { described_class.encode(payload, config) }
     let(:decoded_payload) do
       ::JWT.decode(token, secret, true, algorithn: 'HS256')[0]
     end
@@ -17,8 +17,8 @@ describe Warden::JWTAuth::TokenCoder do
       expect { decoded_payload }.not_to raise_error
     end
 
-    it 'adds a sub claim with provided sub argument' do
-      expect(decoded_payload['sub']).to eq('1')
+    it 'merges in provided payload' do
+      expect(decoded_payload['foo']).to eq('bar')
     end
 
     it 'adds an `iat` claim with the issue time' do
@@ -35,6 +35,12 @@ describe Warden::JWTAuth::TokenCoder do
 
     it 'adds a `jti` claim with a random unique id' do
       expect(decoded_payload['jti']).not_to be_nil
+    end
+
+    it 'gives preference to provided payload over default payload' do
+      payload['jti'] = 'unique'
+
+      expect(decoded_payload['jti']).to eq('unique')
     end
   end
 
