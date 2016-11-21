@@ -12,8 +12,8 @@ module Warden
         new(config).send(:encode, user, scope)
       end
 
-      def self.decode(user, scope, config = JWTAuth.config)
-        new(config).send(:decode, user, scope)
+      def self.decode(token, scope, config = JWTAuth.config)
+        new(config).send(:decode, token, scope)
       end
 
       def initialize(config)
