@@ -27,7 +27,8 @@ module Warden
           return unless env['PATH_INFO'].match(config.token_revocation_paths)
           token = HeaderParser.parse_from_env(env)
           payload = TokenCoder.decode(token, config)
-          config.revocation_strategy.revoke(payload)
+          user = UserCoder.decode_from_payload(payload)
+          config.revocation_strategy.revoke(payload, user)
         end
       end
     end

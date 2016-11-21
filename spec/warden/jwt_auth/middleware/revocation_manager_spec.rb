@@ -11,7 +11,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
 
   let(:user) { Fixtures::User.new }
   let(:token) do
-    Warden::JWTAuth::UserCoder.encode(user, config)
+    Warden::JWTAuth::UserCoder.encode(user, :user, config)
   end
   let(:payload) { Warden::JWTAuth::TokenCoder.decode(token, config) }
 
@@ -36,7 +36,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
     before do
       allow(
         revocation_strategy
-      ).to receive(:revoke).with(payload)
+      ).to receive(:revoke)
     end
 
     it 'adds ENV_KEY key to env' do
@@ -53,7 +53,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
 
         expect(
           revocation_strategy
-        ).to have_received(:revoke).with(payload)
+        ).to have_received(:revoke)
       end
     end
 

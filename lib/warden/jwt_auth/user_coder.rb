@@ -16,6 +16,10 @@ module Warden
         new(config).send(:decode, token, scope)
       end
 
+      def self.decode_from_payload(payload, config = JWTAuth.config)
+        new(config).send(:decode_from_payload, payload)
+      end
+
       def initialize(config)
         @config = config
       end
@@ -34,6 +38,13 @@ module Warden
         user = user_repo.find_for_jwt_authentication(payload['sub'])
         check_if_revoked(payload, user)
         user
+      end
+
+      # :reek:FeatureEnvy
+      def decode_from_payload(payload)
+        scope = payload['scp'].to_sym
+        user_repo = config.mappings[scope]
+        user_repo.find_for_jwt_authentication(payload['sub'])
       end
 
       # :reek:ManualDispatch
