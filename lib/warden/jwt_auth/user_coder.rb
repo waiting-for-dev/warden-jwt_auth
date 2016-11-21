@@ -6,8 +6,8 @@ module Warden
   module JWTAuth
     # Encode/decode a user
     class UserCoder
-      def self.encode(user, config = JWTAuth.config)
-        new.send(:encode, user, config)
+      def self.encode(user, scope, config = JWTAuth.config)
+        new.send(:encode, user, scope, config)
       end
 
       def self.decode(user, scope, config = JWTAuth.config)
@@ -17,9 +17,9 @@ module Warden
       private
 
       # :reek:UtilityFunction
-      def encode(user, config)
+      def encode(user, scope, config)
         sub = user.jwt_subject
-        payload = merge_user_payload(user, sub: sub)
+        payload = merge_user_payload(user, sub: sub, scp: scope)
         TokenCoder.encode(payload, config)
       end
 

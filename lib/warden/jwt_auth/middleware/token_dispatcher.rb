@@ -17,18 +17,16 @@ module Warden
         def call(env)
           env[ENV_KEY] = true
           status, headers, response = @app.call(env)
-          manage_token_response(env, headers)
+          add_token_to_response(env, headers)
           [status, headers, response]
         end
 
         private
 
-        def manage_token_response(env, headers)
-          user = env['warden'].user
-          return unless user &&
-                        env['PATH_INFO'].match(config.response_token_paths)
-          token = UserCoder.encode(user, config)
-          HeaderParser.parse_to_headers(headers, token)
+        # :reek:UtilityFunction
+        def add_token_to_response(env, headers)
+          token = env['warden-jwt_auth.token']
+          HeaderParser.parse_to_headers(headers, token) if token
         end
       end
     end

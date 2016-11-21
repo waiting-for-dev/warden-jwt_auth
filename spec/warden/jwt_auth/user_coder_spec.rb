@@ -7,13 +7,17 @@ describe Warden::JWTAuth::UserCoder do
 
   describe '::encode(user, config)' do
     let(:user) { Fixtures::User.new }
-    let(:token) { described_class.encode(user, config) }
+    let(:token) { described_class.encode(user, :user, config) }
     let(:decoded_payload) do
       Warden::JWTAuth::TokenCoder.decode(token, config)
     end
 
     it 'merges in user `jwt_subject` result as sub claim' do
       expect(decoded_payload['sub']).to eq(user.jwt_subject)
+    end
+
+    it 'merges in given `scope` result as scp claim' do
+      expect(decoded_payload['scp']).to eq('user')
     end
 
     it 'merges in user `jwt_payload` result' do
