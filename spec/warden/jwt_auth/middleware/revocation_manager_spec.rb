@@ -8,7 +8,6 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   include Warden::Test::Helpers
 
   include_context 'configuration'
-  include_context 'revocation'
 
   let(:user) { Fixtures::User.new }
   let(:token) do
@@ -36,7 +35,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   describe '#call(env)' do
     before do
       allow(
-        config.revocation_strategy
+        revocation_strategy
       ).to receive(:revoke).with(payload)
     end
 
@@ -53,7 +52,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         get('/sign_out')
 
         expect(
-          config.revocation_strategy
+          revocation_strategy
         ).to have_received(:revoke).with(payload)
       end
     end
@@ -65,7 +64,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         get '/another_request'
 
         expect(
-          config.revocation_strategy
+          revocation_strategy
         ).not_to have_received(:revoke)
       end
     end

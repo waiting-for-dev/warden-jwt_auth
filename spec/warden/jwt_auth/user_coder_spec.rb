@@ -25,10 +25,6 @@ describe Warden::JWTAuth::UserCoder do
     let(:user) { Fixtures::User.new }
     let(:token) { described_class.encode(user, config) }
 
-    before do
-      config.mappings = { user: Fixtures::UserRepo }
-    end
-
     it 'returns encoded user' do
       expect(
         described_class.decode(token, :user, config)

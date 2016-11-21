@@ -53,8 +53,6 @@ describe Warden::JWTAuth::Strategy do
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 
-      before { config.mappings = { user: Fixtures::UserRepo } }
-
       before { strategy.authenticate! }
 
       it 'successes authentication' do

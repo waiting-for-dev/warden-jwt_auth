@@ -9,8 +9,6 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
 
   include_context 'configuration'
 
-  before { config.response_token_paths = '/sign_in' }
-
   let(:dummy_app) { ->(_env) { [200, {}, []] } }
   let(:this_app) { described_class.new(dummy_app, config) }
   let(:app) { Warden::Manager.new(this_app) }
@@ -24,12 +22,6 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   end
 
   describe '#call(env)' do
-    include_context 'revocation'
-
-    before do
-      allow(revocation_strategy).to receive(:after_jwt_dispatch)
-    end
-
     it 'adds ENV_KEY key to env' do
       get '/'
 

@@ -6,7 +6,6 @@ describe Warden::JWTAuth::TokenCoder do
   include_context 'configuration'
 
   describe '::encode(payload, config)' do
-    let(:expiration_time) { config.expiration_time }
     let(:payload) { { 'foo' => 'bar' } }
     let(:token) { described_class.encode(payload, config) }
     let(:decoded_payload) do
@@ -45,8 +44,6 @@ describe Warden::JWTAuth::TokenCoder do
   end
 
   describe '::decode(token)' do
-    include_context 'revocation'
-
     let(:payload) { { 'sub' => '1', 'jti' => '123' } }
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
 
