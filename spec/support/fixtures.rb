@@ -31,7 +31,7 @@ module Fixtures
       revoked << payload['jti']
     end
 
-    def revoked?(payload)
+    def revoked?(payload, _user)
       revoked.member?(payload['jti'])
     end
   end

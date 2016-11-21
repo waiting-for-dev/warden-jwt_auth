@@ -6,31 +6,34 @@ module Warden
   module JWTAuth
     # Encode/decode a user
     class UserCoder
+      attr_reader :config
+
       def self.encode(user, scope, config = JWTAuth.config)
-        new.send(:encode, user, scope, config)
+        new(config).send(:encode, user, scope)
       end
 
       def self.decode(user, scope, config = JWTAuth.config)
-        new.send(:decode, user, scope, config)
+        new(config).send(:decode, user, scope)
+      end
+
+      def initialize(config)
+        @config = config
       end
 
       private
 
-      # :reek:UtilityFunction
-      def encode(user, scope, config)
+      def encode(user, scope)
         sub = user.jwt_subject
         payload = merge_user_payload(user, sub: sub, scp: scope)
         TokenCoder.encode(payload, config)
       end
 
-      # :reek:UtilityFunction
-      # :reek:FeatureEnvy
-      def decode(token, scope, config)
+      def decode(token, scope)
         payload = TokenCoder.decode(token, config)
-        revocation_strategy = config.revocation_strategy
-        check_if_revoked(payload, revocation_strategy) if revocation_strategy
         user_repo = config.mappings[scope]
-        user_repo.find_for_jwt_authentication(payload['sub'])
+        user = user_repo.find_for_jwt_authentication(payload['sub'])
+        check_if_revoked(payload, user)
+        user
       end
 
       # :reek:ManualDispatch
@@ -40,8 +43,9 @@ module Warden
         user.jwt_payload.merge(payload)
       end
 
-      def check_if_revoked(payload, revocation_strategy)
-        raise JWT::DecodeError if revocation_strategy.revoked?(payload)
+      def check_if_revoked(payload, user)
+        strategy = config.revocation_strategy
+        raise JWT::DecodeError if strategy.revoked?(payload, user)
       end
     end
   end
