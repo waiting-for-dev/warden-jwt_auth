@@ -24,8 +24,11 @@ module Warden
       end
 
       # :reek:UtilityFunction
+      # :reek:FeatureEnvy
       def decode(token, scope, config)
         payload = TokenCoder.decode(token, config)
+        revocation_strategy = config.revocation_strategy
+        check_if_revoked(payload, revocation_strategy) if revocation_strategy
         user_repo = config.mappings[scope]
         user_repo.find_for_jwt_authentication(payload['sub'])
       end
@@ -35,6 +38,10 @@ module Warden
       def merge_user_payload(user, payload)
         return payload unless user.respond_to?(:jwt_payload)
         user.jwt_payload.merge(payload)
+      end
+
+      def check_if_revoked(payload, revocation_strategy)
+        raise JWT::DecodeError if revocation_strategy.revoked?(payload)
       end
     end
   end

@@ -28,8 +28,23 @@ describe Warden::JWTAuth::UserCoder do
   describe '::decode(token, scope, config)' do
     let(:user) { Fixtures::User.new }
     let(:token) { described_class.encode(user, config) }
+    let(:payload) { Warden::JWTAuth::TokenCoder.decode(token, config) }
 
     it 'returns encoded user' do
+      expect(
+        described_class.decode(token, :user, config)
+      ).to be_an_instance_of(Fixtures::User)
+    end
+
+    it 'raises a JWT::DecodeError if the token has been revoked' do
+      revocation_strategy.revoke(payload)
+
+      expect do
+        described_class.decode(token, :user, config)
+      end.to raise_error(JWT::DecodeError)
+    end
+
+    it 'does not raise a JWT::DecodeError if the token has not been revoked' do
       expect(
         described_class.decode(token, :user, config)
       ).to be_an_instance_of(Fixtures::User)

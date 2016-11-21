@@ -50,17 +50,5 @@ describe Warden::JWTAuth::TokenCoder do
     it 'decodes using HS256 algorithm and secret as key' do
       expect(described_class.decode(token, config)).to eq(payload)
     end
-
-    it 'raises a JWT::DecodeError if the token has been revoked' do
-      revocation_strategy.revoke(payload)
-
-      expect do
-        described_class.decode(token, config)
-      end.to raise_error(JWT::DecodeError)
-    end
-
-    it 'does not raise a JWT::DecodeError if the token has not been revoked' do
-      expect(described_class.decode(token, config)).to eq(payload)
-    end
   end
 end
