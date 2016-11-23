@@ -5,21 +5,28 @@ require 'warden/jwt_auth/middleware/revocation_manager'
 
 module Warden
   module JWTAuth
-    # Calls two actual middlewares
+    # Simple rack middleware which is just a wrapper for other middlewares which
+    # actually perform some work.
     class Middleware
       attr_reader :app, :config
 
-      def initialize(app)
+      def initialize(app, config = JWTAuth.config)
         @app = app
-        @config = JWTAuth.config
+        @config = config
       end
 
       def call(env)
-        builder = Rack::Builder.new(app)
-        builder.use(RevocationManager, config)
-        builder.use(TokenDispatcher, config)
+        builder = Rack::Builder.new
+        add_middlewares(builder)
         builder.run(app)
         builder.call(env)
+      end
+
+      private
+
+      def add_middlewares(builder)
+        builder.use(RevocationManager, config)
+        builder.use(TokenDispatcher, config)
       end
     end
   end

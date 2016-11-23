@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe Warden::JWTAuth::Strategy do
   include_context 'configuration'
+  include_context 'fixtures'
 
   describe '#valid?' do
     context 'when Authorization header is valid' do
@@ -48,8 +49,7 @@ describe Warden::JWTAuth::Strategy do
     end
 
     context 'when token is valid' do
-      let(:user) { Fixtures::User.new }
-      let(:token) { Warden::JWTAuth::UserCoder.encode(user, config) }
+      let(:token) { Warden::JWTAuth::UserCoder.encode(user, :user) }
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 
@@ -60,7 +60,7 @@ describe Warden::JWTAuth::Strategy do
       end
 
       it 'logs in user returned by current mapping' do
-        expect(strategy.user).to be_an_instance_of(Fixtures::User)
+        expect(strategy.user).to eq(user)
       end
     end
   end

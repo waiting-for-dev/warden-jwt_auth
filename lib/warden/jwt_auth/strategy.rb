@@ -4,7 +4,8 @@ require 'warden'
 
 module Warden
   module JWTAuth
-    # JWT strategy
+    # Warden strategy to authenticate an user through a JWT token in the
+    # `Authorization` request header
     # :reek:PrimmaDonnaMethod
     class Strategy < Warden::Strategies::Base
       attr_reader :token
@@ -27,7 +28,7 @@ module Warden
       private
 
       def token
-        @token ||= HeaderParser.parse_from_env(env)
+        @token ||= HeaderParser.from_env(env)
       end
     end
   end

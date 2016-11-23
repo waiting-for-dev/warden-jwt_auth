@@ -4,15 +4,12 @@ require 'spec_helper'
 require 'rack/test'
 
 describe Warden::JWTAuth::Middleware::TokenDispatcher do
-  include Rack::Test::Methods
-  include Warden::Test::Helpers
-
   include_context 'configuration'
+  include_context 'fixtures'
+  include_context 'middleware'
 
-  let(:user) { Fixtures::User.new }
-  let(:dummy_app) { ->(_env) { [200, {}, []] } }
   let(:this_app) { described_class.new(dummy_app, config) }
-  let(:app) { Warden::Manager.new(this_app) }
+  let(:app) { warden_app(this_app) }
 
   describe '::ENV_KEY' do
     it 'is warden-jwt_auth.token_dispatcher' do
@@ -47,6 +44,4 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
       end
     end
   end
-
-  after { Warden.test_reset! }
 end

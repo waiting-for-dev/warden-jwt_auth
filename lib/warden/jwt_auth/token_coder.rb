@@ -1,46 +1,61 @@
 # frozen_string_literal: true
 
-require 'jwt'
-
 module Warden
   module JWTAuth
-    # Encode/decode a token, adding some configurable claims to the payload
+    # Encodes/decodes a payload into a JWT token, adding some configurable
+    # claims
     class TokenCoder
+      # Algorithm used to encode
       ALG = 'HS256'
 
-      def self.encode(payload, config)
-        secret = config.secret
-        expiration_time = config.expiration_time
-        new.send(:encode, payload, expiration_time, secret)
+      attr_reader :config
+
+      # Encodes a payload into a JWT
+      #
+      # @param payload [Hash] what has to be encoded
+      # @return [String] JWT
+      def self.encode(payload, config = JWTAuth)
+        new(config).send(:encode, payload)
       end
 
-      def self.decode(token, config)
-        secret = config.secret
-        new.send(:decode, token, secret)
+      # Decodes the payload from a JWT as a hash
+      #
+      # @param token [String] a JWT
+      # @return [Hash] payload decoded from the JWT
+      def self.decode(token, config = JWTAuth)
+        new(config).send(:decode, token)
+      end
+
+      def initialize(config)
+        @config = config
       end
 
       private
 
-      def encode(payload, expiration_time, secret)
-        payload_to_encode = default_payload(expiration_time).merge(payload)
+      def encode(payload)
+        expiration_time = config.expiration_time
+        secret = config.secret
+        payload_to_encode = build_payload(payload, expiration_time)
         JWT.encode(payload_to_encode, secret, ALG)
       end
 
-      # :reek:UtilityFunction
-      def decode(token, secret)
-        JWT.decode(token, secret, true,
+      def decode(token)
+        secret = config.secret
+        JWT.decode(token,
+                   secret,
+                   true,
                    algorithm: ALG,
                    verify_jti: true)[0]
       end
 
       # :reek:UtilityFunction
-      def default_payload(expiration_time)
+      def build_payload(payload, expiration_time)
         now = Time.now.to_i
         {
           iat: now,
           exp: now + expiration_time,
           jti: SecureRandom.uuid
-        }
+        }.merge(payload)
       end
     end
   end

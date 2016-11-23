@@ -6,6 +6,14 @@ module Warden
     class Hooks
       attr_reader :config
 
+      # `env` key where JWT is added
+      PREPARED_TOKEN_ENV_KEY = 'warden-jwt_auth.token'
+
+      # Adds a token for the signed in user to the request `env` if current path
+      # matches with configuration. This will be picked up later on by a rack
+      # middleware which will add it to the response headers.
+      #
+      # @see https://github.com/hassox/warden/wiki/Callbacks
       def self.after_set_user(user, auth, opts)
         new.send(:prepare_token, user, auth, opts)
       end
@@ -20,15 +28,22 @@ module Warden
         env = auth.env
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
-        token = UserCoder.encode(user, scope)
-        env['warden-jwt_auth.token'] = token
+        token = UserCoder.encode(user, scope, config)
+        env[PREPARED_TOKEN_ENV_KEY] = token
       end
 
       def token_should_be_added?(scope, env)
+        jwt_scope?(scope) && path_matches?(env)
+      end
+
+      def jwt_scope?(scope)
         jwt_scopes = config.mappings.keys
-        return false unless jwt_scopes.include?(scope)
-        return false unless env['PATH_INFO'].match(config.response_token_paths)
-        true
+        jwt_scopes.include?(scope)
+      end
+
+      def path_matches?(env)
+        dispatch_paths = config.dispatch_paths
+        dispatch_paths && env['PATH_INFO'].match(dispatch_paths)
       end
     end
   end

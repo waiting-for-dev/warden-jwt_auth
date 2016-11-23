@@ -4,24 +4,19 @@ require 'spec_helper'
 require 'rack/test'
 
 describe Warden::JWTAuth::Middleware::RevocationManager do
-  include Rack::Test::Methods
-  include Warden::Test::Helpers
-
   include_context 'configuration'
+  include_context 'fixtures'
+  include_context 'middleware'
 
-  let(:user) { Fixtures::User.new }
-  let(:token) do
-    Warden::JWTAuth::UserCoder.encode(user, :user, config)
-  end
+  let(:token) { Warden::JWTAuth::UserCoder.encode(user, :user, config) }
   let(:payload) { Warden::JWTAuth::TokenCoder.decode(token, config) }
 
-  let(:dummy_app) { ->(_env) { [200, {}, []] } }
   let(:this_app) { described_class.new(dummy_app, config) }
-  let(:app) { Warden::Manager.new(this_app) }
+  let(:app) { warden_app(this_app) }
 
-  def sign_in
+  def sign_in_with_jwt
     header('Authorization', "Bearer #{token}")
-    login_as(user)
+    login_as(user, scope: :user)
   end
 
   describe '::ENV_KEY' do
@@ -33,39 +28,45 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   end
 
   describe '#call(env)' do
-    before do
-      allow(
-        revocation_strategy
-      ).to receive(:revoke)
-    end
-
     it 'adds ENV_KEY key to env' do
       get '/'
 
       expect(last_request.env[described_class::ENV_KEY]).to eq(true)
     end
 
-    context 'when PATH_INFO matches configured revocation_token_paths' do
-      it 'calls the revocation strategy when user is logged in' do
-        sign_in
-
-        get('/sign_out')
+    context 'when PATH_INFO matches with configured' do
+      it 'calls revocation strategy with decoded payload and user' do
+        sign_in_with_jwt
 
         expect(
           revocation_strategy
-        ).to have_received(:revoke)
+        ).to receive(:revoke).with(payload, user)
+
+        get('/sign_out')
       end
     end
 
-    context 'when PATH_INFO does not match configured token_revocation_paths' do
+    context 'when PATH_INFO does not match with configured' do
       it 'does not call the revocation strategy' do
-        sign_in
-
-        get '/another_request'
+        sign_in_with_jwt
 
         expect(
           revocation_strategy
-        ).not_to have_received(:revoke)
+        ).not_to receive(:revoke)
+
+        get '/another_request'
+      end
+    end
+
+    context 'when token is not present in request headers' do
+      it 'does not call the revocation strategy' do
+        login_as user, scope: :user
+
+        expect(
+          revocation_strategy
+        ).not_to receive(:revoke).with(payload, user)
+
+        get('/sign_out')
       end
     end
   end

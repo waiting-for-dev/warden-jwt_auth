@@ -4,27 +4,21 @@ require 'spec_helper'
 require 'rack/test'
 
 describe Warden::JWTAuth::Middleware do
-  include Rack::Test::Methods
-
   include_context 'configuration'
-
-  let(:dummy_app) { ->(_env) { [200, {}, []] } }
-  let(:this_app) { described_class.new(dummy_app) }
+  include_context 'middleware'
 
   describe '#call(env)' do
-    let(:app) { Warden::Manager.new(this_app) }
+    let(:app) { described_class.new(dummy_app) }
 
-    before do
-      get '/'
-    end
+    before { get '/' }
 
-    it 'calls TokenDispatcher middleware' do
+    it 'adds TokenDispatcher middleware' do
       env_key = Warden::JWTAuth::Middleware::TokenDispatcher::ENV_KEY
 
       expect(last_request.env[env_key]).to eq(true)
     end
 
-    it 'calls RevocationManager middleware' do
+    it 'adds RevocationManager middleware' do
       env_key = Warden::JWTAuth::Middleware::RevocationManager::ENV_KEY
 
       expect(last_request.env[env_key]).to eq(true)

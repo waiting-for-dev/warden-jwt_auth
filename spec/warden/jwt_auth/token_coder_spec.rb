@@ -9,7 +9,7 @@ describe Warden::JWTAuth::TokenCoder do
     let(:payload) { { 'foo' => 'bar' } }
     let(:token) { described_class.encode(payload, config) }
     let(:decoded_payload) do
-      ::JWT.decode(token, secret, true, algorithn: 'HS256')[0]
+      JWT.decode(token, secret, true, algorithn: 'HS256')[0]
     end
 
     it 'encodes given payload using HS256 algorithm and secret as key' do
@@ -36,7 +36,7 @@ describe Warden::JWTAuth::TokenCoder do
       expect(decoded_payload['jti']).not_to be_nil
     end
 
-    it 'gives preference to provided payload over default payload' do
+    it 'when merging provided payload overrides automatic payload' do
       payload['jti'] = 'unique'
 
       expect(decoded_payload['jti']).to eq('unique')
@@ -47,7 +47,7 @@ describe Warden::JWTAuth::TokenCoder do
     let(:payload) { { 'sub' => '1', 'jti' => '123' } }
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
 
-    it 'decodes using HS256 algorithm and secret as key' do
+    it 'returns the payload encoded in the token' do
       expect(described_class.decode(token, config)).to eq(payload)
     end
   end

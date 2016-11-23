@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require 'singleton'
+
 module Fixtures
   # An user record
   class User
+    include Singleton
+
     def jwt_subject
       1
     end
@@ -15,7 +19,7 @@ module Fixtures
   # User repository
   class UserRepo
     def self.find_for_jwt_authentication(_sub)
-      User.new
+      User.instance
     end
   end
 
@@ -27,7 +31,7 @@ module Fixtures
       @revoked = []
     end
 
-    def revoke(payload)
+    def revoke(payload, _user)
       revoked << payload['jti']
     end
 
