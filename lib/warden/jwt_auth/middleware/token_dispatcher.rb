@@ -19,16 +19,16 @@ module Warden
         def call(env)
           env[ENV_KEY] = true
           status, headers, response = app.call(env)
-          add_token_to_response(env, headers)
+          headers = headers_with_token(env, headers)
           [status, headers, response]
         end
 
         private
 
         # :reek:UtilityFunction
-        def add_token_to_response(env, headers)
+        def headers_with_token(env, headers)
           token = env[Hooks::PREPARED_TOKEN_ENV_KEY]
-          HeaderParser.to_headers(headers, token) if token
+          token ? HeaderParser.to_headers(headers, token) : headers
         end
       end
     end
