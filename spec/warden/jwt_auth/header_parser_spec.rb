@@ -37,6 +37,16 @@ describe Warden::JWTAuth::HeaderParser do
     end
   end
 
+  describe '#to_env(env, token)' do
+    it 'adds token in the env Authorization header with Bearer method' do
+      env = {}
+
+      described_class.to_env(env, '123')
+
+      expect(env).to eq('HTTP_AUTHORIZATION' => 'Bearer 123')
+    end
+  end
+
   describe '#to_headers(headers, token)' do
     it 'adds token in the Authorization header with Bearer method' do
       headers = {}

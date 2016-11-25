@@ -20,6 +20,15 @@ module Warden
         method == METHOD ? token : nil
       end
 
+      # Parses the token to rack `env`
+      #
+      # @param env [Hash] rack env hash
+      # @param token [String] JWT token
+      # @return [Hash] modified rack env
+      def self.to_env(env, token)
+        env['HTTP_AUTHORIZATION'] = "#{METHOD} #{token}"
+      end
+
       # Adds a token to response headers
       #
       # @param headers [Hash] rack hash response headers
