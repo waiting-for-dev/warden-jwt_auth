@@ -7,7 +7,7 @@ module Warden
     # Layer above token encryption which directly encodes/decodes a user to/from
     # a JWT
     class UserCoder
-      attr_reader :config
+      attr_reader :config, :helper
 
       # Encodes a user for given scope into a JWT. Payload generated includes a
       # `sub` claim which is build calling `jwt_subject` in `user`, and a custom
@@ -36,53 +36,29 @@ module Warden
         new(config).send(:decode, token, scope)
       end
 
-      def self.decode_from_payload(payload, config = JWTAuth.config)
-        new(config).send(:decode_from_payload, payload)
-      end
-
       def initialize(config)
         @config = config
+        @helper = PayloadUserHelper
       end
 
       private
 
       def encode(user, scope)
-        payload = payload_to_ecode(user, scope)
+        payload = helper.payload_for_user(user, scope)
         TokenCoder.encode(payload, config)
       end
 
       def decode(token, scope)
         payload = TokenCoder.decode(token, config)
-        raise Errors::WrongScope if wrong_scope?(payload, scope)
-        user = decode_from_payload(payload)
+        raise Errors::WrongScope unless helper.scope_matches?(payload, scope)
+        user = helper.find_user(payload, config)
         raise Errors::RevokedToken if revoked?(payload, user)
         user
-      end
-
-      # :reek:FeatureEnvy
-      def decode_from_payload(payload)
-        scope = payload['scp'].to_sym
-        user_repo = config.mappings[scope]
-        user_repo.find_for_jwt_authentication(payload['sub'])
-      end
-
-      # :reek:ManualDispatch
-      # :reek:UtilityFunction
-      def payload_to_ecode(user, scope)
-        sub = user.jwt_subject
-        payload = { sub: sub, scp: scope }
-        return payload unless user.respond_to?(:jwt_payload)
-        user.jwt_payload.merge(payload)
       end
 
       def revoked?(payload, user)
         strategy = config.revocation_strategy
         strategy.revoked?(payload, user)
-      end
-
-      # :reek:UtilityFunction
-      def wrong_scope?(payload, scope)
-        payload['scp'] != scope.to_s
       end
     end
   end

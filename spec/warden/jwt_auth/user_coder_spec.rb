@@ -44,12 +44,4 @@ describe Warden::JWTAuth::UserCoder do
       end.to raise_error(Warden::JWTAuth::Errors::WrongScope)
     end
   end
-
-  describe '::decode_from_payload(payload, config)' do
-    it 'returns encoded user' do
-      expect(
-        described_class.decode_from_payload(payload, config)
-      ).to eq(user)
-    end
-  end
 end

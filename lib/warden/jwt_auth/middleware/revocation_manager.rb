@@ -28,7 +28,7 @@ module Warden
           token = HeaderParser.from_env(env)
           return unless token && token_should_be_added?(env)
           payload = TokenCoder.decode(token, config)
-          user = UserCoder.decode_from_payload(payload)
+          user = PayloadUserHelper.find_user(payload, config)
           config.revocation_strategy.revoke(payload, user)
         end
 
