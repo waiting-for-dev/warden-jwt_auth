@@ -17,7 +17,7 @@ module Warden
   # JWT authentication plugin for warden.
   #
   # It consists of a strategy which tries to authenticate an user decoding a
-  # token present in the `Authentication` header (as `Bearer #{token}`).
+  # token present in the `Authentication` header (as `Bearer %token%`).
   # From it, it takes the `sub` claim and provides it to a configured repository
   # of users for the current scope.
   #

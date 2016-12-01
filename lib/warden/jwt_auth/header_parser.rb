@@ -5,7 +5,7 @@ module Warden
     # Helpers to parse token from a request and to a response
     module HeaderParser
       # Method for `Authorization` header. Token is present in request/response
-      # headers as `Bearer #{token}`
+      # headers as `Bearer %token%`
       METHOD = 'Bearer'
 
       # Parses the token from a rack request
