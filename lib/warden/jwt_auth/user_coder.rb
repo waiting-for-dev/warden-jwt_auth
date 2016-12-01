@@ -14,7 +14,7 @@ module Warden
       # `scp` claim which value is `scope` as a string. The result of
       # calling `jwt_payload` in user is also merged into the payload.
       #
-      # @param user [#jwt_subject#jwt_payload] an user, whatever it is
+      # @param user [Interfaces::User] an user, whatever it is
       # @param scope [Symbol] Warden scope
       # @return [String] encoded JWT
       def self.encode(user, scope, config = JWTAuth.config)
@@ -27,7 +27,7 @@ module Warden
       #
       # @param token [String] a JWT
       # @param scope [Symbol] Warden scope
-      # @return [#jwt_subject#jwt_payload] an user, whatever it is
+      # @return [Interfaces::User] an user, whatever it is
       # @raise [Errors::RevokedToken] when token has been revoked for the
       # encoded user
       # @raise [Errors::WrongScope] when encoded scope does not match with scope

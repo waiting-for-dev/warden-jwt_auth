@@ -7,7 +7,7 @@ module Warden
       # Returns user encoded in given payload
       #
       # @param payload [Hash] JWT payload
-      # @return [#jwt_subject#jwt_payload] an user, whatever it is
+      # @return [Interfaces::User] an user, whatever it is
       def self.find_user(payload, config = JWTAuth.config)
         scope = payload['scp'].to_sym
         user_repo = config.mappings[scope]
@@ -23,7 +23,7 @@ module Warden
 
       # Returns the payload to encode for a given user in a scope
       #
-      # @param user [#jwt_subject#jwt_payload] an user, whatever it is
+      # @param user [Interfaces::User] an user, whatever it is
       # @param scope [Symbol] A Warden scope
       # @return [Hash] payload to encode
       # :reek:ManualDispatch
