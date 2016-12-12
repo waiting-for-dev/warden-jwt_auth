@@ -11,7 +11,7 @@ describe 'Authorization', type: :feature do
 
   context 'when a valid token is provided' do
     it 'authenticates the user' do
-      token = generate_token(user, :user)
+      token = generate_token(config, user, :user)
       env = env_with_token(pristine_env, token)
 
       status = call_app(app, env, '/')[0]
@@ -33,7 +33,7 @@ describe 'Authorization', type: :feature do
 
   context 'when provided token has been revoked' do
     it 'does not authenticate the user' do
-      token = generate_token(user, :user)
+      token = generate_token(config, user, :user)
       env = env_with_token(pristine_env, token)
 
       call_app(app, env, '/sign_out')
@@ -45,7 +45,7 @@ describe 'Authorization', type: :feature do
 
   context 'when provided token is from another scope' do
     it 'does not authenticate the user' do
-      token = generate_token(user, :unknown)
+      token = generate_token(config, user, :unknown)
       env = env_with_token(pristine_env, token)
 
       status = call_app(app, env, '/')[0]

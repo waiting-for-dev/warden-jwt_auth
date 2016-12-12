@@ -11,7 +11,7 @@ describe 'Token revocation', type: :feature do
 
   context 'when path matches with configured' do
     it 'revokes the token' do
-      token = generate_token(user, :user)
+      token = generate_token(config, user, :user)
       env = env_with_token(pristine_env, token)
 
       call_app(app, env, '/sign_out')
@@ -23,7 +23,7 @@ describe 'Token revocation', type: :feature do
 
   context 'when path does not match with configured' do
     it 'does not revoke the token' do
-      token = generate_token(user, :user)
+      token = generate_token(config, user, :user)
       env = env_with_token(pristine_env, token)
 
       call_app(app, env, '/')

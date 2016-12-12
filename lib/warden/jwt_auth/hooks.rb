@@ -28,7 +28,7 @@ module Warden
         env = auth.env
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
-        token = UserCoder.encode(user, scope, config)
+        token = UserEncoder.new(config).call(user, scope)
         env[PREPARED_TOKEN_ENV_KEY] = token
       end
 

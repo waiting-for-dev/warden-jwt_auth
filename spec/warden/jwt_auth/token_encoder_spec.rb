@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-describe Warden::JWTAuth::TokenCoder do
+describe Warden::JWTAuth::TokenEncoder do
   include_context 'configuration'
 
-  describe '::encode(payload, config)' do
+  describe '#call(payload)' do
     let(:payload) { { 'foo' => 'bar' } }
-    let(:token) { described_class.encode(payload, config) }
+    let(:token) { described_class.new(config).call(payload) }
     let(:decoded_payload) do
       JWT.decode(token, secret, true, algorithn: 'HS256')[0]
     end
@@ -40,15 +40,6 @@ describe Warden::JWTAuth::TokenCoder do
       payload['jti'] = 'unique'
 
       expect(decoded_payload['jti']).to eq('unique')
-    end
-  end
-
-  describe '::decode(token)' do
-    let(:payload) { { 'sub' => '1', 'jti' => '123' } }
-    let(:token) { ::JWT.encode(payload, secret, 'HS256') }
-
-    it 'returns the payload encoded in the token' do
-      expect(described_class.decode(token, config)).to eq(payload)
     end
   end
 end

@@ -49,7 +49,7 @@ describe Warden::JWTAuth::Strategy do
     end
 
     context 'when token is valid' do
-      let(:token) { Warden::JWTAuth::UserCoder.encode(user, :user) }
+      let(:token) { Warden::JWTAuth::UserEncoder.new(config).call(user, :user) }
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:strategy) { described_class.new(env, :user) }
 

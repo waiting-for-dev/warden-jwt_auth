@@ -19,7 +19,7 @@ module Warden
       end
 
       def authenticate!
-        user = UserCoder.decode(token, scope)
+        user = UserDecoder.new.call(token, scope)
         success!(user)
       rescue JWT::DecodeError
         fail!
