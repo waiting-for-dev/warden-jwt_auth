@@ -10,9 +10,9 @@ module Warden
 
         attr_reader :app, :config
 
-        def initialize(app, config = JWTAuth.config)
+        def initialize(app)
           @app = app
-          @config = config
+          @config = JWTAuth.config
         end
 
         def call(env)
@@ -27,8 +27,8 @@ module Warden
         def revoke_token(env)
           token = HeaderParser.from_env(env)
           return unless token && token_should_be_added?(env)
-          payload = TokenDecoder.new(config).call(token)
-          user = PayloadUserHelper.find_user(payload, config)
+          payload = TokenDecoder.new.call(token)
+          user = PayloadUserHelper.find_user(payload)
           config.revocation_strategy.revoke(payload, user)
         end
 

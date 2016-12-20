@@ -10,7 +10,7 @@ describe Warden::JWTAuth::TokenDecoder do
     let(:token) { ::JWT.encode(payload, secret, 'HS256') }
 
     it 'returns the payload encoded in the token' do
-      expect(described_class.new(config).call(token)).to eq(payload)
+      expect(described_class.new.call(token)).to eq(payload)
     end
   end
 end

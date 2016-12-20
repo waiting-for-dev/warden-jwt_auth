@@ -8,7 +8,7 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
   include_context 'fixtures'
   include_context 'middleware'
 
-  let(:this_app) { described_class.new(dummy_app, config) }
+  let(:this_app) { described_class.new(dummy_app) }
   let(:app) { warden_app(this_app) }
 
   describe '::ENV_KEY' do

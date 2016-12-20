@@ -8,25 +8,19 @@ module Warden
     # Simple rack middleware which is just a wrapper for other middlewares which
     # actually perform some work.
     class Middleware
-      attr_reader :app, :config
+      attr_reader :app
 
-      def initialize(app, config = JWTAuth.config)
+      def initialize(app)
         @app = app
-        @config = config
       end
 
+      # :reek:FeatureEnvy
       def call(env)
         builder = Rack::Builder.new
-        add_middlewares(builder)
+        builder.use(RevocationManager)
+        builder.use(TokenDispatcher)
         builder.run(app)
         builder.call(env)
-      end
-
-      private
-
-      def add_middlewares(builder)
-        builder.use(RevocationManager, config)
-        builder.use(TokenDispatcher, config)
       end
     end
   end

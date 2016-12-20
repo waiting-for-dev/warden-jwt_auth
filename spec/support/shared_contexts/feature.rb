@@ -16,9 +16,10 @@ shared_context 'feature' do
 
   let(:pristine_env) { {} }
 
+  # :reek:FeatureEnvy
   def build_app(app)
     builder = Rack::Builder.new
-    builder.use Warden::JWTAuth::Middleware, config
+    builder.use Warden::JWTAuth::Middleware
     add_warden(builder)
     builder.run(app)
     builder
@@ -40,8 +41,8 @@ shared_context 'feature' do
   end
 
   # :reek:UtilityFunction
-  def generate_token(config, user, scope)
-    Warden::JWTAuth::UserEncoder.new(config).call(user, scope)
+  def generate_token(user, scope)
+    Warden::JWTAuth::UserEncoder.new.call(user, scope)
   end
 
   # :reek:UtilityFunction

@@ -9,11 +9,10 @@ module Warden
         # Debugging key added to `env`
         ENV_KEY = 'warden-jwt_auth.token_dispatcher'
 
-        attr_reader :app, :config
+        attr_reader :app
 
-        def initialize(app, config = JWTAuth.config)
+        def initialize(app)
           @app = app
-          @config = config
         end
 
         def call(env)

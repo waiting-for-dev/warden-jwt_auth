@@ -7,7 +7,7 @@ describe Warden::JWTAuth::TokenEncoder do
 
   describe '#call(payload)' do
     let(:payload) { { 'foo' => 'bar' } }
-    let(:token) { described_class.new(config).call(payload) }
+    let(:token) { described_class.new.call(payload) }
     let(:decoded_payload) do
       JWT.decode(token, secret, true, algorithn: 'HS256')[0]
     end

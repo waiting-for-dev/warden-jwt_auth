@@ -8,7 +8,8 @@ module Warden
       #
       # @param payload [Hash] JWT payload
       # @return [Interfaces::User] an user, whatever it is
-      def self.find_user(payload, config = JWTAuth.config)
+      def self.find_user(payload)
+        config = JWTAuth.config
         scope = payload['scp'].to_sym
         user_repo = config.mappings[scope]
         user_repo.find_for_jwt_authentication(payload['sub'])

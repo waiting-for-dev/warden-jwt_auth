@@ -8,8 +8,8 @@ module Warden
     class UserDecoder
       attr_reader :config, :helper
 
-      def initialize(config = JWTAuth.config)
-        @config = config
+      def initialize
+        @config = JWTAuth.config
         @helper = PayloadUserHelper
       end
 
@@ -25,9 +25,9 @@ module Warden
       # @raise [Errors::WrongScope] when encoded scope does not match with scope
       # argument
       def call(token, scope)
-        payload = TokenDecoder.new(config).call(token)
+        payload = TokenDecoder.new.call(token)
         raise Errors::WrongScope unless helper.scope_matches?(payload, scope)
-        user = helper.find_user(payload, config)
+        user = helper.find_user(payload)
         raise Errors::RevokedToken if revoked?(payload, user)
         user
       end

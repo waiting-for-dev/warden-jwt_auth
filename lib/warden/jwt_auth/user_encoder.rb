@@ -6,10 +6,9 @@ module Warden
   module JWTAuth
     # Layer above token encoding which directly encodes a user to a JWT
     class UserEncoder
-      attr_reader :config, :helper
+      attr_reader :helper
 
-      def initialize(config = JWTAuth.config)
-        @config = config
+      def initialize
         @helper = PayloadUserHelper
       end
 
@@ -23,7 +22,7 @@ module Warden
       # @return [String] encoded JWT
       def call(user, scope)
         payload = helper.payload_for_user(user, scope)
-        TokenEncoder.new(config).call(payload)
+        TokenEncoder.new.call(payload)
       end
     end
   end

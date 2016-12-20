@@ -6,8 +6,8 @@ module Warden
     class TokenDecoder
       attr_reader :config
 
-      def initialize(config = JWTAuth.config)
-        @config = config
+      def initialize
+        @config = JWTAuth.config
       end
 
       # Decodes the payload from a JWT as a hash

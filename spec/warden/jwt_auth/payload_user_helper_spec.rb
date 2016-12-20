@@ -6,11 +6,11 @@ describe Warden::JWTAuth::PayloadUserHelper do
   include_context 'configuration'
   include_context 'fixtures'
 
-  describe '::find_user(payload, config)' do
+  describe '::find_user(payload)' do
     it 'returns user encoded in a payload for given scope' do
       payload = { 'sub' => 1, 'scp' => 'user' }
 
-      expect(described_class.find_user(payload, config)).to eq(user)
+      expect(described_class.find_user(payload)).to eq(user)
     end
   end
 

@@ -10,8 +10,8 @@ module Warden
 
       attr_reader :config
 
-      def initialize(config = JWTAuth.config)
-        @config = config
+      def initialize
+        @config = JWTAuth.config
       end
 
       # Encodes a payload into a JWT
