@@ -6,10 +6,12 @@ module Warden
   module JWTAuth
     # Layer above token decoding which directly decodes a user from a JWT
     class UserDecoder
-      attr_reader :config, :helper
+      include JWTAuth::Import['revocation_strategy']
 
-      def initialize
-        @config = JWTAuth.config
+      attr_reader :helper
+
+      def initialize(*args)
+        super
         @helper = PayloadUserHelper
       end
 
@@ -35,7 +37,7 @@ module Warden
       private
 
       def revoked?(payload, user)
-        strategy = config.revocation_strategy
+        strategy = revocation_strategy
         strategy.revoked?(payload, user)
       end
     end

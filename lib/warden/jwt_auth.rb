@@ -1,19 +1,9 @@
 # frozen_string_literal: true
 
 require 'dry/configurable'
+require 'dry/auto_inject'
 require 'jwt'
 require 'warden'
-require 'warden/jwt_auth/version'
-require 'warden/jwt_auth/header_parser'
-require 'warden/jwt_auth/payload_user_helper'
-require 'warden/jwt_auth/user_encoder'
-require 'warden/jwt_auth/user_decoder'
-require 'warden/jwt_auth/token_encoder'
-require 'warden/jwt_auth/token_decoder'
-require 'warden/jwt_auth/hooks'
-require 'warden/jwt_auth/strategy'
-require 'warden/jwt_auth/middleware'
-require 'warden/jwt_auth/interfaces'
 
 module Warden
   # JWT authentication plugin for warden.
@@ -53,5 +43,19 @@ module Warden
     #
     # @see Interfaces::RevocationStrategy
     setting :revocation_strategy
+
+    Import = Dry::AutoInject(config)
   end
 end
+
+require 'warden/jwt_auth/version'
+require 'warden/jwt_auth/header_parser'
+require 'warden/jwt_auth/payload_user_helper'
+require 'warden/jwt_auth/user_encoder'
+require 'warden/jwt_auth/user_decoder'
+require 'warden/jwt_auth/token_encoder'
+require 'warden/jwt_auth/token_decoder'
+require 'warden/jwt_auth/hooks'
+require 'warden/jwt_auth/strategy'
+require 'warden/jwt_auth/middleware'
+require 'warden/jwt_auth/interfaces'

@@ -4,7 +4,7 @@ module Warden
   module JWTAuth
     # Warden hooks
     class Hooks
-      attr_reader :config
+      include JWTAuth::Import['mappings', 'dispatch_paths']
 
       # `env` key where JWT is added
       PREPARED_TOKEN_ENV_KEY = 'warden-jwt_auth.token'
@@ -16,10 +16,6 @@ module Warden
       # @see https://github.com/hassox/warden/wiki/Callbacks
       def self.after_set_user(user, auth, opts)
         new.send(:prepare_token, user, auth, opts)
-      end
-
-      def initialize
-        @config = JWTAuth.config
       end
 
       private
@@ -37,12 +33,12 @@ module Warden
       end
 
       def jwt_scope?(scope)
-        jwt_scopes = config.mappings.keys
+        jwt_scopes = mappings.keys
         jwt_scopes.include?(scope)
       end
 
+      # :reek:UtilityFunction
       def path_matches?(env)
-        dispatch_paths = config.dispatch_paths
         dispatch_paths && env['PATH_INFO'].match(dispatch_paths)
       end
     end
