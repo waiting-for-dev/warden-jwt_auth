@@ -26,13 +26,11 @@ module Warden
 
         def revoke_token(env)
           token = HeaderParser.from_env(env)
-          return unless token && token_should_be_added?(env)
-          payload = TokenDecoder.new.call(token)
-          user = PayloadUserHelper.find_user(payload)
-          config.revocation_strategy.revoke(payload, user)
+          return unless token && token_should_be_revoked?(env)
+          TokenRevoker.new.call(token)
         end
 
-        def token_should_be_added?(env)
+        def token_should_be_revoked?(env)
           revocation_paths = config.revocation_paths
           revocation_paths && env['PATH_INFO'].match(revocation_paths)
         end
