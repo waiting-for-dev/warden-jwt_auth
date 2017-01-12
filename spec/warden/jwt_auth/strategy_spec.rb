@@ -6,6 +6,12 @@ describe Warden::JWTAuth::Strategy do
   include_context 'configuration'
   include_context 'fixtures'
 
+  it 'adds JWTAuth::Strategy to Warden with jwt name' do
+    expect(Warden::Strategies._strategies).to include(
+      jwt: described_class
+    )
+  end
+
   describe '#valid?' do
     context 'when Authorization header is valid' do
       it 'returns true' do
