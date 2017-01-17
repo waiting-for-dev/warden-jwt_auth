@@ -30,15 +30,15 @@ describe Warden::JWTAuth::Middleware::TokenDispatcher do
       it 'adds it to the Authorization header' do
         login_as user, scope: :user
 
-        get '/sign_in'
+        post '/sign_in'
 
         expect(last_response.headers['Authorization']).not_to be_nil
       end
     end
 
     context 'when token has not been added to env' do
-      it 'adds nothing when user is not logged in' do
-        get '/sign_in'
+      it 'adds nothing to the Authorization header' do
+        post '/sign_in'
 
         expect(last_response.headers['Authorization']).to be_nil
       end

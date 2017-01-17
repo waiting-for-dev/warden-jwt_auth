@@ -14,7 +14,7 @@ describe 'Authorization', type: :feature do
       token = generate_token(user, :user)
       env = env_with_token(pristine_env, token)
 
-      status = call_app(app, env, '/')[0]
+      status = call_app(app, env, ['GET', '/'])[0]
 
       expect(status).to eq(200)
     end
@@ -25,7 +25,7 @@ describe 'Authorization', type: :feature do
       token = '123'
       env = env_with_token(pristine_env, token)
 
-      status = call_app(app, env, '/')[0]
+      status = call_app(app, env, ['GET', '/'])[0]
 
       expect(status).to eq(401)
     end
@@ -36,8 +36,8 @@ describe 'Authorization', type: :feature do
       token = generate_token(user, :user)
       env = env_with_token(pristine_env, token)
 
-      call_app(app, env, '/sign_out')
-      status = call_app(app, env, '/')[0]
+      call_app(app, env, ['DELETE', '/sign_out'])
+      status = call_app(app, env, ['GET', '/'])[0]
 
       expect(status).to eq(401)
     end
@@ -48,7 +48,7 @@ describe 'Authorization', type: :feature do
       token = generate_token(user, :unknown)
       env = env_with_token(pristine_env, token)
 
-      status = call_app(app, env, '/')[0]
+      status = call_app(app, env, ['GET', '/'])[0]
 
       expect(status).to eq(401)
     end

@@ -29,7 +29,7 @@ module Warden
       end
 
       def token_should_be_added?(scope, env)
-        jwt_scope?(scope) && path_matches?(env)
+        jwt_scope?(scope) && request_matches?(env)
       end
 
       def jwt_scope?(scope)
@@ -37,9 +37,14 @@ module Warden
         jwt_scopes.include?(scope)
       end
 
-      # :reek:UtilityFunction
-      def path_matches?(env)
-        dispatch_paths && env['PATH_INFO'].match(dispatch_paths)
+      # :reek:FeatureEnvy
+      def request_matches?(env)
+        dispatch_paths.each do |tuple|
+          method, path = tuple
+          return true if env['PATH_INFO'].match(path) &&
+                         env['REQUEST_METHOD'] == method
+        end
+        false
       end
     end
   end

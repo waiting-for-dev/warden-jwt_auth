@@ -31,13 +31,34 @@ module Warden
     # @see Interfaces::User
     setting :mappings, {}
 
-    # Regular expression to match request paths where a JWT token should be
-    # added to the `Authorization` response header
-    setting :dispatch_paths, nil
+    # Array of tuples [request_method, request_path_regex] to match request
+    # verbs and paths where a JWT token should be added to the `Authorization`
+    # response header
+    #
+    # @example
+    #  [
+    #    ['POST', %r{^/sign_in$}]
+    #  ]
+    setting(:dispatch_paths, []) do |value|
+      value.map do |tuple|
+        method, path = tuple
+        [method.to_s.upcase, path]
+      end
+    end
 
-    # Regular expression to match request paths where incoming JWT token should
-    # be revoked
-    setting :revocation_paths, nil
+    # Array of tuples [request_method, request_path_regex] to match request
+    # verbs and paths where incoming JWT token should be be revoked
+    #
+    # @example
+    #  [
+    #    ['DELETE', %r{^/sign_out$}]
+    #  ]
+    setting :revocation_paths, [] do |value|
+      value.map do |tuple|
+        method, path = tuple
+        [method.to_s.upcase, path]
+      end
+    end
 
     # Strategy to revoke tokens
     #

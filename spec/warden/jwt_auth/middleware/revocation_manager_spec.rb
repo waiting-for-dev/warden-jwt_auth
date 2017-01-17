@@ -34,19 +34,28 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
       expect(last_request.env[described_class::ENV_KEY]).to eq(true)
     end
 
-    context 'when PATH_INFO matches with configured' do
+    context 'when path and method match' do
       it 'revokes the token' do
         sign_in_with_jwt
-        get('/sign_out')
+        delete '/sign_out'
 
         expect(revocation_strategy.revoked?(payload, user)).to eq(true)
       end
     end
 
-    context 'when PATH_INFO does not match with configured' do
+    context 'when path does not match' do
       it 'does not call the revocation strategy' do
         sign_in_with_jwt
-        get '/another_request'
+        delete '/another_request'
+
+        expect(revocation_strategy.revoked?(payload, user)).to eq(false)
+      end
+    end
+
+    context 'when verb does not match' do
+      it 'does not call the revocation strategy' do
+        sign_in_with_jwt
+        post '/sign_out'
 
         expect(revocation_strategy.revoked?(payload, user)).to eq(false)
       end
@@ -55,7 +64,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
     context 'when token is not present in request headers' do
       it 'does not call the revocation strategy' do
         login_as user, scope: :user
-        get('/sign_out')
+        delete '/sign_out'
         sign_in_with_jwt
 
         expect(revocation_strategy.revoked?(payload, user)).to eq(false)

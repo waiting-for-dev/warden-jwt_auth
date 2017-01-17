@@ -30,9 +30,15 @@ module Warden
           TokenRevoker.new.call(token)
         end
 
+        # :reek:FeatureEnvy
         def token_should_be_revoked?(env)
           revocation_paths = config.revocation_paths
-          revocation_paths && env['PATH_INFO'].match(revocation_paths)
+          revocation_paths.each do |tuple|
+            method, path = tuple
+            return true if env['PATH_INFO'].match(path) &&
+                           env['REQUEST_METHOD'] == method
+          end
+          false
         end
       end
     end

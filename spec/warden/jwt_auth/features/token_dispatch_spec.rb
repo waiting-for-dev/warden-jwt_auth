@@ -23,9 +23,9 @@ describe 'Token dispatch', type: :feature do
     build_app(dispatch_app)
   end
 
-  context 'when path matches with configured' do
+  context 'when path and method match with configured' do
     it 'adds the token to Authorization response header' do
-      headers = call_app(signed_in_app, pristine_env, '/sign_in')[1]
+      headers = call_app(signed_in_app, pristine_env, ['POST', '/sign_in'])[1]
 
       expect(headers).to have_key('Authorization')
     end
@@ -33,7 +33,15 @@ describe 'Token dispatch', type: :feature do
 
   context 'when path does not match with configured' do
     it 'does not add the token to the response' do
-      headers = call_app(signed_in_app, pristine_env, '/')[1]
+      headers = call_app(signed_in_app, pristine_env, ['POST', '/'])[1]
+
+      expect(headers).not_to have_key('Authorization')
+    end
+  end
+
+  context 'when method does not match with configured' do
+    it 'does not add the token to the response' do
+      headers = call_app(signed_in_app, pristine_env, ['GET', '/sign_in'])[1]
 
       expect(headers).not_to have_key('Authorization')
     end
@@ -41,7 +49,7 @@ describe 'Token dispatch', type: :feature do
 
   context 'when user is not set' do
     it 'does not raise an error' do
-      status = call_app(not_signed_in_app, pristine_env, '/')[0]
+      status = call_app(not_signed_in_app, pristine_env, ['GET', '/'])[0]
 
       expect(status).to eq(200)
     end

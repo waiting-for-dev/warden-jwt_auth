@@ -34,9 +34,11 @@ shared_context 'feature' do
   end
 
   # :reek:UtilityFunction
-  def call_app(app, env, path)
+  def call_app(app, env, request_tuple)
+    method, path = request_tuple
     env = env.dup
     env['PATH_INFO'] = path
+    env['REQUEST_METHOD'] = method
     app.call(env)
   end
 

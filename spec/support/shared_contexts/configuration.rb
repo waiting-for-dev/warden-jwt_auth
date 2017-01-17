@@ -4,8 +4,8 @@ shared_context 'configuration' do
   before do
     Warden::JWTAuth.configure do |config|
       config.secret = '123'
-      config.dispatch_paths = %r{^/sign_in$}
-      config.revocation_paths = %r{^/sign_out$}
+      config.dispatch_paths = [['POST', %r{^/sign_in$}]]
+      config.revocation_paths = [['DELETE', %r{^/sign_out$}]]
       config.revocation_strategy = Fixtures::RevocationStrategy.new
       config.mappings = { user: Fixtures::UserRepo }
     end

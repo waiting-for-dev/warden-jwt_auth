@@ -16,31 +16,41 @@ describe Warden::JWTAuth::Hooks do
       request.env['warden-jwt_auth.token']
     end
 
-    context 'when path matches and user is set for a known mapping' do
+    context 'when method and path match and scope is known ' do
       it 'codes a token and adds it to env' do
         login_as user, scope: :user
 
-        get '/sign_in'
+        post '/sign_in'
 
         expect(token(last_request)).not_to be_nil
       end
     end
 
-    context 'when path matches and user is set for a unknown mapping' do
+    context 'when scope is unknown' do
       it 'does nothing' do
         login_as user, scope: :unknown
 
-        get '/sign_in'
+        post '/sign_in'
 
         expect(token(last_request)).to be_nil
       end
     end
 
-    context 'when path does not match even if user is for a known mapping' do
+    context 'when path does not match' do
       it 'does nothing' do
         login_as user, scope: :user
 
-        get '/'
+        post '/'
+
+        expect(token(last_request)).to be_nil
+      end
+    end
+
+    context 'when method does not match' do
+      it 'does nothing' do
+        login_as user, scope: :user
+
+        get '/sign_in'
 
         expect(token(last_request)).to be_nil
       end
