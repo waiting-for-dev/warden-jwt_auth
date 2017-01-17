@@ -39,7 +39,7 @@ module Warden
     #  [
     #    ['POST', %r{^/sign_in$}]
     #  ]
-    setting(:dispatch_paths, []) do |value|
+    setting(:dispatch_requests, []) do |value|
       value.map do |tuple|
         method, path = tuple
         [method.to_s.upcase, path]
@@ -53,7 +53,7 @@ module Warden
     #  [
     #    ['DELETE', %r{^/sign_out$}]
     #  ]
-    setting :revocation_paths, [] do |value|
+    setting :revocation_requests, [] do |value|
       value.map do |tuple|
         method, path = tuple
         [method.to_s.upcase, path]

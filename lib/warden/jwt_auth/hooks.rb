@@ -4,7 +4,7 @@ module Warden
   module JWTAuth
     # Warden hooks
     class Hooks
-      include JWTAuth::Import['mappings', 'dispatch_paths']
+      include JWTAuth::Import['mappings', 'dispatch_requests']
 
       # `env` key where JWT is added
       PREPARED_TOKEN_ENV_KEY = 'warden-jwt_auth.token'
@@ -39,7 +39,7 @@ module Warden
 
       # :reek:FeatureEnvy
       def request_matches?(env)
-        dispatch_paths.each do |tuple|
+        dispatch_requests.each do |tuple|
           method, path = tuple
           return true if env['PATH_INFO'].match(path) &&
                          env['REQUEST_METHOD'] == method
