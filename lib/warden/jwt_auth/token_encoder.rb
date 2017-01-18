@@ -21,13 +21,13 @@ module Warden
 
       private
 
+      #:reek:FeatureEnvy
       def merge_with_default_claims(payload)
         now = Time.now.to_i
-        {
-          iat: now,
-          exp: now + expiration_time,
-          jti: SecureRandom.uuid
-        }.merge(payload)
+        payload['iat']  ||= now
+        payload['exp']  ||= now + expiration_time
+        payload['jti']  ||= SecureRandom.uuid
+        payload
       end
     end
   end
