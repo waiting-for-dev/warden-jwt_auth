@@ -31,11 +31,11 @@ module Fixtures
       @revoked = []
     end
 
-    def revoke(payload, _user)
+    def revoke_jwt(payload, _user)
       revoked << payload['jti']
     end
 
-    def revoked?(payload, _user)
+    def jwt_revoked?(payload, _user)
       revoked.member?(payload['jti'])
     end
   end

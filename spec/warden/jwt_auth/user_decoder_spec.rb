@@ -17,7 +17,7 @@ describe Warden::JWTAuth::UserDecoder do
     end
 
     it 'raises RevokedToken if the token has been revoked' do
-      revocation_strategy.revoke(payload, user)
+      revocation_strategy.revoke_jwt(payload, user)
 
       expect do
         described_class.new.call(token, :user)

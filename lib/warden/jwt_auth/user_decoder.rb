@@ -38,7 +38,7 @@ module Warden
 
       def revoked?(payload, user)
         strategy = revocation_strategy
-        strategy.revoked?(payload, user)
+        strategy.jwt_revoked?(payload, user)
       end
     end
   end

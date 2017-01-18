@@ -13,11 +13,11 @@ describe Warden::JWTAuth::TokenRevoker do
     it 'revokes given token' do
       described_class.new.call(token)
 
-      expect(revocation_strategy.revoked?(payload, user)).to eq(true)
+      expect(revocation_strategy.jwt_revoked?(payload, user)).to eq(true)
     end
 
     it 'revokes calling revocation_strategy with decoded payload and user' do
-      expect(revocation_strategy).to(receive(:revoke).with(payload, user))
+      expect(revocation_strategy).to(receive(:revoke_jwt).with(payload, user))
 
       described_class.new.call(token)
     end

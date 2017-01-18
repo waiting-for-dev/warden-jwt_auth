@@ -12,7 +12,7 @@ module Warden
       def call(token)
         payload = TokenDecoder.new.call(token)
         user = PayloadUserHelper.find_user(payload)
-        revocation_strategy.revoke(payload, user)
+        revocation_strategy.revoke_jwt(payload, user)
       end
     end
   end

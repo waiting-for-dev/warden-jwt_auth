@@ -39,7 +39,7 @@ module Warden
         #
         # @param _payload [Hash]
         # @param _user [User]
-        def revoke(_payload, _user)
+        def revoke_jwt(_payload, _user)
           raise NotImplementedError
         end
 
@@ -48,7 +48,7 @@ module Warden
         # @param _payload [Hash]
         # @param _user [User]
         # @return [Boolean]
-        def revoked?(_payload, _user)
+        def jwt_revoked?(_payload, _user)
           raise NotImplementedError
         end
       end

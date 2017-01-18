@@ -39,7 +39,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         sign_in_with_jwt
         delete '/sign_out'
 
-        expect(revocation_strategy.revoked?(payload, user)).to eq(true)
+        expect(revocation_strategy.jwt_revoked?(payload, user)).to eq(true)
       end
     end
 
@@ -48,7 +48,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         sign_in_with_jwt
         delete '/another_request'
 
-        expect(revocation_strategy.revoked?(payload, user)).to eq(false)
+        expect(revocation_strategy.jwt_revoked?(payload, user)).to eq(false)
       end
     end
 
@@ -57,7 +57,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         sign_in_with_jwt
         post '/sign_out'
 
-        expect(revocation_strategy.revoked?(payload, user)).to eq(false)
+        expect(revocation_strategy.jwt_revoked?(payload, user)).to eq(false)
       end
     end
 
@@ -67,7 +67,7 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
         delete '/sign_out'
         sign_in_with_jwt
 
-        expect(revocation_strategy.revoked?(payload, user)).to eq(false)
+        expect(revocation_strategy.jwt_revoked?(payload, user)).to eq(false)
       end
     end
   end
