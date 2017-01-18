@@ -28,6 +28,8 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   end
 
   describe '#call(env)' do
+    let(:revocation_strategy) { revocation_strategies[:user] }
+
     it 'adds ENV_KEY key to env' do
       get '/'
 

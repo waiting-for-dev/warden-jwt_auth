@@ -7,6 +7,8 @@ describe Warden::JWTAuth::TokenRevoker do
   include_context 'fixtures'
 
   describe '#call(token)' do
+    let(:revocation_strategy) { revocation_strategies[:user] }
+
     let(:token) { Warden::JWTAuth::UserEncoder.new.call(user, :user) }
     let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
 

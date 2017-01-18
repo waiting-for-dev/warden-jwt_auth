@@ -6,7 +6,7 @@ module Warden
   module JWTAuth
     # Layer above token decoding which directly decodes a user from a JWT
     class UserDecoder
-      include JWTAuth::Import['revocation_strategy']
+      include JWTAuth::Import['revocation_strategies']
 
       attr_reader :helper
 
@@ -30,14 +30,14 @@ module Warden
         payload = TokenDecoder.new.call(token)
         raise Errors::WrongScope unless helper.scope_matches?(payload, scope)
         user = helper.find_user(payload)
-        raise Errors::RevokedToken if revoked?(payload, user)
+        raise Errors::RevokedToken if revoked?(payload, user, scope)
         user
       end
 
       private
 
-      def revoked?(payload, user)
-        strategy = revocation_strategy
+      def revoked?(payload, user, scope)
+        strategy = revocation_strategies[scope]
         strategy.jwt_revoked?(payload, user)
       end
     end

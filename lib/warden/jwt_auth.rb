@@ -60,10 +60,16 @@ module Warden
       end
     end
 
-    # Strategy to revoke tokens
+    # Hash with scopes as keys and values with the strategy to revoke tokens for
+    # that scope
+    #
+    # @example
+    #  {
+    #    user: UserRevocationStrategy
+    #  }
     #
     # @see Interfaces::RevocationStrategy
-    setting :revocation_strategy
+    setting :revocation_strategies
 
     Import = Dry::AutoInject(config)
   end
