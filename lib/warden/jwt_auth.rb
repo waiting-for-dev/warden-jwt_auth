@@ -29,7 +29,13 @@ module Warden
     #
     # @see Interfaces::UserRepository
     # @see Interfaces::User
-    setting :mappings, {}
+    setting(:mappings, {}) do |value|
+      Hash[
+        value.each_pair do |scope, mapping|
+          [scope.to_sym, mapping]
+        end
+      ]
+    end
 
     # Array of tuples [request_method, request_path_regex] to match request
     # verbs and paths where a JWT token should be added to the `Authorization`
@@ -69,7 +75,13 @@ module Warden
     #  }
     #
     # @see Interfaces::RevocationStrategy
-    setting :revocation_strategies
+    setting(:revocation_strategies, {}) do |value|
+      Hash[
+        value.each_pair do |scope, strategy|
+          [scope.to_sym, strategy]
+        end
+      ]
+    end
 
     Import = Dry::AutoInject(config)
   end
