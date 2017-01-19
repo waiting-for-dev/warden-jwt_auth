@@ -10,8 +10,8 @@ module Warden
       PREPARED_TOKEN_ENV_KEY = 'warden-jwt_auth.token'
 
       # Adds a token for the signed in user to the request `env` if current path
-      # matches with configuration. This will be picked up later on by a rack
-      # middleware which will add it to the response headers.
+      # and verb match with configuration. This will be picked up later on by a
+      # rack middleware which will add it to the response headers.
       #
       # @see https://github.com/hassox/warden/wiki/Callbacks
       def self.after_set_user(user, auth, opts)

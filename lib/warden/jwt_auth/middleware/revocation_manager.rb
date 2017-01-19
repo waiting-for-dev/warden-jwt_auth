@@ -3,7 +3,7 @@
 module Warden
   module JWTAuth
     class Middleware
-      # Revokes a token if it request patch matches with configured
+      # Revokes a token if it path and method match with configured
       class RevocationManager < Middleware
         # Debugging key added to `env`
         ENV_KEY = 'warden-jwt_auth.revocation_manager'
