@@ -17,7 +17,7 @@ describe 'Token dispatch', type: :feature do
   end
 
   let(:not_signed_in_app) do
-    dispatch_app = lambda do |env|
+    dispatch_app = lambda do
       success_response
     end
     build_app(dispatch_app)
