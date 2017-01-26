@@ -1,5 +1,6 @@
 # Warden::JWTAuth
 
+[![Build Status](https://travis-ci.org/waiting-for-dev/warden-jwt_auth.svg?branch=master)](https://travis-ci.org/waiting-for-dev/warden-jwt_auth)
 [![Code Climate](https://codeclimate.com/github/waiting-for-dev/warden-jwt_auth/badges/gpa.svg)](https://codeclimate.com/github/waiting-for-dev/warden-jwt_auth)
 [![Test Coverage](https://codeclimate.com/github/waiting-for-dev/warden-jwt_auth/badges/coverage.svg)](https://codeclimate.com/github/waiting-for-dev/warden-jwt_auth/coverage)
 
