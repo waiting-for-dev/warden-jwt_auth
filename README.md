@@ -33,9 +33,9 @@ Or install it yourself as:
 
 At its core, this library consists of:
 
-- A Warden strategy that authenticates if a valid JWT token is present in the request headers.
-- A rack middleware which adds a valid JWT token to the response headers in configured requests.
-- A rack middleware which revokes a JWT token in configured requests.
+- A Warden strategy that authenticates a user if a valid JWT token is present in the request headers.
+- A rack middleware which adds a JWT token to the response headers in configured requests.
+- A rack middleware which revokes JWT tokens in configured requests.
 
 As you see, JWT revocation is supported. I wrote [why I think JWT tokens revocation is useful and needed](http://waiting-for-dev.github.io/blog/2017/01/23/stand_up_for_jwt_revocation/).
 
@@ -49,13 +49,13 @@ Warden::JWTAuth.configure do |config|
 end
 ```
 
-**Important:** You are encouraged to use a dedicated secret different than others in use in your application. If several components share the same secret key, chances that a vulnerability in one of them has a wider impact increase. Also, never share your secrets pushing it to a remote repository, you are better off using an environment variable like in the example.
+**Important:** You are encouraged to use a dedicated secret key, different than others in use in your application. If several components share the same secret key, chances that a vulnerability in one of them has a wider impact increase. Also, never share your secrets pushing it to a remote repository, you are better off using an environment variable like in the example.
 
 Currently, HS256 algorithm is the one in use.
 
 ### Warden scopes configuration
 
-You have to map the warden scopes that will be authenticatables through JWT, with the user repositories from where these scope user records can be fetched.
+You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched.
 
 For instance:
 
@@ -63,7 +63,7 @@ For instance:
 config.mappings = { user: UserRepository }
 ```
 
-For this example, `UserRepository` must implement a method `find_for_jwt_authentication` that takes as argument the `sub` claim in the JWT payload. This method should return the authenticated user record from `:user` scope:
+For this example, `UserRepository` must implement a method `find_for_jwt_authentication` that takes as argument the `sub` claim in the JWT payload. This method should return a user record from `:user` scope:
 
 ```ruby
 module UserRepository
@@ -74,7 +74,7 @@ module UserRepository
 end
 ```
 
-Returned user records, must implement a `jwt_subject` returning what should be encoded in the `sub` claim on dispatch time.
+User records must implement a `jwt_subject` method returning what should be encoded in the `sub` claim on dispatch time.
 
 ```ruby
 User = Struct.new(:id, :name)
@@ -141,6 +141,8 @@ config.revocation_strategies = { user: RevocationStrategy }
 ```
 
 The implementation of the revocation strategy is also on your side. They just need to implement two methods: `jwt_revoked?` and `revoke_jwt`, both of them accepting as parameters the JWT payload and the user record, in this order.
+
+You can read about which [JWT recovation strategies](http://waiting-for-dev.github.io/blog/2017/01/24/jwt_revocation_strategies/) can be implement with their pros and cons.
 
 ```ruby
 module RevocationStrategy
