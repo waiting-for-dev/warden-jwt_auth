@@ -3,6 +3,9 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'warden/jwt_auth'
 require 'pry-byebug'
+require 'simplecov'
+
+SimpleCov.start
 
 SPEC_ROOT = Pathname(__FILE__).dirname
 
