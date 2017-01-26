@@ -12,6 +12,7 @@ CommitMsg:
     exclude: &default_excludes
       - Gemfile
       - warden-jwt_auth.gemspec
+      - README.md
 
   HardTabs:
     enabled: true
