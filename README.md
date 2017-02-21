@@ -32,6 +32,8 @@ Or install it yourself as:
 
 ## Usage
 
+You can look at this gem's wiki to see some [example applications](https://github.com/waiting-for-dev/warden-jwt_auth/wiki). Please, add yours if you think it can help somebody.
+
 At its core, this library consists of:
 
 - A Warden strategy that authenticates a user if a valid JWT token is present in the request headers.
