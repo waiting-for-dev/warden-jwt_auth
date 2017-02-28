@@ -11,6 +11,7 @@ CommitMsg:
     required: true
     exclude: &default_excludes
       - Gemfile
+      - CHANGELOG.md
       - warden-jwt_auth.gemspec
       - README.md
 
