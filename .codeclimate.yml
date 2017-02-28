@@ -15,3 +15,5 @@ ratings:
   - "**.rb"
 exclude_paths:
   - spec/
+  - Gemfile
+  - warden-jwt_auth.gemspec
