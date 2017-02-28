@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module Warden
   module JWTAuth
     # Encodes a payload into a JWT token, adding some configurable
