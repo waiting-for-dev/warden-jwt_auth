@@ -30,11 +30,7 @@ module Warden
     # @see Interfaces::UserRepository
     # @see Interfaces::User
     setting(:mappings, {}) do |value|
-      Hash[
-        value.each_pair do |scope, mapping|
-          [scope.to_sym, mapping]
-        end
-      ]
+      symbolize_keys(value)
     end
 
     # Array of tuples [request_method, request_path_regex] to match request
@@ -46,10 +42,7 @@ module Warden
     #    ['POST', %r{^/sign_in$}]
     #  ]
     setting(:dispatch_requests, []) do |value|
-      value.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
-      end
+      upcase_first_items(value)
     end
 
     # Array of tuples [request_method, request_path_regex] to match request
@@ -60,10 +53,7 @@ module Warden
     #    ['DELETE', %r{^/sign_out$}]
     #  ]
     setting :revocation_requests, [] do |value|
-      value.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
-      end
+      upcase_first_items(value)
     end
 
     # Hash with scopes as keys and values with the strategy to revoke tokens for
@@ -76,11 +66,24 @@ module Warden
     #
     # @see Interfaces::RevocationStrategy
     setting(:revocation_strategies, {}) do |value|
+      symbolize_keys(value)
+    end
+
+    # :reek:UtilityFunction
+    def self.symbolize_keys(hash)
       Hash[
-        value.each_pair do |scope, strategy|
-          [scope.to_sym, strategy]
+        hash.each_pair do |key, value|
+          [key.to_sym, value]
         end
       ]
+    end
+
+    # :reek:UtilityFunction
+    def self.upcase_first_items(array)
+      array.map do |tuple|
+        method, path = tuple
+        [method.to_s.upcase, path]
+      end
     end
 
     Import = Dry::AutoInject(config)
