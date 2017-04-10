@@ -23,5 +23,15 @@ describe Warden::JWTAuth::TokenRevoker do
 
       described_class.new.call(token)
     end
+
+    context 'when token is expired' do
+      before { Warden::JWTAuth.config.expiration_time = 0.01 }
+
+      it 'silently ignores it' do
+        expect { described_class.new.call(token) }.not_to raise_error
+      end
+
+      after { Warden::JWTAuth.config.expiration_time = 3600 }
+    end
   end
 end
