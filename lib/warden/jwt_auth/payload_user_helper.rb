@@ -30,7 +30,7 @@ module Warden
       # :reek:ManualDispatch
       def self.payload_for_user(user, scope)
         sub = user.jwt_subject
-        payload = { 'sub' => sub, 'scp' => scope.to_s }
+        payload = { 'sub' => sub.to_s, 'scp' => scope.to_s }
         return payload unless user.respond_to?(:jwt_payload)
         user.jwt_payload.merge(payload)
       end
