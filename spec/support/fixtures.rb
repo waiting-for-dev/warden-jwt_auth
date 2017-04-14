@@ -8,7 +8,7 @@ module Fixtures
     include Singleton
 
     def jwt_subject
-      "1"
+      '1'
     end
 
     def jwt_payload
