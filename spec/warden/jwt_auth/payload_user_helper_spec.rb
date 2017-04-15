@@ -39,6 +39,12 @@ describe Warden::JWTAuth::PayloadUserHelper do
       expect(payload['sub']).to eq(user.jwt_subject)
     end
 
+    it 'coercers sub claim to string to conform with RFC7519' do
+      allow(user).to receive(:jwt_subject).and_return(2)
+
+      expect(payload['sub']).to eq('2')
+    end
+
     it 'adds a `scp` claim with given scope' do
       expect(payload['scp']).to eq('user')
     end
