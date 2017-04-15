@@ -9,7 +9,7 @@ module Warden
       class UserRepository
         # Finds and returns an [User]
         #
-        # @param _sub [BasicObject] JWT sub claim
+        # @param _sub [String] JWT sub claim
         # @return [User]
         def find_for_jwt_authentication(_sub)
           raise NotImplementedError
@@ -18,9 +18,9 @@ module Warden
 
       # An user
       class User
-        # What will be encoded as `sub` claim
+        # What will be encoded as `sub` claim. It must respond to `#to_s`.
         #
-        # @return [BasicObject] `sub` claim
+        # @return [#to_s] `sub` claim
         def jwt_subject
           raise NotImplementedError
         end

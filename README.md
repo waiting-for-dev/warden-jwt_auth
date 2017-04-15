@@ -77,7 +77,7 @@ module UserRepository
 end
 ```
 
-User records must implement a `jwt_subject` method returning what should be encoded in the `sub` claim on dispatch time.
+User records must implement a `jwt_subject` method returning what should be encoded in the `sub` claim on dispatch time. Be aware that what is returned must be coercible to string in order to conform with [RFC7519 standard for `sub` claim](https://tools.ietf.org/html/rfc7519#section-4.1.2).
 
 ```ruby
 User = Struct.new(:id, :name)
