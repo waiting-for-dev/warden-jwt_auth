@@ -41,7 +41,7 @@ module Warden
       def request_matches?(env)
         dispatch_requests.each do |tuple|
           method, path = tuple
-          return true if env['PATH_INFO'].match(path) &&
+          return true if env['PATH_INFO'].to_s.match(path) &&
                          env['REQUEST_METHOD'] == method
         end
         false
