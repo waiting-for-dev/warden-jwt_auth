@@ -8,6 +8,9 @@ module Warden
 
       # Decodes the payload from a JWT as a hash
       #
+      # @see JWT.decode for all the exceptions than can be raised when given
+      # token is invalid
+      #
       # @param token [String] a JWT
       # @return [Hash] payload decoded from the JWT
       def call(token)
