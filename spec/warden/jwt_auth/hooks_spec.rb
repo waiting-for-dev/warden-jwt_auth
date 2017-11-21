@@ -8,7 +8,7 @@ describe Warden::JWTAuth::Hooks do
   include_context 'middleware'
   include_context 'fixtures'
 
-  context 'After set user' do
+  context 'with user set' do
     let(:app) { warden_app(dummy_app) }
 
     # :reek:UtilityFunction

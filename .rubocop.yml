@@ -5,6 +5,9 @@ RSpec/NestedGroups:
   Max: 3
 RSpec/MessageSpies:
   EnforcedStyle: 'receive'
+RSpec/ContextWording:
+  Exclude:
+    - "spec/support/shared_contexts/*rb"
 Metrics/BlockLength:
   Exclude:
     - "spec/**/*.rb"

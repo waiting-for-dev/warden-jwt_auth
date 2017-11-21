@@ -6,10 +6,9 @@ module Warden
   module JWTAuth
     # Warden strategy to authenticate an user through a JWT token in the
     # `Authorization` request header
-    # :reek:PrimmaDonnaMethod
+    # :reek:PrimaDonnaMethod
     class Strategy < Warden::Strategies::Base
-      attr_reader :token
-
+      # :reek:NeelCheck
       def valid?
         !token.nil?
       end
