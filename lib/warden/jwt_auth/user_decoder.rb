@@ -29,7 +29,7 @@ module Warden
       # argument
       def call(token, scope)
         payload = TokenDecoder.new.call(token)
-        raise Errors::WrongScope unless helper.scope_matches?(payload, scope)
+        raise Errors::WrongScope, 'wrong scope' unless helper.scope_matches?(payload, scope)
         user = helper.find_user(payload)
         check_valid_user(payload, user, scope)
         user
@@ -43,8 +43,8 @@ module Warden
       end
 
       def check_valid_user(payload, user, scope)
-        raise Errors::NilUser unless user
-        raise Errors::RevokedToken if revoked?(payload, user, scope)
+        raise Errors::NilUser, 'nil user' unless user
+        raise Errors::RevokedToken, 'revoked token' if revoked?(payload, user, scope)
       end
     end
   end

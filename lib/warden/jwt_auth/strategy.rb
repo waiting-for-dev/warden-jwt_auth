@@ -20,8 +20,8 @@ module Warden
       def authenticate!
         user = UserDecoder.new.call(token, scope)
         success!(user)
-      rescue JWT::DecodeError
-        fail!
+      rescue JWT::DecodeError => e
+        fail!(e.message)
       end
 
       private
