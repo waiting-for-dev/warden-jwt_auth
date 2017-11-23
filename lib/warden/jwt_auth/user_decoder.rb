@@ -24,13 +24,14 @@ module Warden
       # @return [Interfaces::User] an user, whatever it is
       # @raise [Errors::RevokedToken] when token has been revoked for the
       # encoded user
+      # @raise [Errors::NilUser] when decoded user is nil
       # @raise [Errors::WrongScope] when encoded scope does not match with scope
       # argument
       def call(token, scope)
         payload = TokenDecoder.new.call(token)
         raise Errors::WrongScope unless helper.scope_matches?(payload, scope)
         user = helper.find_user(payload)
-        raise Errors::RevokedToken if revoked?(payload, user, scope)
+        check_valid_user(payload, user, scope)
         user
       end
 
@@ -39,6 +40,11 @@ module Warden
       def revoked?(payload, user, scope)
         strategy = revocation_strategies[scope]
         strategy.jwt_revoked?(payload, user)
+      end
+
+      def check_valid_user(payload, user, scope)
+        raise Errors::NilUser unless user
+        raise Errors::RevokedToken if revoked?(payload, user, scope)
       end
     end
   end

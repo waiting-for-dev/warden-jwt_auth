@@ -23,6 +23,14 @@ module Fixtures
     end
   end
 
+  # User repository that mimics returning a nil user (probably a user that has
+  # been deleted)
+  class NilUserRepo
+    def self.find_for_jwt_authentication(_sub)
+      nil
+    end
+  end
+
   # A dummy revocation strategy which keeps the state in its instances
   class RevocationStrategy
     attr_reader :revoked

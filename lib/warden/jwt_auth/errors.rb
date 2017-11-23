@@ -8,6 +8,10 @@ module Warden
       class RevokedToken < JWT::DecodeError
       end
 
+      # Error raised when the user decoded from a token is nil
+      class NilUser < JWT::DecodeError
+      end
+
       # Error raised when trying to decode a token for an scope that doesn't
       # match the one encoded in the payload
       class WrongScope < JWT::DecodeError
