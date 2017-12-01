@@ -63,7 +63,7 @@ Currently, HS256 algorithm is the one in use.
 
 ### Warden scopes configuration
 
-You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched.
+You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched. If a string is supplied, the user repository will first be looked up as a constant.
 
 For instance:
 
@@ -142,7 +142,7 @@ config.revocation_requests = [
 
 **Important**: You are encouraged to delimit your regular expression with `^` and `$` to avoid unintentional matches.
 
-Besides, you need to configure which revocation strategy will be used for each scope.
+Besides, you need to configure which revocation strategy will be used for each scope. If a string is supplied, the revocation strategy will first be looked up as a constant.
 
 ```ruby
 config.revocation_strategies = { user: RevocationStrategy }
