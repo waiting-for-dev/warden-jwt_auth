@@ -101,8 +101,9 @@ module Warden
 
       # :reek:UtilityFunction
       def constantize_values(hash)
-        hash.transform_values do |value|
-          value.is_a?(String) ? Object.const_get(value) : value
+        hash.reduce({}) do |memo, (key, value)|
+          memo[key] = value.is_a?(String) ? Object.const_get(value) : value
+          memo
         end
       end
     end
