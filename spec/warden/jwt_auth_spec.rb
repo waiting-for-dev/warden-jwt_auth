@@ -26,10 +26,10 @@ describe Warden::JWTAuth do
       context 'when the mapping is a constant name' do
         it 'resolves to the constant' do
           described_class.configure do |config|
-            config.mappings = { user: 'Fixtures::RevocationStrategy' }
+            config.revocation_strategies = { user: 'Fixtures::RevocationStrategy' }
           end
 
-          expect(described_class.config.mappings).to eq({
+          expect(described_class.config.revocation_strategies).to eq({
             user: Fixtures::RevocationStrategy
           })
         end
