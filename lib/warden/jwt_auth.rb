@@ -25,7 +25,8 @@ module Warden
     # Expiration time for tokens
     setting :expiration_time, 3600
 
-    # A hash of warden scopes as keys and user repositories as values.
+    # A hash of warden scopes as keys and user repositories as values. The
+    # values can be either the constants themselves or the constant names.
     #
     # @see Interfaces::UserRepository
     # @see Interfaces::User
@@ -56,8 +57,9 @@ module Warden
       upcase_first_items(value)
     end
 
-    # Hash with scopes as keys and values with the strategy to revoke tokens for
-    # that scope
+    # Hash with scopes as keys and strategies to revoke tokens for that scope
+    # as values. The values can be either the constants themselves or the
+    # constant names.
     #
     # @example
     #  {
@@ -87,6 +89,23 @@ module Warden
     end
 
     Import = Dry::AutoInject(config)
+
+    config.instance_eval do
+      def mappings
+        constantize_values(super)
+      end
+
+      def revocation_strategies
+        constantize_values(super)
+      end
+
+      # :reek:UtilityFunction
+      def constantize_values(hash)
+        hash.transform_values do |value|
+          value.is_a?(String) ? Object.const_get(value) : value
+        end
+      end
+    end
   end
 end
 
