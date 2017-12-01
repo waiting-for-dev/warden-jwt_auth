@@ -39,9 +39,10 @@ module Warden
 
       # :reek:FeatureEnvy
       def request_matches?(env)
+        path_info = env['PATH_INFO'] || ''
         dispatch_requests.each do |tuple|
           method, path = tuple
-          return true if env['PATH_INFO'].match(path) &&
+          return true if path_info.match(path) &&
                          env['REQUEST_METHOD'] == method
         end
         false

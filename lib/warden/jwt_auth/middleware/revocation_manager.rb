@@ -32,10 +32,11 @@ module Warden
 
         # :reek:FeatureEnvy
         def token_should_be_revoked?(env)
+          path_info = env['PATH_INFO'] || ''
           revocation_requests = config.revocation_requests
           revocation_requests.each do |tuple|
             method, path = tuple
-            return true if env['PATH_INFO'].match(path) &&
+            return true if path_info.match(path) &&
                            env['REQUEST_METHOD'] == method
           end
           false
