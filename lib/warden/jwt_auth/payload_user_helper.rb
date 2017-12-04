@@ -12,6 +12,7 @@ module Warden
         config = JWTAuth.config
         scope = payload['scp'].to_sym
         user_repo = config.mappings[scope]
+        user_repo = Object.const_get(user_repo) if user_repo.is_a? String
         user_repo.find_for_jwt_authentication(payload['sub'])
       end
 

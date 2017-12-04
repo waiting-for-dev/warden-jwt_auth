@@ -63,7 +63,7 @@ Currently, HS256 algorithm is the one in use.
 
 ### Warden scopes configuration
 
-You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched.
+You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched. If a string is supplied, it will first be looked up as a constant.
 
 For instance:
 
