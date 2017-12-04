@@ -112,6 +112,7 @@ end
 require 'warden/jwt_auth/version'
 require 'warden/jwt_auth/header_parser'
 require 'warden/jwt_auth/payload_user_helper'
+require 'warden/jwt_auth/env_helper'
 require 'warden/jwt_auth/user_encoder'
 require 'warden/jwt_auth/user_decoder'
 require 'warden/jwt_auth/token_encoder'

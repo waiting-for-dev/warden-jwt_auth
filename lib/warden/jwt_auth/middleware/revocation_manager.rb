@@ -8,11 +8,12 @@ module Warden
         # Debugging key added to `env`
         ENV_KEY = 'warden-jwt_auth.revocation_manager'
 
-        attr_reader :app, :config
+        attr_reader :app, :config, :helper
 
         def initialize(app)
           @app = app
           @config = JWTAuth.config
+          @helper = EnvHelper
         end
 
         def call(env)
@@ -26,18 +27,19 @@ module Warden
 
         def revoke_token(env)
           token = HeaderParser.from_env(env)
-          return unless token && token_should_be_revoked?(env)
+          path_info = EnvHelper.path_info(env)
+          method = EnvHelper.request_method(env)
+          return unless token && token_should_be_revoked?(path_info, method)
           TokenRevoker.new.call(token)
         end
 
-        # :reek:FeatureEnvy
-        def token_should_be_revoked?(env)
-          path_info = env['PATH_INFO'] || ''
+        # :reek:ControlParameter
+        def token_should_be_revoked?(path_info, method)
           revocation_requests = config.revocation_requests
           revocation_requests.each do |tuple|
-            method, path = tuple
-            return true if path_info.match(path) &&
-                           env['REQUEST_METHOD'] == method
+            revocation_method, revocation_path = tuple
+            return true if path_info.match(revocation_path) &&
+                           method == revocation_method
           end
           false
         end

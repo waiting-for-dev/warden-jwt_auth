@@ -14,7 +14,7 @@ module Warden
       # @return [String] JWT token
       # @return [nil] if token is not present
       def self.from_env(env)
-        auth = env['HTTP_AUTHORIZATION']
+        auth = EnvHelper.authorization_header(env)
         return nil unless auth
         method, token = auth.split
         method == METHOD ? token : nil
@@ -27,9 +27,7 @@ module Warden
       # @param token [String] JWT token
       # @return [Hash] modified rack env
       def self.to_env(env, token)
-        env = env.dup
-        env['HTTP_AUTHORIZATION'] = "#{METHOD} #{token}"
-        env
+        EnvHelper.set_authorization_header(env, "#{METHOD} #{token}")
       end
 
       # Returns a copy of headers with token added in the `Authorization` key.

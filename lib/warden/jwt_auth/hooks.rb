@@ -29,7 +29,9 @@ module Warden
       end
 
       def token_should_be_added?(scope, env)
-        jwt_scope?(scope) && request_matches?(env)
+        path_info = EnvHelper.path_info(env)
+        method = EnvHelper.request_method(env)
+        jwt_scope?(scope) && request_matches?(path_info, method)
       end
 
       def jwt_scope?(scope)
@@ -37,13 +39,12 @@ module Warden
         jwt_scopes.include?(scope)
       end
 
-      # :reek:FeatureEnvy
-      def request_matches?(env)
-        path_info = env['PATH_INFO'] || ''
+      # :reek:ControlParameter
+      def request_matches?(path_info, method)
         dispatch_requests.each do |tuple|
-          method, path = tuple
-          return true if path_info.match(path) &&
-                         env['REQUEST_METHOD'] == method
+          dispatch_method, dispatch_path = tuple
+          return true if path_info.match(dispatch_path) &&
+                         method == dispatch_method
         end
         false
       end
