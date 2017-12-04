@@ -8,7 +8,7 @@ module Warden
     # `Authorization` request header
     # :reek:PrimaDonnaMethod
     class Strategy < Warden::Strategies::Base
-      # :reek:NeelCheck
+      # :reek:NilCheck
       def valid?
         !token.nil?
       end
@@ -20,8 +20,8 @@ module Warden
       def authenticate!
         user = UserDecoder.new.call(token, scope)
         success!(user)
-      rescue JWT::DecodeError => e
-        fail!(e.message)
+      rescue JWT::DecodeError => exception
+        fail!(exception.message)
       end
 
       private
