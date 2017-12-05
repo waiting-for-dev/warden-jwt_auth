@@ -17,12 +17,20 @@ describe Warden::JWTAuth::Hooks do
     end
 
     context 'when method and path match and scope is known ' do
-      it 'codes a token and adds it to env' do
+      before do
         login_as user, scope: :user
 
         post '/sign_in'
+      end
 
+      it 'codes a token and adds it to env' do
         expect(token(last_request)).not_to be_nil
+      end
+
+      it 'adds user info to the token' do
+        payload = Warden::JWTAuth::TokenDecoder.new.call(token(last_request))
+
+        expect(payload['sub']).to eq(user.jwt_subject)
       end
     end
 
