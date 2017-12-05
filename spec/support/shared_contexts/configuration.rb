@@ -8,6 +8,7 @@ shared_context 'configuration' do
       config.revocation_requests = [['DELETE', %r{^/sign_out$}]]
       config.revocation_strategies = { user: Fixtures::RevocationStrategy.new }
       config.mappings = { user: Fixtures::UserRepo }
+      config.aud_header = 'TEST_AUD'
     end
   end
 
@@ -18,4 +19,5 @@ shared_context 'configuration' do
   let(:revocation_strategies) { config.revocation_strategies }
   let(:mappings) { config.mappings }
   let(:expiration_time) { config.expiration_time }
+  let(:aud_header) { config.aud_header }
 end

@@ -6,7 +6,7 @@ describe Warden::JWTAuth::UserEncoder do
   include_context 'configuration'
   include_context 'fixtures'
 
-  let(:token) { described_class.new.call(user, :user) }
+  let(:token) { described_class.new.call(user, :user, 'aud') }
   let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
 
   describe '#call(user, scope)' do
@@ -16,6 +16,10 @@ describe Warden::JWTAuth::UserEncoder do
 
     it 'merges in given scope as `scp` claim' do
       expect(payload['scp']).to eq('user')
+    end
+
+    it 'merges in given aud as `aud` claim' do
+      expect(payload['aud']).to eq('aud')
     end
 
     it 'merges in user `jwt_payload` result' do

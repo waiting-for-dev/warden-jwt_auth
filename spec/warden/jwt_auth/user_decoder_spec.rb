@@ -6,7 +6,7 @@ describe Warden::JWTAuth::UserDecoder do
   include_context 'configuration'
   include_context 'fixtures'
 
-  let(:token) { Warden::JWTAuth::UserEncoder.new.call(user, :user) }
+  let(:token) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
   let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
 
   describe '#call(token, scope)' do

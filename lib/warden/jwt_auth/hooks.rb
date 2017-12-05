@@ -4,7 +4,7 @@ module Warden
   module JWTAuth
     # Warden hooks
     class Hooks
-      include JWTAuth::Import['mappings', 'dispatch_requests']
+      include JWTAuth::Import['mappings', 'dispatch_requests', 'aud_header']
 
       # `env` key where JWT is added
       PREPARED_TOKEN_ENV_KEY = 'warden-jwt_auth.token'
@@ -24,7 +24,7 @@ module Warden
         env = auth.env
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
-        token = UserEncoder.new.call(user, scope)
+        token = UserEncoder.new.call(user, scope, env[aud_header])
         env[PREPARED_TOKEN_ENV_KEY] = token
       end
 

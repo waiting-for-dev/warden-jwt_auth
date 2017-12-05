@@ -16,8 +16,14 @@ describe Warden::JWTAuth::Hooks do
       request.env['warden-jwt_auth.token']
     end
 
+    def payload(request)
+      token = token(request)
+      Warden::JWTAuth::TokenDecoder.new.call(token)
+    end
+
     context 'when method and path match and scope is known ' do
       before do
+        header aud_header.gsub('HTTP_', ''), 'warden_tests'
         login_as user, scope: :user
 
         post '/sign_in'
@@ -28,9 +34,12 @@ describe Warden::JWTAuth::Hooks do
       end
 
       it 'adds user info to the token' do
-        payload = Warden::JWTAuth::TokenDecoder.new.call(token(last_request))
+        expect(payload(last_request)['sub']).to eq(user.jwt_subject)
+      end
 
-        expect(payload['sub']).to eq(user.jwt_subject)
+      it 'adds configured client id header into the aud claim' do
+        puts last_request.env
+        expect(payload(last_request)['aud']).to eq('warden_tests')
       end
     end
 

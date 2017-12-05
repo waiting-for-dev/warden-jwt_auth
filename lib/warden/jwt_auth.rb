@@ -25,6 +25,12 @@ module Warden
     # Expiration time for tokens
     setting :expiration_time, 3600
 
+    # Request header which value will be encoded as `aud` claim in JWT. If
+    # the header is not present `aud` will be `nil`.
+    setting(:aud_header, 'JWT_AUD') do |value|
+      ('HTTP_' + value.upcase).tr('-', '_')
+    end
+
     # A hash of warden scopes as keys and user repositories as values. The
     # values can be either the constants themselves or the constant names.
     #

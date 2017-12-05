@@ -12,16 +12,24 @@ module Warden
         @helper = PayloadUserHelper
       end
 
-      # Encodes a user for given scope into a JWT. Payload generated includes a
-      # `sub` claim which is build calling `jwt_subject` in `user`, and a custom
-      # `scp` claim which value is `scope` as a string. The result of
-      # calling `jwt_payload` in user is also merged into the payload.
+      # Encodes a user for given scope into a JWT.
+      #
+      # Payload generated includes:
+      #
+      # - a `sub` claim which is build calling `jwt_subject` in `user`
+      # - an `aud` claim taken as it is in the `aud` parameter
+      # - a custom `scp` claim taken as the value of the `scope` parameter
+      # as a string.
+      #
+      # The result of calling `jwt_payload` in user is also merged
+      # into the payload.
       #
       # @param user [Interfaces::User] an user, whatever it is
       # @param scope [Symbol] Warden scope
+      # @param aud [String] JWT aud claim
       # @return [String] encoded JWT
-      def call(user, scope)
-        payload = helper.payload_for_user(user, scope)
+      def call(user, scope, aud)
+        payload = helper.payload_for_user(user, scope).merge('aud' => aud)
         TokenEncoder.new.call(payload)
       end
     end

@@ -11,7 +11,7 @@ describe 'Authorization', type: :feature do
 
   context 'when a valid token is provided' do
     it 'authenticates the user' do
-      token = generate_token(user, :user)
+      token = generate_token(user, :user, pristine_env)
       env = env_with_token(pristine_env, token)
 
       status = call_app(app, env, ['GET', '/'])[0]
@@ -33,7 +33,7 @@ describe 'Authorization', type: :feature do
 
   context 'when provided token has been revoked' do
     it 'does not authenticate the user' do
-      token = generate_token(user, :user)
+      token = generate_token(user, :user, pristine_env)
       env = env_with_token(pristine_env, token)
 
       call_app(app, env, ['DELETE', '/sign_out'])
@@ -45,7 +45,7 @@ describe 'Authorization', type: :feature do
 
   context 'when provided token is from another scope' do
     it 'does not authenticate the user' do
-      token = generate_token(user, :unknown)
+      token = generate_token(user, :unknown, pristine_env)
       env = env_with_token(pristine_env, token)
 
       status = call_app(app, env, ['GET', '/'])[0]
@@ -58,7 +58,7 @@ describe 'Authorization', type: :feature do
     before { Warden::JWTAuth.config.mappings = { user: nil_user_repo } }
 
     it 'does not authenticate' do
-      token = generate_token(user, :user)
+      token = generate_token(user, :user, pristine_env)
       env = env_with_token(pristine_env, token)
 
       status = call_app(app, env, ['GET', '/'])[0]
