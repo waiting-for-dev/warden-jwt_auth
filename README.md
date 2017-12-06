@@ -106,6 +106,7 @@ Just when a token is going to be dispatched to a client, a hook method `on_jwt_d
 def on_jwt_dispatch(token, payload)
   # Do something
 end
+```
 
 ### Middlewares addition
 
