@@ -16,6 +16,11 @@ module Warden
       # match the one encoded in the payload
       class WrongScope < JWT::DecodeError
       end
+
+      # Error raised when trying to decode a token which `aud` claim does not
+      # match with the expected one
+      class WrongAud < JWT::DecodeError
+      end
     end
   end
 end

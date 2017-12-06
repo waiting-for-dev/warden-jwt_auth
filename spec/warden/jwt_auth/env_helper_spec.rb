@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 describe Warden::JWTAuth::EnvHelper do
+  include_context 'configuration'
+
   describe '::path_info(env)' do
     it 'returns PATH_INFO' do
       env = { 'PATH_INFO' => '/foo' }
@@ -40,6 +42,14 @@ describe Warden::JWTAuth::EnvHelper do
       updated_env = described_class.set_authorization_header(env, 'Bearer 123')
 
       expect(updated_env['HTTP_AUTHORIZATION']).to eq('Bearer 123')
+    end
+  end
+
+  describe '::aud_header(env)' do
+    it 'returns configured aud_header' do
+      env = { aud_header => 'FOO_AUD' }
+
+      expect(described_class.aud_header(env)) == 'FOO_AUD'
     end
   end
 end

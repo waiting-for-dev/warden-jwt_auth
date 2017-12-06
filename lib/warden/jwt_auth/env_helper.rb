@@ -47,6 +47,14 @@ module Warden
         env['HTTP_AUTHORIZATION'] = value
         env
       end
+
+      # Returns header configured through `aud_header` option
+      #
+      # @param env [Hash] Rack env
+      # @return [String]
+      def self.aud_header(env)
+        env[JWTAuth.config.aud_header]
+      end
     end
   end
 end

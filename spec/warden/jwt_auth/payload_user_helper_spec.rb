@@ -32,6 +32,24 @@ describe Warden::JWTAuth::PayloadUserHelper do
     end
   end
 
+  describe '::aud_matches?(payload, aud)' do
+    context 'when given aud matches the one encoded in payload' do
+      it 'returns true' do
+        payload = { 'aud' => 'foo' }
+
+        expect(described_class.aud_matches?(payload, 'foo')).to eq(true)
+      end
+    end
+
+    context 'when given aud does not match the one encoded in payload' do
+      it 'returns false' do
+        payload = { 'aud' => 'unknown' }
+
+        expect(described_class.aud_matches?(payload, 'foo')).to eq(false)
+      end
+    end
+  end
+
   describe '::payload_for_user(user, scope)' do
     let(:payload) { described_class.payload_for_user(user, :user) }
 

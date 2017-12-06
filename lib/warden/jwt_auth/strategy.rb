@@ -18,7 +18,8 @@ module Warden
       end
 
       def authenticate!
-        user = UserDecoder.new.call(token, scope)
+        aud = EnvHelper.aud_header(env)
+        user = UserDecoder.new.call(token, scope, aud)
         success!(user)
       rescue JWT::DecodeError => exception
         fail!(exception.message)

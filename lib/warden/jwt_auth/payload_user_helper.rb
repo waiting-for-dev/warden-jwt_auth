@@ -22,6 +22,13 @@ module Warden
         payload['scp'] == scope.to_s
       end
 
+      # Returns whether given aud matches with the one encoded in the payload
+      # @param payload [Hash] JWT payload
+      # @return [Boolean]
+      def self.aud_matches?(payload, aud)
+        payload['aud'] == aud
+      end
+
       # Returns the payload to encode for a given user in a scope
       #
       # @param user [Interfaces::User] an user, whatever it is

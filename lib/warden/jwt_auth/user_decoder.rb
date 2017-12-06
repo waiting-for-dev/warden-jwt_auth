@@ -21,15 +21,17 @@ module Warden
       #
       # @param token [String] a JWT
       # @param scope [Symbol] Warden scope
+      # @param aud [String] Expected aud claim
       # @return [Interfaces::User] an user, whatever it is
       # @raise [Errors::RevokedToken] when token has been revoked for the
       # encoded user
       # @raise [Errors::NilUser] when decoded user is nil
       # @raise [Errors::WrongScope] when encoded scope does not match with scope
+      # @raise [Errors::WrongAud] when encoded aud does not match with aud
       # argument
-      def call(token, scope)
+      def call(token, scope, aud)
         payload = TokenDecoder.new.call(token)
-        raise Errors::WrongScope, 'wrong scope' unless helper.scope_matches?(payload, scope)
+        check_valid_claims(payload, scope, aud)
         user = helper.find_user(payload)
         check_valid_user(payload, user, scope)
         user
@@ -37,14 +39,15 @@ module Warden
 
       private
 
-      def revoked?(payload, user, scope)
-        strategy = revocation_strategies[scope]
-        strategy.jwt_revoked?(payload, user)
+      def check_valid_claims(payload, scope, aud)
+        raise Errors::WrongScope, 'wrong scope' unless helper.scope_matches?(payload, scope)
+        raise Errors::WrongAud, 'wrong aud' unless helper.aud_matches?(payload, aud)
       end
 
       def check_valid_user(payload, user, scope)
         raise Errors::NilUser, 'nil user' unless user
-        raise Errors::RevokedToken, 'revoked token' if revoked?(payload, user, scope)
+        strategy = revocation_strategies[scope]
+        raise Errors::RevokedToken, 'revoked token' if strategy.jwt_revoked?(payload, user)
       end
     end
   end
