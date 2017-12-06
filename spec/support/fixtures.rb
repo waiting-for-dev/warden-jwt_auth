@@ -14,6 +14,10 @@ module Fixtures
     def jwt_payload
       { 'foo' => 'bar' }
     end
+
+    def on_jwt_dispatch(_token, _payload)
+      # Does something
+    end
   end
 
   # User repository

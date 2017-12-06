@@ -24,14 +24,21 @@ module Warden
         env = auth.env
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
-        token, _payload = UserEncoder.new.call(user, scope, env[aud_header])
-        env[PREPARED_TOKEN_ENV_KEY] = token
+        add_token_to_env(user, scope, env)
       end
 
       def token_should_be_added?(scope, env)
         path_info = EnvHelper.path_info(env)
         method = EnvHelper.request_method(env)
         jwt_scope?(scope) && request_matches?(path_info, method)
+      end
+
+      # :reek:ManualDispatch
+      # :reek:FeatureEnvy
+      def add_token_to_env(user, scope, env)
+        token, payload = UserEncoder.new.call(user, scope, env[aud_header])
+        user.on_jwt_dispatch(token, payload) if user.respond_to?(:on_jwt_dispatch)
+        env[PREPARED_TOKEN_ENV_KEY] = token
       end
 
       def jwt_scope?(scope)

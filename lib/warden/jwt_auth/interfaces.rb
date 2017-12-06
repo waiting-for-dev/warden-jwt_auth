@@ -31,6 +31,14 @@ module Warden
         def jwt_payload
           {}
         end
+
+        # Does something just after a JWT for the user has been dispatched.
+        #
+        # @param _token [String]
+        # @param _payload [Hash]
+        def on_jwt_dispatch(_token, _payload)
+          raise NotImplementedError
+        end
       end
 
       # Strategy to manage JWT revocation

@@ -25,21 +25,30 @@ describe Warden::JWTAuth::Hooks do
       before do
         header aud_header.gsub('HTTP_', ''), 'warden_tests'
         login_as user, scope: :user
-
-        post '/sign_in'
       end
 
       it 'codes a token and adds it to env' do
+        post '/sign_in'
+
         expect(token(last_request)).not_to be_nil
       end
 
       it 'adds user info to the token' do
+        post '/sign_in'
+
         expect(payload(last_request)['sub']).to eq(user.jwt_subject)
       end
 
       it 'adds configured client id header into the aud claim' do
-        puts last_request.env
+        post '/sign_in'
+
         expect(payload(last_request)['aud']).to eq('warden_tests')
+      end
+
+      it 'calls on_jwt_dispatch method in the user' do
+        expect(user).to receive(:on_jwt_dispatch)
+
+        post '/sign_in'
       end
     end
 
