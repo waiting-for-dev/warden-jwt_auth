@@ -100,6 +100,13 @@ def jwt_payload
 end
 ```
 
+Just when a token is going to be dispatched to a client, a hook method `on_jwt_dispatch` is invoked, only when it exist, on the user record. This method takes the `token` and the `payload` as arguments.
+
+```ruby
+def on_jwt_dispatch(token, payload)
+  # Do something
+end
+
 ### Middlewares addition
 
 You need to add `Warden::JWTAuth::Middleware` to your rack middlewares stack. Actually, it is just a wrapper which adds two middlewares that do the actual job: dispatching tokens and revoking tokens.
@@ -163,6 +170,12 @@ module RevocationStrategy
   end
 end
 ```
+
+### Requesting client validation
+
+Authentication will be refused if a client requesting to be authenticated through a token is not the same to which it was originally issued. To do so, the content of the header `JWT_AUD` (configurable via `config.aud_header`) is stored as `aud` claim. If you don't want to differentiate between clients, you don't need to provide that header.
+
+**Important:** Be aware that this workflow is not bullet proof. In some scenarios a user can handcraft the request headers, therefore being able to impersonate any client. In such cases you could need something more robust, like an OAuth workflow with client id and client secret.
 
 ## Development
 
