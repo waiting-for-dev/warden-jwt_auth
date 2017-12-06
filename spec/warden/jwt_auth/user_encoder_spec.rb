@@ -6,8 +6,9 @@ describe Warden::JWTAuth::UserEncoder do
   include_context 'configuration'
   include_context 'fixtures'
 
-  let(:token) { described_class.new.call(user, :user, 'aud') }
-  let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
+  let(:token_payload) { described_class.new.call(user, :user, 'aud') }
+  let(:token) { token_payload[0] }
+  let(:payload) { token_payload[1] }
 
   describe '#call(user, scope)' do
     it 'merges in user `jwt_subject` result as sub claim' do

@@ -27,10 +27,11 @@ module Warden
       # @param user [Interfaces::User] an user, whatever it is
       # @param scope [Symbol] Warden scope
       # @param aud [String] JWT aud claim
-      # @return [String] encoded JWT
+      # @return [String, String] encoded JWT and decoded payload
       def call(user, scope, aud)
         payload = helper.payload_for_user(user, scope).merge('aud' => aud)
-        TokenEncoder.new.call(payload)
+        token = TokenEncoder.new.call(payload)
+        [token, payload]
       end
     end
   end

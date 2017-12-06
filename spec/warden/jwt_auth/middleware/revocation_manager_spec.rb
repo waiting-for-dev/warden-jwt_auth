@@ -8,8 +8,9 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
   include_context 'fixtures'
   include_context 'middleware'
 
-  let(:token) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
-  let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
+  let(:token_payload) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
+  let(:token) { token_payload[0] }
+  let(:payload) { token_payload[1] }
 
   let(:this_app) { described_class.new(dummy_app) }
   let(:app) { warden_app(this_app) }

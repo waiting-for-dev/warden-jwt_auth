@@ -9,8 +9,9 @@ describe Warden::JWTAuth::TokenRevoker do
   describe '#call(token)' do
     let(:revocation_strategy) { revocation_strategies[:user] }
 
-    let(:token) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
-    let(:payload) { Warden::JWTAuth::TokenDecoder.new.call(token) }
+    let(:token_payload) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
+    let(:token) { token_payload[0] }
+    let(:payload) { token_payload[1] }
 
     it 'revokes given token' do
       described_class.new.call(token)
