@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] - 2017-12-11
+### Added
+- Ensure JWT scopes are not fetched from session. Workaround for
+  https://github.com/hassox/warden/pull/118
+
 ## [0.3.0] - 2017-12-06
 ### Added
 - Add and call hook method `on_jwt_dispatch` on user instance
