@@ -18,6 +18,17 @@ module Warden
         new.send(:prepare_token, user, auth, opts)
       end
 
+      # Sign out a JWT scope if it comes from the session.
+      #
+      # If a user is meant to be authenticated via JWT, then if it is fetched
+      # from the session it must be something not intended to happen and a
+      # security threat.
+      #
+      # Workaround until https://github.com/hassox/warden/pull/118 is fixed
+      def self.after_fetch(_user, auth, opts)
+        new.send(:logout_scope, auth, opts)
+      end
+
       private
 
       def prepare_token(user, auth, opts)
@@ -25,6 +36,12 @@ module Warden
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
         add_token_to_env(user, scope, env)
+      end
+
+      def logout_scope(auth, opts)
+        scope = opts[:scope]
+        return unless jwt_scope?(scope)
+        auth.logout(scope)
       end
 
       def token_should_be_added?(scope, env)
@@ -61,4 +78,8 @@ end
 
 Warden::Manager.after_set_user do |user, auth, opts|
   Warden::JWTAuth::Hooks.after_set_user(user, auth, opts)
+end
+
+Warden::Manager.after_fetch do |user, auth, opts|
+  Warden::JWTAuth::Hooks.after_fetch(user, auth, opts)
 end
