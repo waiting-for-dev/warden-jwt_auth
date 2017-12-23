@@ -24,7 +24,7 @@ If what you need is a JWT authentication library for [devise](https://github.com
 ## Installation
 
 ```ruby
-gem 'warden-jwt_auth', '~> 0.3.1'
+gem 'warden-jwt_auth', '~> 0.3.2'
 ```
 
 And then execute:
