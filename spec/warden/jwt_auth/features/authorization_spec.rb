@@ -72,7 +72,7 @@ describe 'Authorization', type: :feature do
   context 'when aud provided by the client does not match' do
     it 'does not authenticate the user' do
       token = generate_token(user, :user, pristine_env)
-      env = env_with_token(pristine_env, token).merge(aud_header => 'FOO_AUD')
+      env = env_with_token(pristine_env, token).merge(env_aud_header => 'FOO_AUD')
 
       status = call_app(app, env, ['GET', '/'])[0]
 

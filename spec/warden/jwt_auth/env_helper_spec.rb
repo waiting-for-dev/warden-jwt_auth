@@ -47,9 +47,9 @@ describe Warden::JWTAuth::EnvHelper do
 
   describe '::aud_header(env)' do
     it 'returns configured aud_header' do
-      env = { aud_header => 'FOO_AUD' }
+      env = { env_aud_header => 'FOO_AUD' }
 
-      expect(described_class.aud_header(env)) == 'FOO_AUD'
+      expect(described_class.aud_header(env)).to eq('FOO_AUD')
     end
   end
 end

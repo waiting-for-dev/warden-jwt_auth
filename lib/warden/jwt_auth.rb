@@ -27,9 +27,7 @@ module Warden
 
     # Request header which value will be encoded as `aud` claim in JWT. If
     # the header is not present `aud` will be `nil`.
-    setting(:aud_header, 'JWT_AUD') do |value|
-      ('HTTP_' + value.upcase).tr('-', '_')
-    end
+    setting :aud_header, 'JWT_AUD'
 
     # A hash of warden scopes as keys and user repositories as values. The
     # values can be either the constants themselves or the constant names.

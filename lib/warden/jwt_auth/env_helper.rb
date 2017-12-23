@@ -53,7 +53,8 @@ module Warden
       # @param env [Hash] Rack env
       # @return [String]
       def self.aud_header(env)
-        env[JWTAuth.config.aud_header]
+        env_name = ('HTTP_' + JWTAuth.config.aud_header.upcase).tr('-', '_')
+        env[env_name]
       end
     end
   end

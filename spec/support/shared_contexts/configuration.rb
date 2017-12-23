@@ -20,4 +20,5 @@ shared_context 'configuration' do
   let(:mappings) { config.mappings }
   let(:expiration_time) { config.expiration_time }
   let(:aud_header) { config.aud_header }
+  let(:env_aud_header) { ('HTTP_' + config.aud_header.upcase).tr('-', '_') }
 end

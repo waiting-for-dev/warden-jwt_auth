@@ -44,7 +44,8 @@ shared_context 'feature' do
 
   # :reek:UtilityFunction
   def generate_token(user, scope, env)
-    token, _payload = Warden::JWTAuth::UserEncoder.new.call(user, scope, env[aud_header])
+    aud = Warden::JWTAuth::EnvHelper.aud_header(env)
+    token, _payload = Warden::JWTAuth::UserEncoder.new.call(user, scope, aud)
     token
   end
 

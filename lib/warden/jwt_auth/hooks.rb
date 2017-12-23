@@ -51,9 +51,10 @@ module Warden
       end
 
       # :reek:ManualDispatch
-      # :reek:FeatureEnvy
+      # :reek:UtilityFunction
       def add_token_to_env(user, scope, env)
-        token, payload = UserEncoder.new.call(user, scope, env[aud_header])
+        aud = EnvHelper.aud_header(env)
+        token, payload = UserEncoder.new.call(user, scope, aud)
         user.on_jwt_dispatch(token, payload) if user.respond_to?(:on_jwt_dispatch)
         env[PREPARED_TOKEN_ENV_KEY] = token
       end
