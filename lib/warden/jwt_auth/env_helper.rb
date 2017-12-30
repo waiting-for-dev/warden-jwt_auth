@@ -56,6 +56,16 @@ module Warden
         env_name = ('HTTP_' + JWTAuth.config.aud_header.upcase).tr('-', '_')
         env[env_name]
       end
+
+      # Returns whether `text/html` is within `Accept` header values
+      #
+      # @param env [Hash] Rack env
+      # @return [Boolean]
+      def self.html_request?(env)
+        accept = env['HTTP_ACCEPT']
+        return false unless accept
+        accept.include?('text/html')
+      end
     end
   end
 end

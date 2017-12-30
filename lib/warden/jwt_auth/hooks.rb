@@ -18,11 +18,12 @@ module Warden
         new.send(:prepare_token, user, auth, opts)
       end
 
-      # Sign out a JWT scope if it comes from the session.
+      # Sign out a JWT scope if it comes from the session unless it is an HTML
+      # request
       #
       # If a user is meant to be authenticated via JWT, then if it is fetched
-      # from the session it must be something not intended to happen and a
-      # security threat.
+      # from the session during an API request it must be something not intended
+      # to happen and a security threat.
       #
       # Workaround until https://github.com/hassox/warden/pull/118 is fixed
       def self.after_fetch(_user, auth, opts)
@@ -38,9 +39,11 @@ module Warden
         add_token_to_env(user, scope, env)
       end
 
+      # :reek:FeatureEnvy
       def logout_scope(auth, opts)
+        env = auth.env
         scope = opts[:scope]
-        return unless jwt_scope?(scope)
+        return if !jwt_scope?(scope) || EnvHelper.html_request?(env)
         auth.logout(scope)
       end
 

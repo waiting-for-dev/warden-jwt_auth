@@ -52,4 +52,24 @@ describe Warden::JWTAuth::EnvHelper do
       expect(described_class.aud_header(env)).to eq('FOO_AUD')
     end
   end
+
+  describe '::html_request?(env)' do
+    it 'returns true when `Accept` header contains `text/html`' do
+      env = { 'HTTP_ACCEPT' => 'text/html' }
+
+      expect(described_class.html_request?(env)).to eq(true)
+    end
+
+    it 'returns false when `Accept` header does not contain `text/html`' do
+      env = { 'HTTP_ACCEPT' => 'application/json' }
+
+      expect(described_class.html_request?(env)).to eq(false)
+    end
+
+    it 'returns false when `Accept` header is not present' do
+      env = {}
+
+      expect(described_class.html_request?(env)).to eq(false)
+    end
+  end
 end
