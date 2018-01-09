@@ -43,7 +43,7 @@ module Warden
       def logout_scope(auth, opts)
         env = auth.env
         scope = opts[:scope]
-        return if !jwt_scope?(scope) || EnvHelper.html_request?(env)
+        return if !jwt_scope?(scope) || EnvHelper.no_api_request?(env)
         auth.logout(scope)
       end
 

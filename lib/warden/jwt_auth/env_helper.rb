@@ -57,14 +57,16 @@ module Warden
         env[env_name]
       end
 
-      # Returns whether `text/html` is within `Accept` header values
+      # Heuristic to determinate whether the request is not meant to be consumed
+      # by an API endpoint
       #
       # @param env [Hash] Rack env
       # @return [Boolean]
-      def self.html_request?(env)
+      def self.no_api_request?(env)
         accept = env['HTTP_ACCEPT']
         return false unless accept
-        accept.include?('text/html')
+        accept.include?('text/html') ||
+          accept.include?('text/javascript')
       end
     end
   end
