@@ -17,6 +17,7 @@ module Warden
       # rubocop:disable Lint/HandleExceptions
       rescue JWT::ExpiredSignature
       end
+      # rubocop:enable Lint/HandleExceptions
     end
   end
 end
