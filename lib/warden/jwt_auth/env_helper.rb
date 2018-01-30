@@ -56,18 +56,6 @@ module Warden
         env_name = ('HTTP_' + JWTAuth.config.aud_header.upcase).tr('-', '_')
         env[env_name]
       end
-
-      # Heuristic to determinate whether the request is not meant to be consumed
-      # by an API endpoint
-      #
-      # @param env [Hash] Rack env
-      # @return [Boolean]
-      def self.no_api_request?(env)
-        accept = env['HTTP_ACCEPT']
-        return false unless accept
-        accept.include?('text/html') ||
-          accept.include?('text/javascript')
-      end
     end
   end
 end

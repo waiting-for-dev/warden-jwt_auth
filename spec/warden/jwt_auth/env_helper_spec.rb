@@ -52,30 +52,4 @@ describe Warden::JWTAuth::EnvHelper do
       expect(described_class.aud_header(env)).to eq('FOO_AUD')
     end
   end
-
-  describe '::no_api_request?(env)' do
-    it 'returns true when `Accept` header contains `text/html`' do
-      env = { 'HTTP_ACCEPT' => 'text/html' }
-
-      expect(described_class.no_api_request?(env)).to eq(true)
-    end
-
-    it 'returns true when `Accept` header contains `text/javascript`' do
-      env = { 'HTTP_ACCEPT' => 'text/javascript' }
-
-      expect(described_class.no_api_request?(env)).to eq(true)
-    end
-
-    it 'returns false when `Accept` header contains something else' do
-      env = { 'HTTP_ACCEPT' => 'application/json' }
-
-      expect(described_class.no_api_request?(env)).to eq(false)
-    end
-
-    it 'returns false when `Accept` header is not present' do
-      env = {}
-
-      expect(described_class.no_api_request?(env)).to eq(false)
-    end
-  end
 end
