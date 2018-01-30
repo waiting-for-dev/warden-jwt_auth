@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.4] - 2018-12-09
+## [0.3.5] - 2018-01-30
+### Fixed
+- Do not disallow fetching JWT scopes from session
+
+## [0.3.4] - 2018-01-09
 ### Fixed
 - Do not log out from session for standard AJAX requests
 
