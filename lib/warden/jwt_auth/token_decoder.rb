@@ -17,8 +17,8 @@ module Warden
         JWT.decode(token,
                    secret,
                    true,
-                   algorithm: TokenEncoder::ALG,
-                   verify_jti: true)[0]
+                   algorithm: TokenEncoder::ALG)[0]
+           .tap { |p| p['scp'] = 'user' if p['scp'].to_s.empty? }
       end
     end
   end

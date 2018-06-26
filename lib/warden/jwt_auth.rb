@@ -29,6 +29,9 @@ module Warden
     # the header is not present `aud` will be `nil`.
     setting :aud_header, 'JWT_AUD'
 
+    # Logger object for recording failures
+    setting :logger
+
     # A hash of warden scopes as keys and user repositories as values. The
     # values can be either the constants themselves or the constant names.
     #

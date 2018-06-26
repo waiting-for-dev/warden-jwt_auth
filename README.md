@@ -1,3 +1,6 @@
+# Why fork it?
+Our infrastructure does not require the use of jti and scp claims today, both of which are being validated with no options to opt-out in the gem today. While we're at it, we're adding logging to the failed decode paths.
+
 # Warden::JWTAuth
 
 [![Gem Version](https://badge.fury.io/rb/warden-jwt_auth.svg)](https://badge.fury.io/rb/warden-jwt_auth)

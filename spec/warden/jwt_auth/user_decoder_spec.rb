@@ -31,6 +31,16 @@ describe Warden::JWTAuth::UserDecoder do
       end.to raise_error(Warden::JWTAuth::Errors::WrongScope)
     end
 
+    context 'when scope is not specified' do
+      let(:token_payload) { Warden::JWTAuth::UserEncoder.new.call(user, nil, 'aud') }
+
+      it 'returns encoded user' do
+        expect(
+          described_class.new.call(token, :user, 'aud')
+        ).to eq(user)
+      end
+    end
+
     it 'raises NilUser if decoded user is equal to nil' do
       Warden::JWTAuth.config.mappings = { user: nil_user_repo }
 

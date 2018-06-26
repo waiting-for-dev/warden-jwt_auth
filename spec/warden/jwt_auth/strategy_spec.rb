@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'logger'
 
 describe Warden::JWTAuth::Strategy do
   include_context 'configuration'
@@ -40,6 +41,8 @@ describe Warden::JWTAuth::Strategy do
 
   describe '#authenticate!' do
     context 'when token is invalid' do
+      before { Warden::JWTAuth.config.logger = Logger.new(STDOUT) }
+
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer 123' } }
       let(:strategy) { described_class.new(env, :user) }
 
@@ -51,6 +54,11 @@ describe Warden::JWTAuth::Strategy do
 
       it 'halts authentication' do
         expect(strategy).to be_halted
+      end
+
+      it 'logs errors' do
+        expect(Warden::JWTAuth.config.logger).to receive(:error)
+        strategy.authenticate!
       end
     end
 
