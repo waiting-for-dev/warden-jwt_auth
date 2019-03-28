@@ -19,17 +19,17 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'dry-configurable', '~> 0.5'
-  spec.add_dependency 'dry-auto_inject', '~> 0.4'
+  spec.add_dependency 'dry-configurable', '~> 0.8'
+  spec.add_dependency 'dry-auto_inject', '~> 0.6'
   spec.add_dependency 'jwt', '~> 2.1'
   spec.add_dependency 'warden', '~> 1.2'
 
-  spec.add_development_dependency "bundler", "~> 1.12"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rack-test", "~> 0.6"
-  spec.add_development_dependency "pry-byebug", "~> 3.4"
+  spec.add_development_dependency "bundler", "~> 1.17"
+  spec.add_development_dependency "rake", "~> 12.3"
+  spec.add_development_dependency "rspec", "~> 3.8"
+  spec.add_development_dependency "rack-test", "~> 1.1"
+  spec.add_development_dependency "pry-byebug", "~> 3.7"
   # Test reporting
-  spec.add_development_dependency 'simplecov', '~> 0.13'
+  spec.add_development_dependency 'simplecov', '~> 0.16'
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 1.0'
 end
