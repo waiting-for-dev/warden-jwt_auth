@@ -57,6 +57,8 @@ describe 'Authorization', type: :feature do
   context 'when the user fetched from repo is nil' do
     before { Warden::JWTAuth.config.mappings = { user: nil_user_repo } }
 
+    after { Warden::JWTAuth.config.mappings = { user: user_repo } }
+
     it 'does not authenticate' do
       token = generate_token(user, :user, pristine_env)
       env = env_with_token(pristine_env, token)
@@ -65,8 +67,6 @@ describe 'Authorization', type: :feature do
 
       expect(status).to eq(401)
     end
-
-    after { Warden::JWTAuth.config.mappings = { user: user_repo } }
   end
 
   context 'when aud provided by the client does not match' do

@@ -24,6 +24,7 @@ module Warden
         env = auth.env
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
+
         add_token_to_env(user, scope, env)
       end
 

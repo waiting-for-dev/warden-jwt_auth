@@ -16,6 +16,7 @@ module Warden
       def self.from_env(env)
         auth = EnvHelper.authorization_header(env)
         return nil unless auth
+
         method, token = auth.split
         method == METHOD ? token : nil
       end

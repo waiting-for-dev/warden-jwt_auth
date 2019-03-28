@@ -30,6 +30,7 @@ module Warden
           path_info = EnvHelper.path_info(env)
           method = EnvHelper.request_method(env)
           return unless token && token_should_be_revoked?(path_info, method)
+
           TokenRevoker.new.call(token)
         end
 

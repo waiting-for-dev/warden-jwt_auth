@@ -39,6 +39,7 @@ module Warden
         sub = user.jwt_subject
         payload = { 'sub' => String(sub), 'scp' => scope.to_s }
         return payload unless user.respond_to?(:jwt_payload)
+
         user.jwt_payload.merge(payload)
       end
     end
