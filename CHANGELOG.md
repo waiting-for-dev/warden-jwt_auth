@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.6] - 2019-04-29
+### Fixed
+- Update depencies.
+
 ## [0.3.5] - 2018-01-30
 ### Fixed
 - Do not disallow fetching JWT scopes from session
