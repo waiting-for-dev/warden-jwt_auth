@@ -22,6 +22,9 @@ module Warden
     # The secret used to encode the token
     setting :secret
 
+    # The algorithm used to encode the token
+    setting :algorithm, 'HS256'
+
     # Expiration time for tokens
     setting :expiration_time, 3600
 

@@ -7,10 +7,7 @@ module Warden
     # Encodes a payload into a JWT token, adding some configurable
     # claims
     class TokenEncoder
-      include JWTAuth::Import['secret', 'expiration_time']
-
-      # Algorithm used to encode
-      ALG = 'HS256'
+      include JWTAuth::Import['secret', 'algorithm', 'expiration_time']
 
       # Encodes a payload into a JWT
       #
@@ -18,7 +15,7 @@ module Warden
       # @return [String] JWT
       def call(payload)
         payload_to_encode = merge_with_default_claims(payload)
-        JWT.encode(payload_to_encode, secret, ALG)
+        JWT.encode(payload_to_encode, secret, algorithm)
       end
 
       private
