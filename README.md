@@ -59,7 +59,14 @@ end
 
 **Important:** You are encouraged to use a dedicated secret key, different than others in use in your application. If several components share the same secret key, chances that a vulnerability in one of them has a wider impact increase. Also, never share your secrets pushing it to a remote repository, you are better off using an environment variable like in the example.
 
-Currently, HS256 algorithm is the one in use.
+Currently, HS256 algorithm is the default.
+Configure the matching secret and algorithm name to use a different one (e.g. RS256)
+```ruby
+Warden::JWTAuth.configure do |config|
+  config.secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_SECRET_KEY'])
+  config.algorithm = ENV['WARDEN_JWT_ALGORITHM']
+end
+```
 
 ### Warden scopes configuration
 
