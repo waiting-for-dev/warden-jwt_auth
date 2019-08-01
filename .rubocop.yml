@@ -13,3 +13,5 @@ Metrics/BlockLength:
     - "spec/**/*.rb"
 Metrics/LineLength:
   Max: 100
+Naming/RescuedExceptionsVariableName:
+  PreferredName: exception
