@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.8'
   # Test reporting
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 1.0'
-  spec.add_development_dependency 'simplecov', '~> 0.16'
+  spec.add_development_dependency 'simplecov', '~> 0.18'
 end
