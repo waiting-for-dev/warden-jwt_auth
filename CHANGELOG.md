@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.1] - 2020-02-23
+- Upgrade dry-configurable dependency to fix upstream bug preventing
+  warden-jwt_auth to be loaded ([21](https://github.com/waiting-for-dev/warden-jwt_auth/issues/21)).
+
 ## [0.4.0] - 2019-08-01
 ### Added
 - Allow configuration of the signing algorithm ([19](https://github.com/waiting-for-dev/warden-jwt_auth/pull/19)].
