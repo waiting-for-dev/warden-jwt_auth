@@ -10,7 +10,7 @@ module Warden
 
       attr_reader :helper
 
-      def initialize(*args)
+      def initialize(**args)
         super
         @helper = PayloadUserHelper
       end
