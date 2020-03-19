@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'dry-auto_inject', '~> 0.6'
-  spec.add_dependency 'dry-configurable', '~> 0.11', '>= 0.11.3'
+  spec.add_dependency 'dry-configurable', '~> 0.9', '< 0.11'
   spec.add_dependency 'jwt', '~> 2.1'
   spec.add_dependency 'warden', '~> 1.2'
 
