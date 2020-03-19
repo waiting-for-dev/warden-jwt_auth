@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.2] - 2020-03-19
+### Fixed
+- Lock dry-configurable dependency to fix upstream regression. ([21](https://github.com/waiting-for-dev/warden-jwt_auth/issues/21))
+- Fix ruby 2.7 warnings (@trevorrjohn [23](https://github.com/waiting-for-dev/warden-jwt_auth/pull/23) )
+
 ## [0.4.1] - 2020-02-23
+### Fixed
 - Upgrade dry-configurable dependency to fix upstream bug preventing
   warden-jwt_auth to be loaded ([21](https://github.com/waiting-for-dev/warden-jwt_auth/issues/21)).
 
