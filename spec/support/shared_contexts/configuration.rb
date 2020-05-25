@@ -6,7 +6,7 @@ shared_context 'configuration' do
       config.secret = '123'
       config.dispatch_requests = [['POST', %r{^/sign_in$}]]
       config.revocation_requests = [['DELETE', %r{^/sign_out$}]]
-      config.revocation_strategies = { user: Fixtures::RevocationStrategy.new }
+      config.revocation_strategies = { user: "Fixtures::RevocationStrategy" }
       config.mappings = { user: Fixtures::UserRepo }
       config.aud_header = 'TEST_AUD'
     end
