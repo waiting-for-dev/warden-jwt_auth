@@ -19,6 +19,27 @@ module Warden
   module JWTAuth
     extend Dry::Configurable
 
+    def symbolize_keys(hash)
+      hash.each_with_object({}) do |(key, value), memo|
+        memo[key.to_sym] = value
+      end
+    end
+
+    def upcase_first_items(array)
+      array.map do |tuple|
+        method, path = tuple
+        [method.to_s.upcase, path]
+      end
+    end
+
+    def constantize_values(hash)
+      hash.each_with_object({}) do |(key, value), memo|
+        memo[key] = value.is_a?(String) ? Object.const_get(value) : value
+      end
+    end
+
+    module_function :constantize_values, :symbolize_keys, :upcase_first_items
+
     # The secret used to encode the token
     setting :secret
 
@@ -38,7 +59,7 @@ module Warden
     # @see Interfaces::UserRepository
     # @see Interfaces::User
     setting(:mappings, {}) do |value|
-      symbolize_keys(value)
+      constantize_values(symbolize_keys(value))
     end
 
     # Array of tuples [request_method, request_path_regex] to match request
@@ -75,44 +96,10 @@ module Warden
     #
     # @see Interfaces::RevocationStrategy
     setting(:revocation_strategies, {}) do |value|
-      symbolize_keys(value)
-    end
-
-    # :reek:UtilityFunction
-    def self.symbolize_keys(hash)
-      Hash[
-        hash.each_pair do |key, value|
-          [key.to_sym, value]
-        end
-      ]
-    end
-
-    # :reek:UtilityFunction
-    def self.upcase_first_items(array)
-      array.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
-      end
+      constantize_values(symbolize_keys(value))
     end
 
     Import = Dry::AutoInject(config)
-
-    config.instance_eval do
-      def mappings
-        constantize_values(super)
-      end
-
-      def revocation_strategies
-        constantize_values(super)
-      end
-
-      # :reek:UtilityFunction
-      def constantize_values(hash)
-        hash.each_with_object({}) do |(key, value), memo|
-          memo[key] = value.is_a?(String) ? Object.const_get(value) : value
-        end
-      end
-    end
   end
 end
 

@@ -37,18 +37,14 @@ module Fixtures
 
   # A dummy revocation strategy which keeps the state in its instances
   class RevocationStrategy
-    attr_reader :revoked
+    @@revoked = []
 
-    def initialize
-      @revoked = []
+    def self.revoke_jwt(payload, _user)
+      @@revoked << payload['jti']
     end
 
-    def revoke_jwt(payload, _user)
-      revoked << payload['jti']
-    end
-
-    def jwt_revoked?(payload, _user)
-      revoked.member?(payload['jti'])
+    def self.jwt_revoked?(payload, _user)
+      @@revoked.member?(payload['jti'])
     end
   end
 end
