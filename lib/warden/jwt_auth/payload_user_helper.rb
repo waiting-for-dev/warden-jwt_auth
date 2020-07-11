@@ -34,7 +34,6 @@ module Warden
       # @param user [Interfaces::User] an user, whatever it is
       # @param scope [Symbol] A Warden scope
       # @return [Hash] payload to encode
-      # :reek:ManualDispatch
       def self.payload_for_user(user, scope)
         sub = user.jwt_subject
         payload = { 'sub' => String(sub), 'scp' => scope.to_s }

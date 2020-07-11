@@ -30,6 +30,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rack-test', '~> 1.1'
   spec.add_development_dependency 'rake', '~> 12.3'
   spec.add_development_dependency 'rspec', '~> 3.8'
+  # Cops
+  spec.add_development_dependency 'rubocop', '~> 0.87'
+  spec.add_development_dependency 'rubocop-rspec', '~> 1.42'
   # Test reporting
   spec.add_development_dependency 'codeclimate-test-reporter', '~> 1.0'
   spec.add_development_dependency 'simplecov', '0.17'

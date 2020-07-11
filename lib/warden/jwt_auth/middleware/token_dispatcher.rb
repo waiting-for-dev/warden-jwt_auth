@@ -24,7 +24,6 @@ module Warden
 
         private
 
-        # :reek:UtilityFunction
         def headers_with_token(env, headers)
           token = env[Hooks::PREPARED_TOKEN_ENV_KEY]
           token ? HeaderParser.to_headers(headers, token) : headers

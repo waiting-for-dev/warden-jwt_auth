@@ -20,9 +20,11 @@ describe Warden::JWTAuth::TokenRevoker do
     end
 
     it 'revokes calling revocation_strategy with decoded payload and user' do
-      expect(revocation_strategy).to(receive(:revoke_jwt).with(payload, user))
+      allow(revocation_strategy).to(receive(:revoke_jwt).with(payload, user))
 
       described_class.new.call(token)
+
+      expect(revocation_strategy).to(have_received(:revoke_jwt).with(payload, user))
     end
 
     context 'when token is expired' do

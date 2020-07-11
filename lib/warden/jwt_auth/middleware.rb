@@ -14,7 +14,6 @@ module Warden
         @app = app
       end
 
-      # :reek:FeatureEnvy
       def call(env)
         builder = Rack::Builder.new
         builder.use(RevocationManager)

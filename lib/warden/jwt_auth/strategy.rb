@@ -6,9 +6,7 @@ module Warden
   module JWTAuth
     # Warden strategy to authenticate an user through a JWT token in the
     # `Authorization` request header
-    # :reek:PrimaDonnaMethod
     class Strategy < Warden::Strategies::Base
-      # :reek:NilCheck
       def valid?
         !token.nil?
       end
@@ -21,8 +19,8 @@ module Warden
         aud = EnvHelper.aud_header(env)
         user = UserDecoder.new.call(token, scope, aud)
         success!(user)
-      rescue JWT::DecodeError => exception
-        fail!(exception.message)
+      rescue JWT::DecodeError => e
+        fail!(e.message)
       end
 
       private

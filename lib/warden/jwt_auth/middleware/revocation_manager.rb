@@ -34,7 +34,6 @@ module Warden
           TokenRevoker.new.call(token)
         end
 
-        # :reek:ControlParameter
         def token_should_be_revoked?(path_info, method)
           revocation_requests = config.revocation_requests
           revocation_requests.each do |tuple|

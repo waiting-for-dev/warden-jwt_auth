@@ -16,7 +16,6 @@ shared_context 'feature' do
 
   let(:pristine_env) { {} }
 
-  # :reek:FeatureEnvy
   def build_app(app)
     builder = Rack::Builder.new
     builder.use Warden::JWTAuth::Middleware
@@ -25,7 +24,6 @@ shared_context 'feature' do
     builder
   end
 
-  # :reek:FeatureEnvy
   def add_warden(builder)
     builder.use Warden::Manager do |manager|
       manager.default_strategies(:jwt)
@@ -33,7 +31,6 @@ shared_context 'feature' do
     end
   end
 
-  # :reek:UtilityFunction
   def call_app(app, env, request_tuple)
     method, path = request_tuple
     env = env.dup
@@ -42,14 +39,12 @@ shared_context 'feature' do
     app.call(env)
   end
 
-  # :reek:UtilityFunction
   def generate_token(user, scope, env)
     aud = Warden::JWTAuth::EnvHelper.aud_header(env)
     token, _payload = Warden::JWTAuth::UserEncoder.new.call(user, scope, aud)
     token
   end
 
-  # :reek:UtilityFunction
   def env_with_token(env, token)
     Warden::JWTAuth::HeaderParser.to_env(env, token)
   end

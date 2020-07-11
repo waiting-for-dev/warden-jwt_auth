@@ -34,8 +34,6 @@ module Warden
         jwt_scope?(scope) && request_matches?(path_info, method)
       end
 
-      # :reek:ManualDispatch
-      # :reek:UtilityFunction
       def add_token_to_env(user, scope, env)
         aud = EnvHelper.aud_header(env)
         token, payload = UserEncoder.new.call(user, scope, aud)
@@ -48,7 +46,6 @@ module Warden
         jwt_scopes.include?(scope)
       end
 
-      # :reek:ControlParameter
       def request_matches?(path_info, method)
         dispatch_requests.each do |tuple|
           dispatch_method, dispatch_path = tuple

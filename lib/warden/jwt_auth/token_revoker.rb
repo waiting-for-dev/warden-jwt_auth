@@ -14,10 +14,10 @@ module Warden
         scope = payload['scp'].to_sym
         user = PayloadUserHelper.find_user(payload)
         revocation_strategies[scope].revoke_jwt(payload, user)
-      # rubocop:disable Lint/HandleExceptions
+      # rubocop:disable Lint/SuppressedException
       rescue JWT::ExpiredSignature
       end
-      # rubocop:enable Lint/HandleExceptions
+      # rubocop:enable Lint/SuppressedException
     end
   end
 end

@@ -11,7 +11,6 @@ describe Warden::JWTAuth::Hooks do
   context 'with user set' do
     let(:app) { warden_app(dummy_app) }
 
-    # :reek:UtilityFunction
     def token(request)
       request.env['warden-jwt_auth.token']
     end
@@ -46,9 +45,11 @@ describe Warden::JWTAuth::Hooks do
       end
 
       it 'calls on_jwt_dispatch method in the user' do
-        expect(user).to receive(:on_jwt_dispatch)
+        allow(user).to receive(:on_jwt_dispatch)
 
         post '/sign_in'
+
+        expect(user).to have_received(:on_jwt_dispatch)
       end
     end
 

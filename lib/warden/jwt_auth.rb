@@ -20,9 +20,7 @@ module Warden
     extend Dry::Configurable
 
     def symbolize_keys(hash)
-      hash.each_with_object({}) do |(key, value), memo|
-        memo[key.to_sym] = value
-      end
+      hash.transform_keys(&:to_sym)
     end
 
     def upcase_first_items(array)
@@ -33,8 +31,8 @@ module Warden
     end
 
     def constantize_values(hash)
-      hash.each_with_object({}) do |(key, value), memo|
-        memo[key] = value.is_a?(String) ? Object.const_get(value) : value
+      hash.transform_values do |value|
+        value.is_a?(String) ? Object.const_get(value) : value
       end
     end
 

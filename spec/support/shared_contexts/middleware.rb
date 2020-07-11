@@ -6,7 +6,6 @@ shared_context 'middleware' do
 
   let(:dummy_app) { ->(_env) { [200, {}, []] } }
 
-  #:reek:UtilityFunction
   def warden_app(app)
     Warden::Manager.new(app)
   end
