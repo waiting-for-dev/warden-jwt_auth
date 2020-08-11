@@ -11,8 +11,8 @@ module Warden
       def self.find_user(payload)
         config = JWTAuth.config
         scope = payload['scp'].to_sym
-        user_repo = config.mappings[scope]
-        user_repo.find_for_jwt_authentication(payload['sub'])
+        ref = config.mappings[scope].to_s.classify
+        Object.const_get(ref).find_for_jwt_authentication(payload['sub'])
       end
 
       # Returns whether given scope matches with the one encoded in the payload
