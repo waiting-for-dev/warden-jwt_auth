@@ -3,6 +3,7 @@
 require 'spec_helper'
 require 'rack/test'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 describe Warden::JWTAuth::Middleware::RevocationManager do
   include_context 'configuration'
   include_context 'fixtures'
@@ -75,3 +76,4 @@ describe Warden::JWTAuth::Middleware::RevocationManager do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
