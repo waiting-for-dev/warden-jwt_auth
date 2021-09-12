@@ -42,23 +42,23 @@ module Warden
     setting :secret
 
     # The algorithm used to encode the token
-    setting :algorithm, 'HS256'
+    setting :algorithm, default: 'HS256'
 
     # Expiration time for tokens
-    setting :expiration_time, 3600
+    setting :expiration_time, default: 3600
 
     # Request header which value will be encoded as `aud` claim in JWT. If
     # the header is not present `aud` will be `nil`.
-    setting :aud_header, 'JWT_AUD'
+    setting :aud_header, default: 'JWT_AUD'
 
     # A hash of warden scopes as keys and user repositories as values. The
     # values can be either the constants themselves or the constant names.
     #
     # @see Interfaces::UserRepository
     # @see Interfaces::User
-    setting(:mappings, {}) do |value|
-      constantize_values(symbolize_keys(value))
-    end
+    setting(:mappings,
+            default: {},
+            constructor: ->(value) { constantize_values(symbolize_keys(value)) })
 
     # Array of tuples [request_method, request_path_regex] to match request
     # verbs and paths where a JWT token should be added to the `Authorization`
@@ -68,9 +68,9 @@ module Warden
     #  [
     #    ['POST', %r{^/sign_in$}]
     #  ]
-    setting(:dispatch_requests, []) do |value|
-      upcase_first_items(value)
-    end
+    setting(:dispatch_requests,
+            default: [],
+            constructor: ->(value) { upcase_first_items(value) })
 
     # Array of tuples [request_method, request_path_regex] to match request
     # verbs and paths where incoming JWT token should be be revoked
@@ -79,9 +79,9 @@ module Warden
     #  [
     #    ['DELETE', %r{^/sign_out$}]
     #  ]
-    setting :revocation_requests, [] do |value|
-      upcase_first_items(value)
-    end
+    setting(:revocation_requests,
+            default: [],
+            constructor: ->(value) { upcase_first_items(value) })
 
     # Hash with scopes as keys and strategies to revoke tokens for that scope
     # as values. The values can be either the constants themselves or the
@@ -93,9 +93,9 @@ module Warden
     #  }
     #
     # @see Interfaces::RevocationStrategy
-    setting(:revocation_strategies, {}) do |value|
-      constantize_values(symbolize_keys(value))
-    end
+    setting(:revocation_strategies,
+            default: {},
+            constructor: ->(value) { constantize_values(symbolize_keys(value)) })
 
     Import = Dry::AutoInject(config)
   end
