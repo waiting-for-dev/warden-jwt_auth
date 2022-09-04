@@ -68,6 +68,16 @@ Warden::JWTAuth.configure do |config|
 end
 ```
 
+If the algorithm is asymmetric (e.g. RS256) and necessitates a different decoding secret than the encoding secret, configure the `decoding_secret` setting as well.
+
+```ruby
+Warden::JWTAuth.configure do |config|
+  config.secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_PRIVATE_KEY'])
+  config.decoding_secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_PUBLIC_KEY'])
+  config.algorithm = 'RS256' # or other asymmetric algorithm
+end
+```
+
 ### Warden scopes configuration
 
 You have to map the warden scopes that will be authenticatable through JWT, with the user repositories from where these scope user records can be fetched. If a string is supplied, the user repository will first be looked up as a constant.

@@ -41,6 +41,9 @@ module Warden
     # The secret used to encode the token
     setting :secret
 
+    # The secret used to decode the token, defaults to `secret` if not provided
+    setting :decoding_secret, constructor: ->(value) { value || config.secret }
+
     # The algorithm used to encode the token
     setting :algorithm, default: 'HS256'
 
