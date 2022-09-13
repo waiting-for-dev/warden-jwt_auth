@@ -195,6 +195,19 @@ Authentication will be refused if a client requesting to be authenticated throug
 
 **Important:** Be aware that this workflow is not bullet proof. In some scenarios a user can handcraft the request headers, therefore being able to impersonate any client. In such cases you could need something more robust, like an OAuth workflow with client id and client secret.
 
+### Secret rotation
+
+Secret rotation is supported by setting `rotation_secret`. Set the new secret as the `secret` and copy the previous secret to `rotation_secret`
+
+```ruby
+Warden::JWTAuth.configure do |config|
+  config.secret = ENV['WARDEN_JWT_SECRET_KEY']
+  config.rotation_secret = ENV['WARDEN_JWT_SECRET_KEY_ROTATION']
+end
+```
+
+You can remove the `rotation_secret` when you are condifent that large enough user base has the fetched the token encrypted with the new secret.
+
 ## Development
 
 There are docker and docker-compose files configured to create a development environment for this gem. So, if you use Docker you only need to run:

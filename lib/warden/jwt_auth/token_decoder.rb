@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "jwt/error"
+require 'jwt/error'
 
 module Warden
   module JWTAuth
     # Decodes a JWT into a hash payload into a JWT token
     class TokenDecoder
-      include JWTAuth::Import['decoding_secret', 'secret_rotation', 'algorithm']
+      include JWTAuth::Import['decoding_secret', 'rotation_secret', 'algorithm']
 
       # Decodes the payload from a JWT as a hash
       #
@@ -16,19 +16,19 @@ module Warden
       # @param token [String] a JWT
       # @return [Hash] payload decoded from the JWT
       def call(token)
-        begin
-          JWT.decode(token,
-                     decoding_secret,
-                     true,
-                     algorithm: algorithm,
-                     verify_jti: true)[0]
-        rescue JWT::VerificationError => e
-          JWT.decode(token,
-                     secret_rotation,
-                     true,
-                     algorithm: algorithm,
-                     verify_jti: true)[0]
-        end
+        decode(token, decoding_secret)
+      rescue JWT::VerificationError
+        decode(token, rotation_secret)
+      end
+
+      private
+
+      def decode(token, secret)
+        JWT.decode(token,
+                   secret,
+                   true,
+                   algorithm: algorithm,
+                   verify_jti: true)[0]
       end
     end
   end
