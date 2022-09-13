@@ -42,7 +42,7 @@ module Warden
     setting :secret
 
     # The old secret used for rotation
-    setting :secret_rotation
+    setting :rotation_secret
 
     # The secret used to decode the token, defaults to `secret` if not provided
     setting :decoding_secret, constructor: ->(value) { value || config.secret }
