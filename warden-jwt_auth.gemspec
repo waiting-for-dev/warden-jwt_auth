@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.expand_path('lib', __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'warden/jwt_auth/version'
+require_relative 'lib/warden/jwt_auth/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'warden-jwt_auth'
@@ -15,15 +13,14 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/waiting-for-dev/warden-jwt_auth'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files         = Dir.glob('lib/**/*')
+  spec.files        += %w[README.md LICENSE.txt warden-jwt_auth.gemspec]
   spec.require_paths = ['lib']
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.add_dependency 'dry-auto_inject', '~> 0.8'
-  spec.add_dependency 'dry-configurable', '~> 0.13'
+  spec.add_dependency 'dry-auto_inject', '~> 1.0'
+  spec.add_dependency 'dry-configurable', '~> 1.0'
   spec.add_dependency 'jwt', '~> 2.1'
   spec.add_dependency 'warden', '~> 1.2'
 

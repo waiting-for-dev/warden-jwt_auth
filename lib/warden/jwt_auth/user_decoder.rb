@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'warden/jwt_auth/errors'
-
 module Warden
   module JWTAuth
     # Layer above token decoding which directly decodes a user from a JWT

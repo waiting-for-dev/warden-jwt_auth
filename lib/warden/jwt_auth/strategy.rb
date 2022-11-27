@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'warden'
-
 module Warden
   module JWTAuth
     # Warden strategy to authenticate an user through a JWT token in the

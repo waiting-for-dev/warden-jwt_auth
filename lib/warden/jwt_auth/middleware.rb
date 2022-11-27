@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'warden/jwt_auth/middleware/token_dispatcher'
-require 'warden/jwt_auth/middleware/revocation_manager'
-
 module Warden
   module JWTAuth
     # Simple rack middleware which is just a wrapper for other middlewares which
