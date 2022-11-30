@@ -25,8 +25,8 @@ module Warden
 
     def upcase_first_items(array)
       array.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
+        method, path, body = tuple
+        [method.to_s.upcase, path, body]
       end
     end
 

@@ -147,6 +147,14 @@ config.dispatch_requests = [
 
 Tokens will be returned in the `Authorization` response header, with format `Bearer #{token}`.
 
+There's an optional third element for the array, a regular expression to match something in the request body. This can be used in cases when more than one type of request goes to the same endpoint and use the same HTTP verb, such as when using GraphQL. For example, if you want to allow only requests that contain `signIn` in their body to dispatch tokens, you can use something like:
+
+```ruby
+config.dispatch_requests = [
+                             ['POST', %r{^/graphql$}, %r{signIn}]
+                           ]
+```
+
 ### Requests authentication
 
 Once you have a valid token, you can authenticate following requests providing the token in the `Authorization` request header, with format `Bearer #{token}`.
@@ -166,6 +174,8 @@ config.revocation_requests = [
 ```
 
 **Important**: You are encouraged to delimit your regular expression with `^` and `$` to avoid unintentional matches.
+
+As for `dispatch_requests` there's an optional third element for the array of `revocation_requests` too, a regular expression to match something in the request body.
 
 Besides, you need to configure which revocation strategy will be used for each scope. If a string is supplied, the revocation strategy will first be looked up as a constant.
 

@@ -31,7 +31,8 @@ module Warden
       def token_should_be_added?(scope, env)
         path_info = EnvHelper.path_info(env)
         method = EnvHelper.request_method(env)
-        jwt_scope?(scope) && request_matches?(path_info, method)
+        body_string_io = Rack::Request.new(env).body
+        jwt_scope?(scope) && request_matches?(path_info, method, body_string_io)
       end
 
       def add_token_to_env(user, scope, env)
@@ -46,11 +47,12 @@ module Warden
         jwt_scopes.include?(scope)
       end
 
-      def request_matches?(path_info, method)
+      def request_matches?(path_info, method, body_string_io)
         dispatch_requests.each do |tuple|
-          dispatch_method, dispatch_path = tuple
+          dispatch_method, dispatch_path, dispatch_body = tuple
           return true if path_info.match(dispatch_path) &&
-                         method == dispatch_method
+                         method == dispatch_method &&
+                         (dispatch_body ? body_string_io.string.match(dispatch_body) : true)
         end
         false
       end
