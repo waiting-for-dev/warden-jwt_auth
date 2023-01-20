@@ -50,6 +50,9 @@ module Warden
     # Expiration time for tokens
     setting :expiration_time, default: 3600
 
+    # Request header that will be used for receiving and returning the token.
+    setting :token_header, default: 'Authorization'
+
     # Request header which value will be encoded as `aud` claim in JWT. If
     # the header is not present `aud` will be `nil`.
     setting :aud_header, default: 'JWT_AUD'

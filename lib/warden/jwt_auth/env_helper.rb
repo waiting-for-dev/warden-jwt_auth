@@ -25,16 +25,17 @@ module Warden
         env['REQUEST_METHOD']
       end
 
-      # Returns HTTP_AUTHORIZATION environment variable
+      # Returns header configured through `token_header` option
       #
       # @param env [Hash] Rack env
       # @return [String]
       def self.authorization_header(env)
-        env['HTTP_AUTHORIZATION']
+        env_name = ('HTTP_' + JWTAuth.config.token_header.upcase).tr('-', '_')
+        env[env_name]
       end
 
-      # Returns a copy of `env` with value added to the `HTTP_AUTHORIZATION`
-      # environment variable.
+      # Returns a copy of `env` with value added to the environment variable
+      # configured through `token_header` option
       #
       # Be aware than `env` is not modified in place and still an updated copy
       # is returned.
@@ -44,7 +45,8 @@ module Warden
       # @return [Hash] modified rack env
       def self.set_authorization_header(env, value)
         env = env.dup
-        env['HTTP_AUTHORIZATION'] = value
+        env_name = ('HTTP_' + JWTAuth.config.token_header.upcase).tr('-', '_')
+        env[env_name] = value
         env
       end
 
