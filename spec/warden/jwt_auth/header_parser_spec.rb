@@ -55,5 +55,18 @@ describe Warden::JWTAuth::HeaderParser do
 
       expect(headers).to eq('Authorization' => 'Bearer 123')
     end
+
+
+    describe 'custom token header' do
+      it 'returns configured token_header' do
+        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('Test_Authorization')
+
+        headers = {}
+
+        headers = described_class.to_headers(headers, '123')
+
+        expect(headers).to eq('Test_Authorization' => 'Bearer 123')
+      end
+    end
   end
 end

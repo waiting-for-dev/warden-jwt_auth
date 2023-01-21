@@ -36,7 +36,7 @@ describe Warden::JWTAuth::EnvHelper do
 
     describe 'custom token header' do
       it 'returns configured token_header' do
-        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('TEST_AUTHORIZATION')
+        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('Test_Authorization')
 
         env = { 'HTTP_TEST_AUTHORIZATION' => 'Bearer 123' }
 
@@ -56,7 +56,7 @@ describe Warden::JWTAuth::EnvHelper do
 
     describe 'custom token header' do
       it 'sets value as configured token_header' do
-        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('TEST_AUTHORIZATION')
+        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('Test_Authorization')
 
         env = {}
 
