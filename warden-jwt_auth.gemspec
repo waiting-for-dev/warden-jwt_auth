@@ -22,8 +22,8 @@ Gem::Specification.new do |spec|
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.add_dependency 'dry-auto_inject', '~> 0.8'
-  spec.add_dependency 'dry-configurable', '~> 0.13'
+  spec.add_dependency 'dry-auto_inject', '>= 0.8', '< 2'
+  spec.add_dependency 'dry-configurable', '>= 0.13', '< 2'
   spec.add_dependency 'jwt', '~> 2.1'
   spec.add_dependency 'warden', '~> 1.2'
 
