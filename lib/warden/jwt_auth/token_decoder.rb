@@ -16,14 +16,16 @@ module Warden
       # @param token [String] a JWT
       # @return [Hash] payload decoded from the JWT
       def call(token)
+        decode(token, decoding_secret)
+      rescue JWT::VerificationError
+        decode(token, rotation_secret)
+      end
+
+      private
+
+      def decode(token, secret)
         JWT.decode(token,
-                   decoding_secret,
-                   true,
-                   algorithm: algorithm,
-                   verify_jti: true)[0]
-      rescue JWT::VerificationError => e
-        JWT.decode(token,
-                   rotation_secret,
+                   secret,
                    true,
                    algorithm: algorithm,
                    verify_jti: true)[0]
