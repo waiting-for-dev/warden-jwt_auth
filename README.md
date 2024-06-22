@@ -182,7 +182,7 @@ module RevocationStrategy
   def self.jwt_revoked?(payload, user)
     # Does something to check whether the JWT token is revoked for given user
   end
-  
+
   def self.revoke_jwt(payload, user)
     # Does something to revoke the JWT token for given user
   end
@@ -207,6 +207,17 @@ end
 ```
 
 You can remove the `rotation_secret` when you are condifent that large enough user base has the fetched the token encrypted with the new secret.
+
+### Multiple issuers
+
+When your application handles JWT tokens from multiple sources (e.g. webhooks authenticated via provider JTW tokens) you can configure this gem to use the [issuer claim](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1) to only handle tokens it has issued.
+
+```ruby
+Warden::JWTAuth.configure do |config|
+  config.secret = ENV['WARDEN_JWT_SECRET_KEY']
+  config.issuer = 'http://my-application.com'
+end
+```
 
 ## Development
 
