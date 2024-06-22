@@ -50,6 +50,24 @@ describe Warden::JWTAuth::PayloadUserHelper do
     end
   end
 
+  describe '::issuer_matches?(payload, aud)' do
+    context 'when given iss matches the one encoded in payload' do
+      it 'returns true' do
+        payload = { 'iss' => 'http://example.com' }
+
+        expect(described_class.issuer_matches?(payload, 'http://example.com')).to eq(true)
+      end
+    end
+
+    context 'when given iss does not match the one encoded in payload' do
+      it 'returns false' do
+        payload = { 'iss' => 'unknown' }
+
+        expect(described_class.issuer_matches?(payload, 'http://example.com')).to eq(false)
+      end
+    end
+  end
+
   describe '::payload_for_user(user, scope)' do
     let(:payload) { described_class.payload_for_user(user, :user) }
 

@@ -40,7 +40,7 @@ module Warden
       end
 
       def issuer_claim_matches?
-        Warden::JWTAuth.config.issuer == TokenDecoder.new.call(token)['iss']
+        PayloadUserHelper.issuer_matches?(TokenDecoder.new.call(token), Warden::JWTAuth.config.issuer)
       end
     end
   end
