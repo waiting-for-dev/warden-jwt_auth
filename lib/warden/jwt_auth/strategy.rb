@@ -8,7 +8,9 @@ module Warden
     # `Authorization` request header
     class Strategy < Warden::Strategies::Base
       def valid?
-        !token.nil?
+        !token.nil? && verify_issuer_claim
+      rescue JWT::DecodeError
+        true
       end
 
       def store?
@@ -27,6 +29,14 @@ module Warden
 
       def token
         @token ||= HeaderParser.from_env(env)
+      end
+
+      def verify_issuer_claim
+        case Warden::JWTAuth.config.issuer
+        when nil then true
+        when TokenDecoder.new.call(token)['iss'] then true
+        else false
+        end
       end
     end
   end
