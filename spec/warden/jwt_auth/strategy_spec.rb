@@ -35,6 +35,7 @@ describe Warden::JWTAuth::Strategy do
       let(:token) { Warden::JWTAuth::TokenEncoder.new.call({issuer: issuer}) }
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:issuer) { 'http://example.com' }
+      let(:strategy) { described_class.new(env, :user) }
 
       before do
         Warden::JWTAuth.configure do |config|
@@ -44,8 +45,6 @@ describe Warden::JWTAuth::Strategy do
 
       context "when the issuer claim matches the configured issuer" do
         it 'returns true' do
-          strategy = described_class.new(env, :user)
-
           expect(strategy).to be_valid
         end
       end
@@ -54,8 +53,6 @@ describe Warden::JWTAuth::Strategy do
         let(:token) { Warden::JWTAuth::TokenEncoder.new.call({"iss" => 'http://example.org'}) }
 
         it 'returns false' do
-          strategy = described_class.new(env, :user)
-
           expect(strategy).not_to be_valid
         end
       end
