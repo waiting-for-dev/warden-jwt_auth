@@ -31,6 +31,7 @@ module Warden
 
       # Returns whether given issuer matches with the one encoded in the payload
       # @param payload [Hash] JWT payload
+      # @param issuer [String] The issuer to match
       # @return [Boolean]
       def self.issuer_matches?(payload, issuer)
         payload['iss'] == issuer.to_s
