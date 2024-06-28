@@ -53,6 +53,13 @@ module Warden
     # Expiration time for tokens
     setting :expiration_time, default: 3600
 
+    # The issuer claims associated with the tokens
+    #
+    # Will be used to only apply the warden strategy when the issuer matches.
+    # This allows for multiple token issuers being used.
+    # @see https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1
+    setting :issuer, default: nil
+
     # Request header which value will be encoded as `aud` claim in JWT. If
     # the header is not present `aud` will be `nil`.
     setting :aud_header, default: 'JWT_AUD'

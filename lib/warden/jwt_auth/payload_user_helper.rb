@@ -29,6 +29,14 @@ module Warden
         payload['aud'] == aud
       end
 
+      # Returns whether given issuer matches with the one encoded in the payload
+      # @param payload [Hash] JWT payload
+      # @param issuer [String] The issuer to match
+      # @return [Boolean]
+      def self.issuer_matches?(payload, issuer)
+        payload['iss'] == issuer.to_s
+      end
+
       # Returns the payload to encode for a given user in a scope
       #
       # @param user [Interfaces::User] an user, whatever it is

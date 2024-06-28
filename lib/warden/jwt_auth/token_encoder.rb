@@ -7,7 +7,7 @@ module Warden
     # Encodes a payload into a JWT token, adding some configurable
     # claims
     class TokenEncoder
-      include JWTAuth::Import['secret', 'algorithm', 'expiration_time']
+      include JWTAuth::Import['secret', 'algorithm', 'expiration_time', 'issuer']
 
       # Encodes a payload into a JWT
       #
@@ -24,6 +24,7 @@ module Warden
         now = Time.now.to_i
         payload['iat'] ||= now
         payload['exp'] ||= now + expiration_time
+        payload['iss'] ||= issuer if issuer
         payload['jti'] ||= SecureRandom.uuid
         payload
       end
