@@ -11,6 +11,7 @@ shared_context 'configuration' do
       config.revocation_requests = [['DELETE', %r{^/sign_out$}]]
       config.revocation_strategies = { user: Fixtures::RevocationStrategy.new }
       config.mappings = { user: Fixtures::UserRepo }
+      config.token_header = 'Authorization'
       config.aud_header = 'TEST_AUD'
     end
   end
@@ -25,6 +26,8 @@ shared_context 'configuration' do
   let(:revocation_strategies) { config.revocation_strategies }
   let(:mappings) { config.mappings }
   let(:expiration_time) { config.expiration_time }
+  let(:token_header) { config.token_header}
+  let(:env_token_header) { ('HTTP_' + config.token_header.upcase).tr('-', '_') }
   let(:aud_header) { config.aud_header }
   let(:env_aud_header) { ('HTTP_' + config.aud_header.upcase).tr('-', '_') }
 end

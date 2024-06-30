@@ -28,42 +28,20 @@ describe Warden::JWTAuth::EnvHelper do
   end
 
   describe '::authorization_header(env)' do
-    it 'returns HTTP_AUTHORIZATION by default' do
-      env = { 'HTTP_AUTHORIZATION' => 'Bearer 123' }
+    it 'returns configured authorization_header' do
+      env = { env_token_header => 'Bearer 123' }
 
       expect(described_class.authorization_header(env)).to eq('Bearer 123')
-    end
-
-    describe 'custom token header' do
-      it 'returns configured token_header' do
-        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('Test_Authorization')
-
-        env = { 'HTTP_TEST_AUTHORIZATION' => 'Bearer 123' }
-
-        expect(described_class.authorization_header(env)).to eq('Bearer 123')
-      end
     end
   end
 
   describe '::set_authorization_header(env, value)' do
-    it 'sets value as HTTP_AUTHORIZATION' do
+    it 'sets value as configured token_header' do
       env = {}
 
       updated_env = described_class.set_authorization_header(env, 'Bearer 123')
 
-      expect(updated_env['HTTP_AUTHORIZATION']).to eq('Bearer 123')
-    end
-
-    describe 'custom token header' do
-      it 'sets value as configured token_header' do
-        allow(Warden::JWTAuth.config).to receive(:token_header).and_return('Test_Authorization')
-
-        env = {}
-
-        updated_env = described_class.set_authorization_header(env, 'Bearer 123')
-
-        expect(updated_env['HTTP_TEST_AUTHORIZATION']).to eq('Bearer 123')
-      end
+      expect(updated_env[env_token_header]).to eq('Bearer 123')
     end
   end
 
@@ -72,6 +50,14 @@ describe Warden::JWTAuth::EnvHelper do
       env = { env_aud_header => 'FOO_AUD' }
 
       expect(described_class.aud_header(env)).to eq('FOO_AUD')
+    end
+  end
+
+  describe '::env_name(header)' do
+    it 'returns env name for header' do
+      header = 'Test-Authorization'
+
+      expect(described_class.env_name(header)).to eq('HTTP_TEST_AUTHORIZATION')
     end
   end
 end
