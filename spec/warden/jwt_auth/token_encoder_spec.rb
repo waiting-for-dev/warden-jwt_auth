@@ -65,5 +65,18 @@ describe Warden::JWTAuth::TokenEncoder do
         expect(decoded_payload['foo']).to eq('bar')
       end
     end
+
+    context 'with issuer claim' do
+      let(:issuer) { 'http://example.com' }
+      before do
+        Warden::JWTAuth.configure do |config|
+          config.issuer = issuer
+        end
+      end
+
+      it 'adds a `iss` claim with the configured issuer' do
+        expect(decoded_payload['iss']).to eq(issuer)
+      end
+    end
   end
 end

@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.0] - 2024-06-28
+- Add support for issue claim ([56](https://github.com/waiting-for-dev/warden-jwt_auth/pull/56))
+
 ## [0.8.0] - 2023-01-31
 - Add support for secret rotation ([49](https://github.com/waiting-for-dev/warden-jwt_auth/pull/49))
 - Support dry-* v1 ([52](https://github.com/waiting-for-dev/warden-jwt_auth/pull/52))
