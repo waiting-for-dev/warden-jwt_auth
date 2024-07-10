@@ -53,6 +53,9 @@ module Warden
     # Expiration time for tokens
     setting :expiration_time, default: 3600
 
+    # Request header that will be used for receiving and returning the token.
+    setting :token_header, default: 'Authorization'
+
     # The issuer claims associated with the tokens
     #
     # Will be used to only apply the warden strategy when the issuer matches.

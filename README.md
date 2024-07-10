@@ -145,7 +145,7 @@ config.dispatch_requests = [
 
 **Important**: You are encouraged to delimit your regular expression with `^` and `$` to avoid unintentional matches.
 
-Tokens will be returned in the `Authorization` response header, with format `Bearer #{token}`.
+Tokens will be returned in the `Authorization` response header (configurable via `config.token_header`), with format `Bearer #{token}`.
 
 ### Requests authentication
 

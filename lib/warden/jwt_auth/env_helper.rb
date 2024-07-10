@@ -25,16 +25,17 @@ module Warden
         env['REQUEST_METHOD']
       end
 
-      # Returns HTTP_AUTHORIZATION environment variable
+      # Returns header configured through `token_header` option
       #
       # @param env [Hash] Rack env
       # @return [String]
       def self.authorization_header(env)
-        env['HTTP_AUTHORIZATION']
+        header_env_name = env_name(JWTAuth.config.token_header)
+        env[header_env_name]
       end
 
-      # Returns a copy of `env` with value added to the `HTTP_AUTHORIZATION`
-      # environment variable.
+      # Returns a copy of `env` with value added to the environment variable
+      # configured through `token_header` option
       #
       # Be aware than `env` is not modified in place and still an updated copy
       # is returned.
@@ -44,7 +45,8 @@ module Warden
       # @return [Hash] modified rack env
       def self.set_authorization_header(env, value)
         env = env.dup
-        env['HTTP_AUTHORIZATION'] = value
+        header_env_name = env_name(JWTAuth.config.token_header)
+        env[header_env_name] = value
         env
       end
 
@@ -53,8 +55,16 @@ module Warden
       # @param env [Hash] Rack env
       # @return [String]
       def self.aud_header(env)
-        env_name = ('HTTP_' + JWTAuth.config.aud_header.upcase).tr('-', '_')
-        env[env_name]
+        header_env_name = env_name(JWTAuth.config.aud_header)
+        env[header_env_name]
+      end
+
+      # Returns the ENV name for a given header
+      #
+      # @param header [String] Header name
+      # @return [String]
+      def self.env_name(header)
+        ('HTTP_' + header.upcase).tr('-', '_')
       end
     end
   end

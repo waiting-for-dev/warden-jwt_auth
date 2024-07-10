@@ -21,8 +21,8 @@ module Warden
         method == METHOD ? token : nil
       end
 
-      # Returns a copy of `env` with token added to the `HTTP_AUTHORIZATION`
-      # header. Be aware than `env` is not modified in place.
+      # Returns a copy of `env` with token added to the header configured through
+      # `token_header` option. Be aware than `env` is not modified in place.
       #
       # @param env [Hash] rack env hash
       # @param token [String] JWT token
@@ -39,7 +39,7 @@ module Warden
       # @return [Hash] response headers with the token added
       def self.to_headers(headers, token)
         headers = headers.dup
-        headers['Authorization'] = "#{METHOD} #{token}"
+        headers[JWTAuth.config.token_header] = "#{METHOD} #{token}"
         headers
       end
     end
