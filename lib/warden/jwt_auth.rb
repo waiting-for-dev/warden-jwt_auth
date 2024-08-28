@@ -113,6 +113,17 @@ module Warden
             default: {},
             constructor: ->(value) { constantize_values(symbolize_keys(value)) })
 
+    # Array of valid values for the `aud` claim on tokens. If set, `aud_header`
+    # logic is bypassed.
+    #
+    # @example
+    # ["inbound-api-access"]
+    setting(:valid_auds, default: [])
+
+    # Default scope for tokens. If set, tokens without an `scp` claim will take
+    # this value instead.
+    setting :default_scope
+
     Import = Dry::AutoInject(config)
   end
 end
