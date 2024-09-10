@@ -50,15 +50,6 @@ module Warden
         env
       end
 
-      # Returns header configured through `aud_header` option
-      #
-      # @param env [Hash] Rack env
-      # @return [String]
-      def self.aud_header(env)
-        header_env_name = env_name(Auth0.config.aud_header)
-        env[header_env_name]
-      end
-
       # Returns the ENV name for a given header
       #
       # @param header [String] Header name

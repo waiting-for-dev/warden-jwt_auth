@@ -10,11 +10,11 @@ describe Warden::Auth0::UserDecoder do
   let(:issuer) { 'https://test-dev.eu.auth0.com/' }
   let(:payload) do
     {
-      "sub": '1234567890',
-      "name": 'John Doe',
-      "iat": 1516239022,
-      "jti": 'baf1dc38-0331-40d3-b80a-60fd2c5a21c3',
-      "iss": issuer
+      sub => '1234567890',
+      name => 'John Doe',
+      iat => 1516239022,
+      jti => 'baf1dc38-0331-40d3-b80a-60fd2c5a21c3',
+      iss => issuer
     }
   end
 

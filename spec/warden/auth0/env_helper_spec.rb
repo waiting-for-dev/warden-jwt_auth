@@ -45,14 +45,6 @@ describe Warden::Auth0::EnvHelper do
     end
   end
 
-  describe '::aud_header(env)' do
-    it 'returns configured aud_header' do
-      env = { env_aud_header => 'FOO_AUD' }
-
-      expect(described_class.aud_header(env)).to eq('FOO_AUD')
-    end
-  end
-
   describe '::env_name(header)' do
     it 'returns env name for header' do
       header = 'Test-Authorization'

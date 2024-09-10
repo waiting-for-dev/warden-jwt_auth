@@ -6,12 +6,21 @@ describe Warden::Auth0::TokenDecoder do
   include_context 'configuration'
 
   describe '#call(token)' do
-    let(:payload) { { 'sub' => '1', 'jti' => '123' } }
-    let(:token) { ::JWT.encode(payload, secret, 'HS256') }
-    let(:invalid_token) { ::JWT.encode(payload, 'invalid', 'HS256') }
+    let(:payload) do
+      {
+        'sub' => '1234567890',
+        'name' => 'John Doe',
+        'iat' => 1516239022,
+        'jti' => 'baf1dc38-0331-40d3-b80a-60fd2c5a21c3',
+        'iss' => issuer
+      }
+    end
+    let(:valid_token) { 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.bohJzH8dseepETezDOs3uX6oJcwJvhQwMyWnmO8OY4E' }
+
+    let(:invalid_token) { "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.iMV9ZwCkU1S6Gx8v56uA6oGiM6KLdHnaV_epUDImgHg" }
 
     it 'returns the payload encoded in the token' do
-      expect(described_class.new.call(token)).to eq(payload)
+      expect(described_class.new.call(valid_token)).to eq(payload)
     end
 
     it 'raises an error if decode fails' do
