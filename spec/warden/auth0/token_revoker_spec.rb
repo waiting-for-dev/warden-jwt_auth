@@ -2,14 +2,14 @@
 
 require 'spec_helper'
 
-describe Warden::JWTAuth::TokenRevoker do
+describe Warden::Auth0::TokenRevoker do
   include_context 'configuration'
   include_context 'fixtures'
 
   describe '#call(token)' do
     let(:revocation_strategy) { revocation_strategies[:user] }
 
-    let(:token_payload) { Warden::JWTAuth::UserEncoder.new.call(user, :user, 'aud') }
+    let(:token_payload) { Warden::Auth0::UserEncoder.new.call(user, :user, 'aud') }
     let(:token) { token_payload[0] }
     let(:payload) { token_payload[1] }
 
@@ -28,9 +28,9 @@ describe Warden::JWTAuth::TokenRevoker do
     end
 
     context 'when token is expired' do
-      before { Warden::JWTAuth.config.expiration_time = -1 }
+      before { Warden::Auth0.config.expiration_time = -1 }
 
-      after { Warden::JWTAuth.config.expiration_time = 3600 }
+      after { Warden::Auth0.config.expiration_time = 3600 }
 
       it 'silently ignores it' do
         expect { described_class.new.call(token) }.not_to raise_error

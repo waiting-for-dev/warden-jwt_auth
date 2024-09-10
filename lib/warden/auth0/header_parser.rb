@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Helpers to parse token from a request and to a response
     module HeaderParser
       # Method for `Authorization` header. Token is present in request/response
@@ -39,7 +39,7 @@ module Warden
       # @return [Hash] response headers with the token added
       def self.to_headers(headers, token)
         headers = headers.dup
-        headers[JWTAuth.config.token_header] = "#{METHOD} #{token}"
+        headers[Auth0.config.token_header] = "#{METHOD} #{token}"
         headers
       end
     end

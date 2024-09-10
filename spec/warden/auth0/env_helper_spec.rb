@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Warden::JWTAuth::EnvHelper do
+describe Warden::Auth0::EnvHelper do
   include_context 'configuration'
 
   describe '::path_info(env)' do

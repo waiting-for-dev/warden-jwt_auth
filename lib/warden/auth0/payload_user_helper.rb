@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Helper functions to deal with user info present in a decode payload
     module PayloadUserHelper
       # Returns user encoded in given payload
@@ -9,7 +9,7 @@ module Warden
       # @param payload [Hash] JWT payload
       # @return [Interfaces::User] an user, whatever it is
       def self.find_user(payload)
-        config = JWTAuth.config
+        config = Auth0.config
         scope = payload['scp'].to_sym
         user_repo = config.mappings[scope]
         user_repo.find_for_jwt_authentication(payload['sub'])

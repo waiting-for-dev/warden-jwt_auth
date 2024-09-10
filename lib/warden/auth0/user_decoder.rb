@@ -3,10 +3,10 @@
 require 'warden/jwt_auth/errors'
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Layer above token decoding which directly decodes a user from a JWT
     class UserDecoder
-      include JWTAuth::Import['revocation_strategies']
+      include Auth0::Import['revocation_strategies']
 
       attr_reader :helper
 

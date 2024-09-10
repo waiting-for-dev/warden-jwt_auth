@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Helper functions to centralize working with rack env.
     #
     # It follows
@@ -30,7 +30,7 @@ module Warden
       # @param env [Hash] Rack env
       # @return [String]
       def self.authorization_header(env)
-        header_env_name = env_name(JWTAuth.config.token_header)
+        header_env_name = env_name(Auth0.config.token_header)
         env[header_env_name]
       end
 
@@ -45,7 +45,7 @@ module Warden
       # @return [Hash] modified rack env
       def self.set_authorization_header(env, value)
         env = env.dup
-        header_env_name = env_name(JWTAuth.config.token_header)
+        header_env_name = env_name(Auth0.config.token_header)
         env[header_env_name] = value
         env
       end
@@ -55,7 +55,7 @@ module Warden
       # @param env [Hash] Rack env
       # @return [String]
       def self.aud_header(env)
-        header_env_name = env_name(JWTAuth.config.aud_header)
+        header_env_name = env_name(Auth0.config.aud_header)
         env[header_env_name]
       end
 

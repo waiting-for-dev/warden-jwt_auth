@@ -2,17 +2,16 @@
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'warden/jwt_auth/version'
+require 'warden/auth0/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'warden-jwt_auth'
-  spec.version       = Warden::JWTAuth::VERSION
-  spec.authors       = ['Marc Busqué']
-  spec.email         = ['marc@lamarciana.com']
+  spec.name          = 'warden-auth0'
+  spec.version       = Warden::Auth0::VERSION
+  spec.authors       = ['1KOMMA5º']
 
-  spec.summary       = 'JWT authentication for Warden.'
-  spec.description   = 'JWT authentication for Warden, ORM agnostic and accepting the implementation of token revocation strategies.'
-  spec.homepage      = 'https://github.com/waiting-for-dev/warden-jwt_auth'
+  spec.summary       = 'Auth0 authentication for Warden.'
+  spec.description   = 'Auth0 authentication for Warden, ORM agnostic and accepting the implementation of token revocation strategies.'
+  spec.homepage      = 'https://github.com/sarakola/warden-jwt_auth'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

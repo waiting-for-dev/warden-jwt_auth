@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Warden::JWTAuth::PayloadUserHelper do
+describe Warden::Auth0::PayloadUserHelper do
   include_context 'configuration'
   include_context 'fixtures'
 

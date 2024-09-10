@@ -55,9 +55,9 @@ describe 'Authorization', type: :feature do
   end
 
   context 'when the user fetched from repo is nil' do
-    before { Warden::JWTAuth.config.mappings = { user: nil_user_repo } }
+    before { Warden::Auth0.config.mappings = { user: nil_user_repo } }
 
-    after { Warden::JWTAuth.config.mappings = { user: user_repo } }
+    after { Warden::Auth0.config.mappings = { user: user_repo } }
 
     it 'does not authenticate' do
       token = generate_token(user, :user, pristine_env)

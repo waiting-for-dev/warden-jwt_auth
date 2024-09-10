@@ -16,17 +16,9 @@ shared_context 'feature' do
 
   let(:pristine_env) { {} }
 
-  def build_app(app)
-    builder = Rack::Builder.new
-    builder.use Warden::JWTAuth::Middleware
-    add_warden(builder)
-    builder.run(app)
-    builder
-  end
-
   def add_warden(builder)
     builder.use Warden::Manager do |manager|
-      manager.default_strategies(:jwt)
+      manager.default_strategies(:auth0)
       manager.failure_app = failure_app
     end
   end
@@ -40,12 +32,12 @@ shared_context 'feature' do
   end
 
   def generate_token(user, scope, env)
-    aud = Warden::JWTAuth::EnvHelper.aud_header(env)
-    token, _payload = Warden::JWTAuth::UserEncoder.new.call(user, scope, aud)
+    aud = Warden::Auth0::EnvHelper.aud_header(env)
+    token, _payload = Warden::Auth0::UserEncoder.new.call(user, scope, aud)
     token
   end
 
   def env_with_token(env, token)
-    Warden::JWTAuth::HeaderParser.to_env(env, token)
+    Warden::Auth0::HeaderParser.to_env(env, token)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Interfaces expected to be implemented in applications working with this
     # gem
     module Interfaces
@@ -37,26 +37,6 @@ module Warden
         # @param _token [String]
         # @param _payload [Hash]
         def on_jwt_dispatch(_token, _payload)
-          raise NotImplementedError
-        end
-      end
-
-      # Strategy to manage JWT revocation
-      class RevocationStrategy
-        # Does something to revoke a JWT payload
-        #
-        # @param _payload [Hash]
-        # @param _user [User]
-        def revoke_jwt(_payload, _user)
-          raise NotImplementedError
-        end
-
-        # Returns whether a JWT payload is revoked
-        #
-        # @param _payload [Hash]
-        # @param _user [User]
-        # @return [Boolean]
-        def jwt_revoked?(_payload, _user)
           raise NotImplementedError
         end
       end

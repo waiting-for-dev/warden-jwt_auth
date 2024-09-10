@@ -1,4 +1,4 @@
-# Warden::JWTAuth
+# Warden::Auth0
 
 [![Gem Version](https://badge.fury.io/rb/warden-jwt_auth.svg)](https://badge.fury.io/rb/warden-jwt_auth)
 [![Build Status](https://travis-ci.org/waiting-for-dev/warden-jwt_auth.svg?branch=master)](https://travis-ci.org/waiting-for-dev/warden-jwt_auth)
@@ -52,7 +52,7 @@ As you see, JWT revocation is supported. I wrote [why I think JWT tokens revocat
 First of all, you have to configure the secret key that will be used to sign generated tokens.
 
 ```ruby
-Warden::JWTAuth.configure do |config|
+Warden::Auth0.configure do |config|
   config.secret = ENV['WARDEN_JWT_SECRET_KEY']
 end
 ```
@@ -62,7 +62,7 @@ end
 Currently, HS256 algorithm is the default.
 Configure the matching secret and algorithm name to use a different one (e.g. RS256) (see [ruby-jwt](https://github.com/jwt/ruby-jwt#algorithms-and-usage) to see which are supported)
 ```ruby
-Warden::JWTAuth.configure do |config|
+Warden::Auth0.configure do |config|
   config.secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_SECRET_KEY'])
   config.algorithm = ENV['WARDEN_JWT_ALGORITHM']
 end
@@ -71,7 +71,7 @@ end
 If the algorithm is asymmetric (e.g. RS256) and necessitates a different decoding secret than the encoding secret, configure the `decoding_secret` setting as well.
 
 ```ruby
-Warden::JWTAuth.configure do |config|
+Warden::Auth0.configure do |config|
   config.secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_PRIVATE_KEY'])
   config.decoding_secret = OpenSSL::PKey::RSA.new(ENV['WARDEN_JWT_PUBLIC_KEY'])
   config.algorithm = 'RS256' # or other asymmetric algorithm
@@ -127,7 +127,7 @@ end
 
 ### Middlewares addition
 
-You need to add `Warden::JWTAuth::Middleware` to your rack middlewares stack. Actually, it is just a wrapper which adds two middlewares that do the actual job: dispatching tokens and revoking tokens.
+You need to add `Warden::Auth0::Middleware` to your rack middlewares stack. Actually, it is just a wrapper which adds two middlewares that do the actual job: dispatching tokens and revoking tokens.
 
 ### Token dispatch configuration
 
@@ -200,7 +200,7 @@ Authentication will be refused if a client requesting to be authenticated throug
 Secret rotation is supported by setting `rotation_secret`. Set the new secret as the `secret` and copy the previous secret to `rotation_secret`
 
 ```ruby
-Warden::JWTAuth.configure do |config|
+Warden::Auth0.configure do |config|
   config.secret = ENV['WARDEN_JWT_SECRET_KEY']
   config.rotation_secret = ENV['WARDEN_JWT_SECRET_KEY_ROTATION']
 end
@@ -213,7 +213,7 @@ You can remove the `rotation_secret` when you are condifent that large enough us
 When your application handles JWT tokens from multiple sources (e.g. webhooks authenticated via provider JTW tokens) you can configure this gem to use the [issuer claim](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1) to only handle tokens it has issued.
 
 ```ruby
-Warden::JWTAuth.configure do |config|
+Warden::Auth0.configure do |config|
   config.secret = ENV['WARDEN_JWT_SECRET_KEY']
   config.issuer = 'http://my-application.com'
 end

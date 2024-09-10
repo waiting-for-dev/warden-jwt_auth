@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Warden
-  module JWTAuth
+  module Auth0
     module Errors
       # Error raised when trying to decode a token that has been revoked for an
       # user

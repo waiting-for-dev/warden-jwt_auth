@@ -17,7 +17,7 @@ Feature requests and questions about `warden-jwt_auth` are also accepted.
 Provide following information. Please, format pasted output as code. Feel free to remove the secret key value.
 
 - Version of `warden-jwt_auth` in use
-- Output of `Warden::JWTAuth.config`
+- Output of `Warden::Auth0.config`
 - If your issue is related with not getting a JWT from the server:
   - Involved request path, method and request headers
   - Response headers for that request

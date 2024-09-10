@@ -3,10 +3,10 @@
 require 'jwt/error'
 
 module Warden
-  module JWTAuth
+  module Auth0
     # Decodes a JWT into a hash payload into a JWT token
     class TokenDecoder
-      include JWTAuth::Import['decoding_secret', 'rotation_secret', 'algorithm']
+      include Auth0::Import['decoding_secret']
 
       # Decodes the payload from a JWT as a hash
       #
@@ -17,8 +17,6 @@ module Warden
       # @return [Hash] payload decoded from the JWT
       def call(token)
         decode(token, decoding_secret)
-      rescue JWT::VerificationError
-        decode(token, rotation_secret)
       end
 
       private
@@ -27,7 +25,7 @@ module Warden
         JWT.decode(token,
                    secret,
                    true,
-                   algorithm: algorithm,
+                   #  algorithm: algorithm,
                    verify_jti: true)[0]
       end
     end
