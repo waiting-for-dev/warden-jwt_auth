@@ -51,11 +51,14 @@ module Warden
     # @see https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1
     setting :issuer, default: nil
 
+    setting :user_resolver
+
     Import = Dry::AutoInject(config)
   end
 end
 
 require 'warden/auth0/version'
+require 'warden/auth0/errors'
 require 'warden/auth0/header_parser'
 require 'warden/auth0/payload_user_helper'
 require 'warden/auth0/env_helper'
