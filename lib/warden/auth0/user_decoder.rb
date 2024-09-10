@@ -6,8 +6,6 @@ module Warden
   module Auth0
     # Layer above token decoding which directly decodes a user from a JWT
     class UserDecoder
-      include Auth0::Import['revocation_strategies']
-
       attr_reader :helper
 
       def initialize(**args)
@@ -15,40 +13,28 @@ module Warden
         @helper = PayloadUserHelper
       end
 
-      # Returns the user that is encoded in a JWT. The scope is used to choose
-      # the user repository to which send `#find_for_jwt_authentication(sub)`
-      # with decoded `sub` claim.
-      #
+      # Returns the user that is encoded in a JWT.
       # @param token [String] a JWT
-      # @param scope [Symbol] Warden scope
-      # @param aud [String] Expected aud claim
-      # @return [Interfaces::User] an user, whatever it is
-      # @raise [Errors::RevokedToken] when token has been revoked for the
-      # encoded user
+      # @param issuer [String] Expected issuer claim
+      # @return [Interfaces::User] a user, whatever it is
       # @raise [Errors::NilUser] when decoded user is nil
-      # @raise [Errors::WrongScope] when encoded scope does not match with scope
-      # @raise [Errors::WrongAud] when encoded aud does not match with aud
-      # argument
-      def call(token, scope, aud)
+      # @raise [Errors::WrongIssuer] when encoded issues does not match with issues argument
+      def call(token, issuer)
         payload = TokenDecoder.new.call(token)
-        check_valid_claims(payload, scope, aud)
-        user = helper.find_user(payload)
-        check_valid_user(payload, user, scope)
+        check_valid_claims(payload, issuer)
+        user = Warden::Auth0.config.user_resolver.call(payload)
+        check_valid_user(user)
         user
       end
 
       private
 
-      def check_valid_claims(payload, scope, aud)
-        raise Errors::WrongScope, 'wrong scope' unless helper.scope_matches?(payload, scope)
-        raise Errors::WrongAud, 'wrong aud' unless helper.aud_matches?(payload, aud)
+      def check_valid_claims(payload, issuer)
+        raise Warden::Auth0::Errors::WrongIssuer, 'wrong issuer' unless helper.issuer_matches?(payload, issuer)
       end
 
-      def check_valid_user(payload, user, scope)
-        raise Errors::NilUser, 'nil user' unless user
-
-        strategy = revocation_strategies[scope]
-        raise Errors::RevokedToken, 'revoked token' if strategy.jwt_revoked?(payload, user)
+      def check_valid_user(user)
+        raise Warden::Auth0::Errors::NilUser, 'nil user' unless user
       end
     end
   end
