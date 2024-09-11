@@ -23,6 +23,13 @@ shared_context 'feature' do
     end
   end
 
+  def build_app(app)
+    builder = Rack::Builder.new
+    add_warden(builder)
+    builder.run(app)
+    builder
+  end
+
   def call_app(app, env, request_tuple)
     method, path = request_tuple
     env = env.dup
