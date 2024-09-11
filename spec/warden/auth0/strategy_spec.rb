@@ -6,9 +6,6 @@ describe Warden::Auth0::Strategy do
   include_context 'configuration'
   include_context 'fixtures'
 
-  let(:valid_token) { 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.bohJzH8dseepETezDOs3uX6oJcwJvhQwMyWnmO8OY4E' }
-  let(:invalid_token) { 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.iMV9ZwCkU1S6Gx8v56uA6oGiM6KLdHnaV_epUDImgHg' }
-
   it 'adds Auth0::Strategy to Warden with auth0 name' do
     expect(Warden::Strategies._strategies).to include(
       auth0: described_class
@@ -100,7 +97,7 @@ describe Warden::Auth0::Strategy do
     end
 
     context 'when issuer does not match' do
-      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{invalid_token}" } }
+      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{wrong_issuer_token}" } }
       let(:strategy) { described_class.new(env) }
 
       before { strategy.authenticate! }
