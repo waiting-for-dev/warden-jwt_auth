@@ -8,6 +8,10 @@ module Warden
       class RevokedToken < JWT::DecodeError
       end
 
+      # Error raised when no issuer has been configured
+      class NoConfiguredIssuer < JWT::DecodeError
+      end
+
       # Error raised when the user decoded from a token is nil
       class NilUser < JWT::DecodeError
       end

@@ -7,6 +7,7 @@ describe Warden::Auth0::Strategy do
   include_context 'fixtures'
 
   let(:valid_token) { 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.bohJzH8dseepETezDOs3uX6oJcwJvhQwMyWnmO8OY4E' }
+  let(:invalid_token) { 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3Rlc3QtZGV2LmV1LmF1dGgwLmNvbS8ifQ.iMV9ZwCkU1S6Gx8v56uA6oGiM6KLdHnaV_epUDImgHg' }
 
   it 'adds Auth0::Strategy to Warden with auth0 name' do
     expect(Warden::Strategies._strategies).to include(
@@ -50,7 +51,7 @@ describe Warden::Auth0::Strategy do
   describe '#authenticate!' do
     context 'when token is invalid' do
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer 123' } }
-      let(:strategy) { described_class.new(env, :user) }
+      let(:strategy) { described_class.new(env) }
 
       before { strategy.authenticate! }
 
@@ -65,7 +66,7 @@ describe Warden::Auth0::Strategy do
 
     context 'when token is valid' do
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{valid_token}" } }
-      let(:strategy) { described_class.new(env, :user) }
+      let(:strategy) { described_class.new(env) }
 
       before { strategy.authenticate! }
 
@@ -75,6 +76,41 @@ describe Warden::Auth0::Strategy do
 
       it 'logs in user returned by current mapping' do
         expect(strategy.user).to eq(user)
+      end
+    end
+
+    context 'when no user is found' do
+      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{valid_token}" } }
+      let(:strategy) { described_class.new(env) }
+
+      before do
+        Warden::Auth0.config.user_resolver = ->(_token) { nil }
+        strategy.authenticate!
+      end
+
+      after { Warden::Auth0.config.user_resolver = ->(_token) { user } }
+
+      it 'fails authentication' do
+        expect(strategy).not_to be_successful
+      end
+
+      it 'halts authentication' do
+        expect(strategy).to be_halted
+      end
+    end
+
+    context 'when issuer does not match' do
+      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{invalid_token}" } }
+      let(:strategy) { described_class.new(env) }
+
+      before { strategy.authenticate! }
+
+      it 'fails authentication' do
+        expect(strategy).not_to be_successful
+      end
+
+      it 'halts authentication' do
+        expect(strategy).to be_halted
       end
     end
   end

@@ -31,12 +31,6 @@ shared_context 'feature' do
     app.call(env)
   end
 
-  def generate_token(user, scope, env)
-    aud = Warden::Auth0::EnvHelper.aud_header(env)
-    token, _payload = Warden::Auth0::UserEncoder.new.call(user, scope, aud)
-    token
-  end
-
   def env_with_token(env, token)
     Warden::Auth0::HeaderParser.to_env(env, token)
   end

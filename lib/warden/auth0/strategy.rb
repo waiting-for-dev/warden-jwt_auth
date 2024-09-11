@@ -16,8 +16,12 @@ module Warden
       end
 
       def authenticate!
-        configured_issuer = Warden::Auth0.config.issuer
-        user = UserDecoder.new.call(token, configured_issuer)
+        raise Errors::WrongIssuer, 'wrong issuer' unless issuer_claim_valid?
+
+        user = Warden::Auth0.config.user_resolver.call(decoded_token)
+
+        raise Warden::Auth0::Errors::NilUser, 'nil user' unless user
+
         success!(user)
       rescue JWT::DecodeError => e
         fail!(e.message)
@@ -26,17 +30,29 @@ module Warden
       private
 
       def issuer_claim_valid?
-        configured_issuer = Warden::Auth0.config.issuer
-        return true if configured_issuer.nil?
-
-        payload = TokenDecoder.new.call(token)
-        PayloadUserHelper.issuer_matches?(payload, configured_issuer)
+        issuer = configured_issuer
+        issuer_matches?(decoded_token, issuer)
       rescue JWT::DecodeError
-        true
+        false
+      end
+
+      def decoded_token
+        TokenDecoder.new.call(token)
+      end
+
+      def configured_issuer
+        configured_issuer = Warden::Auth0.config.issuer
+        raise Errors::NoConfiguredIssuer if configured_issuer.nil?
+
+        configured_issuer
       end
 
       def token_exists?
         !token.nil?
+      end
+
+      def issuer_matches?(payload, issuer)
+        payload['iss'] == issuer.to_s
       end
 
       def token
