@@ -6,16 +6,10 @@ require 'jwt'
 require 'warden'
 
 module Warden
-  # JWT authentication plugin for warden.
+  # Auth0 authentication plugin for warden.
   #
   # It consists of a strategy which tries to authenticate an user decoding a
   # token present in the `Authentication` header (as `Bearer %token%`).
-  # From it, it takes the `sub` claim and provides it to a configured repository
-  # of users for the current scope.
-  #
-  # It also consists of two rack middlewares which perform two actions for
-  # configured request paths: dispatching a token for a signed in user and
-  # revoking an incoming token.
   module Auth0
     extend Dry::Configurable
 
@@ -63,4 +57,3 @@ require 'warden/auth0/header_parser'
 require 'warden/auth0/env_helper'
 require 'warden/auth0/token_decoder'
 require 'warden/auth0/strategy'
-require 'warden/auth0/interfaces'

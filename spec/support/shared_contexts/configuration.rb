@@ -15,5 +15,4 @@ shared_context 'configuration' do
   let(:token_header) { config.token_header}
   let(:issuer) { config.issuer }
   let(:env_token_header) { ('HTTP_' + config.token_header.upcase).tr('-', '_') }
-  let(:mappings) { config.mappings }
 end

@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe Warden::Auth0::TokenDecoder do
   include_context 'configuration'
+  include_context 'fixtures'
 
   describe '#call(token)' do
     let(:payload) do
