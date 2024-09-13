@@ -10,6 +10,12 @@ shared_context 'configuration' do
       config.token_header = 'Authorization'
       config.user_resolver = ->(token) { Fixtures::User.instance }
     end
+
+    Warden::Strategies.add(:auth0, Warden::Auth0::Strategy) do
+      def user_resolver(decoded_token)
+        Fixtures::User.instance
+      end
+    end
   end
 
   let(:config) { Warden::Auth0.config }

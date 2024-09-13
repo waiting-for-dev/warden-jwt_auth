@@ -20,7 +20,7 @@ module Warden
 
         raise Errors::WrongAud, 'wrong audience' unless aud_claim_valid?
 
-        user = Warden::Auth0.config.user_resolver.call(decoded_token)
+        user = user_resolver(decoded_token)
 
         raise Warden::Auth0::Errors::NilUser, 'nil user' unless user
 
@@ -48,6 +48,10 @@ module Warden
 
       def decoded_token
         TokenDecoder.new.call(token)
+      end
+
+      def user_resolver(decoded_token)
+        raise "TODO: Implement!"
       end
 
       def configured_aud
@@ -84,5 +88,3 @@ module Warden
     end
   end
 end
-
-Warden::Strategies.add(:auth0, Warden::Auth0::Strategy)

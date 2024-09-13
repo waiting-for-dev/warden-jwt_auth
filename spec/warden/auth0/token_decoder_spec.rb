@@ -18,15 +18,15 @@ describe Warden::Auth0::TokenDecoder do
     end
 
     it 'returns the payload encoded in the token' do
-      expect(described_class.new.call(valid_token)).to eq(payload)
+      expect(subject.call(valid_token)).to eq(payload)
     end
 
     it 'raises an error if decode fails' do
-      expect { described_class.new.call(invalid_token) }.to raise_error(JWT::VerificationError)
+      expect { subject.call(invalid_token) }.to raise_error(JWT::VerificationError)
     end
 
     it 'raises an error if no secret is set' do
-      expect { described_class.new.call(nil) }.to raise_error(JWT::DecodeError)
+      expect { subject.call(nil) }.to raise_error(JWT::DecodeError)
     end
   end
 end

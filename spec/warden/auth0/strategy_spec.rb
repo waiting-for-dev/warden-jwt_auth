@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 describe Warden::Auth0::Strategy do
-  include_context 'configuration'
   include_context 'fixtures'
+  include_context 'configuration'
   include_context 'token_decoder'
 
   it 'adds Auth0::Strategy to Warden with auth0 name' do
@@ -105,13 +105,16 @@ describe Warden::Auth0::Strategy do
       let(:token_payload) { valid_payload }
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
       let(:strategy) { described_class.new(env) }
+      let(:user) { nil }
 
       before do
-        Warden::Auth0.config.user_resolver = ->(_token) { nil }
+        Warden::Strategies.add(:auth0, Warden::Auth0::Strategy) do
+          def user_resolver(decoded_token)
+           user
+          end
+        end
         strategy.authenticate!
       end
-
-      after { Warden::Auth0.config.user_resolver = ->(_token) { user } }
 
       it 'fails authentication' do
         expect(strategy).not_to be_successful
