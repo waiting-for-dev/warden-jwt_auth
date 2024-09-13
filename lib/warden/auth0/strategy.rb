@@ -26,6 +26,7 @@ module Warden
 
         success!(user)
       rescue JWT::DecodeError => e
+        puts "Failing to authenticate with #{e.message}"
         fail!(e.message)
       end
 
