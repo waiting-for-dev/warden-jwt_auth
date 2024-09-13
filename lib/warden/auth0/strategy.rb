@@ -8,7 +8,7 @@ module Warden
     # `Authorization` request header
     class Strategy < Warden::Strategies::Base
       def valid?
-        token_exists? && issuer_claim_valid?
+        token_exists? && issuer_claim_valid? && aud_claim_valid?
       end
 
       def store?
@@ -17,6 +17,8 @@ module Warden
 
       def authenticate!
         raise Errors::WrongIssuer, 'wrong issuer' unless issuer_claim_valid?
+
+        raise Errors::WrongAud, 'wrong audience' unless aud_claim_valid?
 
         user = Warden::Auth0.config.user_resolver.call(decoded_token)
 
@@ -36,8 +38,22 @@ module Warden
         false
       end
 
+      def aud_claim_valid?
+        aud = configured_aud
+        aud_matches?(decoded_token, aud)
+      rescue JWT::DecodeError
+        false
+      end
+
       def decoded_token
         TokenDecoder.new.call(token)
+      end
+
+      def configured_aud
+        configured_aud = Warden::Auth0.config.aud
+        raise Errors::NoConfiguredAud if configured_aud.nil?
+
+        configured_aud
       end
 
       def configured_issuer
@@ -53,6 +69,10 @@ module Warden
 
       def issuer_matches?(payload, issuer)
         payload['iss'] == issuer.to_s
+      end
+
+      def aud_matches?(payload, aud)
+        payload['aud'] == aud.to_s
       end
 
       def token

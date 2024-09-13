@@ -12,6 +12,10 @@ module Warden
       class NoConfiguredIssuer < JWT::DecodeError
       end
 
+      # Error raised when no aud has been configured
+      class NoConfiguredAud < JWT::DecodeError
+      end
+
       # Error raised when the user decoded from a token is nil
       class NilUser < JWT::DecodeError
       end
