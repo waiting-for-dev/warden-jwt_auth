@@ -5,6 +5,8 @@ shared_context 'configuration' do
     Warden::Auth0.configure do |config|
       config.decoding_secret = 'useauth0byoktatobuildyourcustomidentitypipeline'
       config.issuer = 'https://test-dev.eu.auth0.com/'
+      config.aud = 'https://test.com/api'
+      config.algorithm = "HS256"
       config.token_header = 'Authorization'
       config.user_resolver = ->(token) { Fixtures::User.instance }
     end

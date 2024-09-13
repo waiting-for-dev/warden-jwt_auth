@@ -73,7 +73,9 @@ module Warden
       end
 
       def aud_matches?(payload, aud)
-        payload['aud'] == aud.to_s
+        return true if payload['aud'] == aud.to_s
+
+        payload['aud'].is_a?(Array) && payload['aud'].include?(aud)
       end
 
       def token

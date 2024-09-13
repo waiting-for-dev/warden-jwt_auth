@@ -5,6 +5,7 @@ require 'spec_helper'
 describe Warden::Auth0::Strategy do
   include_context 'configuration'
   include_context 'fixtures'
+  include_context 'token_decoder'
 
   it 'adds Auth0::Strategy to Warden with auth0 name' do
     expect(Warden::Strategies._strategies).to include(
@@ -22,16 +23,34 @@ describe Warden::Auth0::Strategy do
       end
     end
 
-    context 'when Authorization header exists' do
-      it 'returns true when the token issuer matches the configured one' do
-        env = { 'HTTP_AUTHORIZATION' => "Bearer #{valid_token}" }
+    context 'when token issuer and aud match the configured ones' do
+      let(:token_payload) { valid_payload }
+
+      it 'returns true' do
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer some-token' }
+
         strategy = described_class.new(env)
 
         expect(strategy).to be_valid
       end
+    end
+
+    context 'when token issuer does not match the configured one' do
+      let(:token_payload) { wrong_iss_payload }
 
       it 'returns false when the token issuer does not match the configured one' do
-        env = { 'HTTP_AUTHORIZATION' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJqdGkiOiJiYWYxZGMzOC0wMzMxLTQwZDMtYjgwYS02MGZkMmM1YTIxYzMiLCJpc3MiOiJodHRwczovL3dyb25nLWRldi5ldS5hdXRoMC5jb20vIn0.puYkNmvLkqqKSrWAB8zYKSbmHydBTPFxhkxK1AZec_k' }
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer some-token' }
+        strategy = described_class.new(env)
+
+        expect(strategy).not_to be_valid
+      end
+    end
+
+    context 'when token aud does not match the configured one' do
+      let(:token_payload) { wrong_aud_payload }
+
+      it 'returns false when the token aud does not match the configured one' do
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer some-token' }
         strategy = described_class.new(env)
 
         expect(strategy).not_to be_valid
@@ -50,7 +69,12 @@ describe Warden::Auth0::Strategy do
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer 123' } }
       let(:strategy) { described_class.new(env) }
 
-      before { strategy.authenticate! }
+      before do
+        allow(token_decoder)
+          .to receive(:call)
+          .and_raise(JWT::VerificationError)
+        strategy.authenticate!
+      end
 
       it 'fails authentication' do
         expect(strategy).not_to be_successful
@@ -62,7 +86,8 @@ describe Warden::Auth0::Strategy do
     end
 
     context 'when token is valid' do
-      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{valid_token}" } }
+      let(:token_payload) { valid_payload }
+      let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
       let(:strategy) { described_class.new(env) }
 
       before { strategy.authenticate! }
@@ -77,7 +102,8 @@ describe Warden::Auth0::Strategy do
     end
 
     context 'when no user is found' do
-      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{valid_token}" } }
+      let(:token_payload) { valid_payload }
+      let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
       let(:strategy) { described_class.new(env) }
 
       before do
@@ -97,7 +123,24 @@ describe Warden::Auth0::Strategy do
     end
 
     context 'when issuer does not match' do
-      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{wrong_issuer_token}" } }
+      let(:token_payload) { wrong_iss_payload }
+      let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
+      let(:strategy) { described_class.new(env) }
+
+      before { strategy.authenticate! }
+
+      it 'fails authentication' do
+        expect(strategy).not_to be_successful
+      end
+
+      it 'halts authentication' do
+        expect(strategy).to be_halted
+      end
+    end
+
+    context 'when aud does not match' do
+      let(:token_payload) { wrong_aud_payload }
+      let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
       let(:strategy) { described_class.new(env) }
 
       before { strategy.authenticate! }

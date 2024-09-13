@@ -53,6 +53,7 @@ module Warden
     # Will be used to only apply the warden strategy when the audience matches.
     setting :aud, default: nil
 
+    # This is a method that takes in the payload sub and should return a User
     setting :user_resolver
 
     Import = Dry::AutoInject(config)
