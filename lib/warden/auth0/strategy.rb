@@ -20,7 +20,9 @@ module Warden
 
         raise Errors::WrongAud, 'wrong audience' unless aud_claim_valid?
 
-        user = user_resolver(decoded_token)
+        method = "#{scope}_resolver"
+        raise "unimplemented resolver #{method}" unless respond_to?(method)
+        user = send(method, decoded_token)
 
         raise Warden::Auth0::Errors::NilUser, 'nil user' unless user
 
@@ -48,10 +50,6 @@ module Warden
 
       def decoded_token
         TokenDecoder.new.call(token)
-      end
-
-      def user_resolver(decoded_token)
-        raise "TODO: Implement!"
       end
 
       def configured_aud
