@@ -6,7 +6,7 @@ module Warden
   module Auth0
     # Decodes a JWT into a hash payload into a JWT token
     class TokenDecoder
-      include Auth0::Import['decoding_secret', 'algorithm']
+      include Auth0::Import['algorithm', 'jwks']
 
       # Decodes the payload from a JWT as a hash
       #
@@ -16,17 +16,13 @@ module Warden
       # @param token [String] a JWT
       # @return [Hash] payload decoded from the JWT
       def call(token)
-        decode(token, decoding_secret)
+        decode(token)
       end
 
       private
 
-      def decode(token, secret)
-        JWT.decode(token,
-                   secret,
-                   true,
-                   algorithm: algorithm,
-                   verify_jti: true)[0]
+      def decode(token)
+        JWT.decode(token, nil, true, algorithms: algorithm, jwks: jwks)[0]
       end
     end
   end

@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-configurable', '>= 0.13', '< 2'
   spec.add_dependency 'jwt', '~> 2.1'
   spec.add_dependency 'warden', '~> 1.2'
+  spec.add_dependency 'faraday', '~> 2.11'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'pry-byebug', '~> 3.7'

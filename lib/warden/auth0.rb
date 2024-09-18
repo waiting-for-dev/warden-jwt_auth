@@ -4,6 +4,7 @@ require 'dry/configurable'
 require 'dry/auto_inject'
 require 'jwt'
 require 'warden'
+require 'faraday'
 
 module Warden
   # Auth0 authentication plugin for warden.
@@ -12,29 +13,6 @@ module Warden
   # token present in the `Authentication` header (as `Bearer %token%`).
   module Auth0
     extend Dry::Configurable
-
-    def symbolize_keys(hash)
-      hash.transform_keys(&:to_sym)
-    end
-
-    def upcase_first_items(array)
-      array.map do |tuple|
-        method, path = tuple
-        [method.to_s.upcase, path]
-      end
-    end
-
-    def constantize_values(hash)
-      hash.transform_values do |value|
-        value.is_a?(String) ? Object.const_get(value) : value
-      end
-    end
-
-    module_function :constantize_values, :symbolize_keys, :upcase_first_items
-
-    # The secret used to decode the token, defaults to `secret` if not provided
-    setting :decoding_secret, constructor: ->(value) { value || config.secret }
-
     # Request header that will be used for receiving and returning the token.
     setting :token_header, default: 'Authorization'
 
@@ -53,10 +31,30 @@ module Warden
     # Will be used to only apply the warden strategy when the audience matches.
     setting :aud, default: nil
 
-    # This is a method that takes in the payload sub and should return a User
-    setting :user_resolver
+    # The url to fetch jwks from
+    setting :jwks_url
+
+    # Store the JWKS after fetching it
+    setting :jwks, constructor: ->(jwks) { jwks || fetch_jwks(config.jwks_url) }
 
     Import = Dry::AutoInject(config)
+
+    # Method to fetch JWKS from the specified URL
+    def self.fetch_jwks(jwks_url)
+      raise 'No url provided for fetching jwks' if jwks_url.nil?
+
+      jwks_response = connection.get(jwks_url).body
+      jwks = JWT::JWK::Set.new(jwks_response)
+      jwks.select { |key| key[:use] == 'sig' }
+    rescue StandardError => e
+      raise "Failed to fetch JWKS: #{e.message}"
+    end
+
+    def self.connection
+      Faraday.new(request: { timeout: 5 }) do |conn|
+        conn.response :json
+      end
+    end
   end
 end
 

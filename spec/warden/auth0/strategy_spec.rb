@@ -5,10 +5,15 @@ require 'spec_helper'
 describe Warden::Auth0::Strategy do
   include_context 'fixtures'
   include_context 'configuration'
-  include_context 'token_decoder'
+
+  let(:token_payload) { valid_payload }
 
   let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer some-token' } }
   let(:scope) { 'user' }
+
+  before do
+    allow(::JWT).to receive(:decode).and_return [token_payload, {}]
+  end
 
   subject { described_class.new(env, scope) }
 
@@ -72,8 +77,8 @@ describe Warden::Auth0::Strategy do
       let(:env) { { 'HTTP_AUTHORIZATION' => 'Bearer 123' } }
 
       before do
-        allow(token_decoder)
-          .to receive(:call)
+        allow(::JWT)
+          .to receive(:decode)
           .and_raise(JWT::VerificationError)
         subject.authenticate!
       end

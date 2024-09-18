@@ -22,6 +22,7 @@ module Warden
 
         method = "#{scope}_resolver"
         raise "unimplemented resolver #{method}" unless respond_to?(method)
+
         user = send(method, decoded_token)
 
         raise Warden::Auth0::Errors::NilUser, 'nil user' unless user
