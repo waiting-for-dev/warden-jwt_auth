@@ -175,7 +175,7 @@ config.revocation_strategies = { user: RevocationStrategy }
 
 The implementation of the revocation strategy is also on your side. They just need to implement two methods: `jwt_revoked?` and `revoke_jwt`, both of them accepting as parameters the JWT payload and the user record, in this order.
 
-You can read about which [JWT recovation strategies](http://waiting-for-dev.github.io/blog/2017/01/24/jwt_revocation_strategies/) can be implement with their pros and cons.
+You can read about which [JWT recovation strategies](http://waiting-for-dev.github.io/blog/2017/01/24/jwt_revocation_strategies) can be implement with their pros and cons.
 
 ```ruby
 module RevocationStrategy
