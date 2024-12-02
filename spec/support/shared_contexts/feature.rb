@@ -15,6 +15,7 @@ shared_context 'feature' do
   let(:success_response) { [200, {}, ['success']] }
 
   let(:pristine_env) { {} }
+  let(:env_with_rack_input) { { 'rack.input' => StringIO.new } }
 
   def build_app(app)
     builder = Rack::Builder.new

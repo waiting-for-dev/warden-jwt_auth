@@ -44,6 +44,14 @@ describe Warden::JWTAuth::Hooks do
         expect(payload(last_request)['aud']).to eq('warden_tests')
       end
 
+      it 'calls before_jwt_dispatch method in the user' do
+        allow(user).to receive(:before_jwt_dispatch)
+
+        post '/sign_in'
+
+        expect(user).to have_received(:before_jwt_dispatch)
+      end
+
       it 'calls on_jwt_dispatch method in the user' do
         allow(user).to receive(:on_jwt_dispatch)
 

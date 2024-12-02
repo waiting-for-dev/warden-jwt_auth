@@ -32,6 +32,13 @@ module Warden
           {}
         end
 
+        # Does something before a JWT for the user has been dispatched.
+        #
+        # @param _request_params [Hash]
+        def before_jwt_dispatch(_request_params)
+          raise NotImplementedError
+        end
+
         # Does something just after a JWT for the user has been dispatched.
         #
         # @param _token [String]

@@ -25,7 +25,7 @@ describe 'Token dispatch', type: :feature do
 
   context 'when path and method match with configured' do
     it 'adds the token to Authorization response header' do
-      headers = call_app(signed_in_app, pristine_env, ['POST', '/sign_in'])[1]
+      headers = call_app(signed_in_app, env_with_rack_input, ['POST', '/sign_in'])[1]
 
       expect(headers).to have_key('Authorization')
     end

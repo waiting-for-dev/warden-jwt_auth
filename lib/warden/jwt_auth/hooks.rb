@@ -25,7 +25,7 @@ module Warden
         scope = opts[:scope]
         return unless token_should_be_added?(scope, env)
 
-        add_token_to_env(user, scope, env)
+        add_token_to_env(user, scope, env, auth.params)
       end
 
       def token_should_be_added?(scope, env)
@@ -34,7 +34,8 @@ module Warden
         jwt_scope?(scope) && request_matches?(path_info, method)
       end
 
-      def add_token_to_env(user, scope, env)
+      def add_token_to_env(user, scope, env, request_params)
+        user.before_jwt_dispatch(request_params) if user.respond_to?(:before_jwt_dispatch)
         aud = EnvHelper.aud_header(env)
         token, payload = UserEncoder.new.call(user, scope, aud)
         user.on_jwt_dispatch(token, payload) if user.respond_to?(:on_jwt_dispatch)

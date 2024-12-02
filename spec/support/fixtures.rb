@@ -15,6 +15,10 @@ module Fixtures
       { 'foo' => 'bar' }
     end
 
+    def before_jwt_dispatch(request_params)
+      # Does something
+    end
+
     def on_jwt_dispatch(_token, _payload)
       # Does something
     end

@@ -117,6 +117,14 @@ def jwt_payload
 end
 ```
 
+Before a token is going to be dispatched to a client, a hook method `before_jwt_dispatch` is invoked, only when it exist, on the user record. This method takes the `request_params` (parameters comming from request) as arguments.
+
+```ruby
+def before_jwt_dispatch(request_params)
+  # Do something
+end
+```
+
 Just when a token is going to be dispatched to a client, a hook method `on_jwt_dispatch` is invoked, only when it exist, on the user record. This method takes the `token` and the `payload` as arguments.
 
 ```ruby
