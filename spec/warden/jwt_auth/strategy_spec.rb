@@ -31,8 +31,8 @@ describe Warden::JWTAuth::Strategy do
       end
     end
 
-    context "when issuer is configured" do
-      let(:token) { Warden::JWTAuth::TokenEncoder.new.call({issuer: issuer}) }
+    context 'when issuer is configured' do
+      let(:token) { Warden::JWTAuth::TokenEncoder.new.call({ issuer: issuer }) }
       let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
       let(:issuer) { 'http://example.com' }
       let(:strategy) { described_class.new(env, :user) }
@@ -43,14 +43,14 @@ describe Warden::JWTAuth::Strategy do
         end
       end
 
-      context "when the issuer claim matches the configured issuer" do
+      context 'when the issuer claim matches the configured issuer' do
         it 'returns true' do
           expect(strategy).to be_valid
         end
       end
 
-      context "when the issuer claim does not match the configured issuer" do
-        let(:token) { Warden::JWTAuth::TokenEncoder.new.call({"iss" => 'http://example.org'}) }
+      context 'when the issuer claim does not match the configured issuer' do
+        let(:token) { Warden::JWTAuth::TokenEncoder.new.call({ 'iss' => 'http://example.org' }) }
 
         it 'returns false' do
           expect(strategy).not_to be_valid

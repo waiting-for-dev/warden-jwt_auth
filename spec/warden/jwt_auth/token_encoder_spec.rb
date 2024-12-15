@@ -68,6 +68,7 @@ describe Warden::JWTAuth::TokenEncoder do
 
     context 'with issuer claim' do
       let(:issuer) { 'http://example.com' }
+
       before do
         Warden::JWTAuth.configure do |config|
           config.issuer = issuer
