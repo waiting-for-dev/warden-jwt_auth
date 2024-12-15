@@ -31,30 +31,25 @@ describe Warden::JWTAuth::Strategy do
       end
     end
 
-    context 'when issuer is configured' do
-      let(:token) { Warden::JWTAuth::TokenEncoder.new.call({ issuer: issuer }) }
-      let(:env) { { 'HTTP_AUTHORIZATION' => "Bearer #{token}" } }
-      let(:issuer) { 'http://example.com' }
-      let(:strategy) { described_class.new(env, :user) }
+    context 'when issuer claim is configured and it matches the configured issuer' do
+      it 'returns true' do
+        token = Warden::JWTAuth::TokenEncoder.new.call({ 'iss' => Warden::JWTAuth.config.issuer })
+        env = { 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
 
-      before do
-        Warden::JWTAuth.configure do |config|
-          config.issuer = issuer
-        end
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).to be_valid
       end
+    end
 
-      context 'when the issuer claim matches the configured issuer' do
-        it 'returns true' do
-          expect(strategy).to be_valid
-        end
-      end
+    context "when issuer claim is configured and it doesn't match the configured issuer" do
+      it 'returns false' do
+        token = Warden::JWTAuth::TokenEncoder.new.call({ 'iss' => Warden::JWTAuth.config.issuer + 'aaa' })
+        env = { 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
 
-      context 'when the issuer claim does not match the configured issuer' do
-        let(:token) { Warden::JWTAuth::TokenEncoder.new.call({ 'iss' => 'http://example.org' }) }
+        strategy = described_class.new(env, :user)
 
-        it 'returns false' do
-          expect(strategy).not_to be_valid
-        end
+        expect(strategy).not_to be_valid
       end
     end
   end

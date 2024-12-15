@@ -13,6 +13,7 @@ shared_context 'configuration' do
       config.mappings = { user: Fixtures::UserRepo }
       config.token_header = 'Authorization'
       config.aud_header = 'TEST_AUD'
+      config.issuer = 'http://example.com'
     end
   end
 

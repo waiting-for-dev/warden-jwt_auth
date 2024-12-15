@@ -19,6 +19,8 @@ module Warden
   module JWTAuth
     extend Dry::Configurable
 
+    module_function
+
     def symbolize_keys(hash)
       hash.transform_keys(&:to_sym)
     end
@@ -35,8 +37,6 @@ module Warden
         value.is_a?(String) ? Object.const_get(value) : value
       end
     end
-
-    module_function :constantize_values, :symbolize_keys, :upcase_first_items
 
     # The secret used to encode the token
     setting :secret
