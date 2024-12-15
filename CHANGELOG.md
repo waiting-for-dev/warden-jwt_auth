@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.10.1] - 2024-12-15
+- Fix version mismatch
+
 ## [0.8.0] - 2024-06-28
 - Add support for issue claim ([56](https://github.com/waiting-for-dev/warden-jwt_auth/pull/56))
 
