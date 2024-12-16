@@ -15,7 +15,28 @@ describe Warden::JWTAuth::Strategy do
   describe '#valid?' do
     context 'when Authorization header is valid' do
       it 'returns true' do
-        env = { 'HTTP_AUTHORIZATION' => 'Bearer 123' }
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer 123', 'PATH_INFO' => '/users', 'REQUEST_METHOD' => 'GET' }
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).to be_valid
+      end
+
+      it 'returns false when the current path / method matches a dispatch request path / method' do
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer 123', 'PATH_INFO' => '/sign_in', 'REQUEST_METHOD' => 'POST' }
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).not_to be_valid
+      end
+
+      it 'returns true when the current path matches a dispatch request, but the method does not' do
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer 123', 'PATH_INFO' => '/sign_in', 'REQUEST_METHOD' => 'GET' }
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).to be_valid
+      end
+
+      it 'returns true when the current path does not match a dispatch request path' do
+        env = { 'HTTP_AUTHORIZATION' => 'Bearer 123', 'PATH_INFO' => '/users', 'REQUEST_METHOD' => 'POST' }
         strategy = described_class.new(env, :user)
 
         expect(strategy).to be_valid
@@ -25,6 +46,20 @@ describe Warden::JWTAuth::Strategy do
     context 'when Authorization header is not valid' do
       it 'returns false' do
         env = {}
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).not_to be_valid
+      end
+
+      it 'returns false when the current path matches a dispatch request path' do
+        env = { 'PATH_INFO' => '/sign_in', 'REQUEST_METHOD' => 'POST' }
+        strategy = described_class.new(env, :user)
+
+        expect(strategy).not_to be_valid
+      end
+
+      it 'returns true when the current path does not match a dispatch request path' do
+        env = { 'PATH_INFO' => '/users', 'REQUEST_METHOD' => 'GET' }
         strategy = described_class.new(env, :user)
 
         expect(strategy).not_to be_valid

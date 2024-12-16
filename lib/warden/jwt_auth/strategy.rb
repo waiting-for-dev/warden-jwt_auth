@@ -7,8 +7,10 @@ module Warden
     # Warden strategy to authenticate an user through a JWT token in the
     # `Authorization` request header
     class Strategy < Warden::Strategies::Base
+      include JWTAuth::Import['dispatch_requests']
+
       def valid?
-        token_exists? && issuer_claim_valid?
+        token_exists? && issuer_claim_valid? && !path_is_dispatch_request_path?
       end
 
       def store?
@@ -24,6 +26,14 @@ module Warden
       end
 
       private
+
+      def path_is_dispatch_request_path?
+        current_path = EnvHelper.path_info(env)
+        request_method = EnvHelper.request_method(env)
+        dispatch_requests.any? do |tuple|
+          request_method == tuple.first && current_path.match(tuple.last)
+        end
+      end
 
       def issuer_claim_valid?
         configured_issuer = Warden::JWTAuth.config.issuer
