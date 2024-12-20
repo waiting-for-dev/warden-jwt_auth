@@ -30,8 +30,8 @@ module Warden
       def path_is_dispatch_request_path?
         current_path = EnvHelper.path_info(env)
         request_method = EnvHelper.request_method(env)
-        dispatch_requests.any? do |tuple|
-          request_method == tuple.first && current_path.match(tuple.last)
+        dispatch_requests.any? do |(dispatch_method, dispatch_path)|
+          request_method == dispatch_method && current_path.match(dispatch_path)
         end
       end
 

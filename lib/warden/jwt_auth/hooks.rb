@@ -47,8 +47,7 @@ module Warden
       end
 
       def request_matches?(path_info, method)
-        dispatch_requests.each do |tuple|
-          dispatch_method, dispatch_path = tuple
+        dispatch_requests.each do |(dispatch_method, dispatch_path)|
           return true if path_info.match(dispatch_path) &&
                          method == dispatch_method
         end
