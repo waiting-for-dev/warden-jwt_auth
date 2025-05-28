@@ -72,13 +72,27 @@ module Warden
       end
 
       def issuer_matches?(payload, issuer)
-        payload['iss'] == issuer.to_s
+        if issuer.is_a?(String)
+          payload['iss'] == issuer.to_s
+        elsif issuer.is_a?(Array)
+          issuer.map(&:to_s).include(payload['iss'])
+        end
+
+        false
       end
 
       def aud_matches?(payload, aud)
-        return true if payload['aud'] == aud.to_s
+        if aud.is_a?(String)
+          return true if payload['aud'] == aud.to_s
 
-        payload['aud'].is_a?(Array) && payload['aud'].include?(aud)
+          payload['aud'].is_a?(Array) && payload['aud'].include?(aud)
+        elsif aud.is_a?(Array)
+          return true if aud.include?(payload['aud'])
+
+          payload['aud'].is_a?(Array) && (payload['aud'] & aud).any?
+        end
+        
+        false
       end
 
       def token
