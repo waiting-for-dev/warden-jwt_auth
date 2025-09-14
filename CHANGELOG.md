@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.12.0] - 2024-09-14
+- Support jwt v3 ([65](https://github.com/waiting-for-dev/warden-jwt_auth/pull/65))
+
 ## [0.11.0] - 2024-12-20
 - Prevent strategy from running when the current path matches a dispatch request ([60](https://github.com/waiting-for-dev/warden-jwt_auth/pull/60))
 
