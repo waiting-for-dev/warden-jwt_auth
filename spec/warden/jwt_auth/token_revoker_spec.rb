@@ -36,5 +36,25 @@ describe Warden::JWTAuth::TokenRevoker do
         expect { described_class.new.call(token) }.not_to raise_error
       end
     end
+
+    context 'when the token has already been revoked' do
+      before { described_class.new.call(token) }
+
+      it 'does not revoke it a second time' do
+        described_class.new.call(token)
+
+        expect(revocation_strategy.revoked.length).to eq(1)
+      end
+    end
+
+    context 'when the user encoded in the token no longer exists' do
+      before { Warden::JWTAuth.config.mappings = { user: Fixtures::NilUserRepo } }
+
+      it 'still revokes the token' do
+        described_class.new.call(token)
+
+        expect(revocation_strategy.revoked.length).to eq(1)
+      end
+    end
   end
 end
